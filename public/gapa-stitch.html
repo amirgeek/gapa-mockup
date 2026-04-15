@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>GAPA - Plataforma</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "surface-tint": "#186c37", "surface-variant": "#dfe3e1", "inverse-surface": "#2d3130",
+          "primary-fixed-dim": "#87d898", "secondary-fixed": "#d6e3ff", "error": "#ba1a1a",
+          "on-tertiary-container": "#ffeeed", "surface-dim": "#d7dbd8", "secondary-container": "#8fb7fd",
+          "on-secondary": "#ffffff", "tertiary-fixed": "#ffdad6", "surface-container-low": "#f1f5f2",
+          "on-surface-variant": "#404940", "primary-fixed": "#a3f5b2", "on-primary": "#ffffff",
+          "surface-container": "#ebefec", "surface-bright": "#f6faf7", "on-primary-fixed": "#00210b",
+          "surface-container-high": "#e5e9e6", "on-error-container": "#93000a", "on-error": "#ffffff",
+          "on-tertiary": "#ffffff", "on-background": "#181d1b", "on-primary-container": "#ccffd1",
+          "outline-variant": "#bfc9bd", "on-primary-fixed-variant": "#005225", "secondary-fixed-dim": "#aac7ff",
+          "on-secondary-fixed": "#001b3e", "error-container": "#ffdad6", "surface-container-lowest": "#ffffff",
+          "primary": "#096430", "on-tertiary-fixed-variant": "#930010", "background": "#f6faf7",
+          "tertiary": "#ad0d19", "secondary": "#335e9f", "on-secondary-fixed-variant": "#144685",
+          "on-tertiary-fixed": "#410003", "on-secondary-container": "#154786", "surface": "#f6faf7",
+          "inverse-on-surface": "#eef2ef", "outline": "#707a6f", "primary-container": "#2d7d46",
+          "tertiary-container": "#d12d2e", "tertiary-fixed-dim": "#ffb3ac", "surface-container-highest": "#dfe3e1",
+          "on-surface": "#181d1b", "inverse-primary": "#87d898"
+        },
+        borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "1.5rem", "full": "9999px" },
+        fontFamily: { "headline": ["Noto Serif"], "body": ["Inter"], "label": ["Inter"] }
+      }
+    }
+  }
+</script>
+<style>
+  .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  body { font-family: 'Inter', sans-serif; min-height: 100dvh; }
+  h1, h2, h3, .serif { font-family: 'Noto Serif', serif; }
+  .screen { display: none; }
+  .screen.active { display: block; }
+  .hide-scrollbar::-webkit-scrollbar { display: none; }
+  .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+</style>
+</head>
+<body class="bg-surface text-on-surface">
+
+<!-- ===================== SCREEN: LANDING ===================== -->
+<div id="screen-landing" class="screen active">
+  <header class="fixed top-0 w-full z-50 bg-[#f6faf7]/90 backdrop-blur-md shadow-sm">
+    <div class="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[#096430]">diversity_1</span>
+        <span class="font-serif italic text-2xl font-bold text-[#096430]">GAPA</span>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="goTo('screen-login')" class="border-2 border-secondary text-secondary px-5 py-2 rounded-xl font-semibold text-sm hover:bg-secondary/5 transition-all">Iniciar Sesión</button>
+        <button onclick="goTo('screen-onboarding-1')" class="bg-tertiary text-on-tertiary px-5 py-2 rounded-xl font-semibold text-sm hover:opacity-90 transition-all">Registrarme</button>
+      </div>
+    </div>
+  </header>
+  <main class="pt-28 pb-20 px-6 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-20">
+      <div class="lg:col-span-7">
+        <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-container/10 text-primary mb-8">
+          <span class="material-symbols-outlined text-sm" style="font-variation-settings:'FILL' 1;">verified</span>
+          <span class="text-xs font-semibold tracking-widest uppercase">Terapia grupal guiada por profesionales</span>
+        </div>
+        <h1 class="font-headline text-5xl md:text-7xl text-on-surface leading-[1.1] tracking-tight mb-8">
+          Tu espacio seguro para <span class="italic text-primary block">sanar en comunidad</span>
+        </h1>
+        <p class="text-on-surface-variant text-lg max-w-xl mb-10 leading-relaxed">Redescubre tu bienestar emocional a través del apoyo colectivo y la guía experta.</p>
+        <div class="flex flex-col sm:flex-row gap-4">
+          <button onclick="goTo('screen-onboarding-1')" class="bg-tertiary text-on-tertiary px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 shadow-lg flex items-center justify-center gap-2">
+            Comenzar gratis <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+          <button onclick="goTo('screen-login')" class="border-2 border-secondary text-secondary px-8 py-4 rounded-xl font-semibold text-lg hover:bg-secondary/5 flex items-center justify-center">
+            Ya tengo cuenta
+          </button>
+        </div>
+      </div>
+      <div class="lg:col-span-5">
+        <div class="aspect-square rounded-[3rem] overflow-hidden shadow-2xl">
+          <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBGYXJbhdn6L3TyHSxncvlz9bJQETY5KfuNU-uu2Z0z1fgHCk2VbUQShdkrdd43Zi_aE1OcrWkTiMa6MmApAKZyjfgNTI0vU4ub4UBD7i6BtueadREUokLZLhtPuZvMt_r6418j01JRQMLN5dBL9dSKcavy6EENJkUAnnmKKYJ8kcIe-L9JD0KBSB4GOSVNUM8p4iJAoQts25rVftOFQufozqN992G8eJTfo07mKQ7t558ueEIL58YrtGNVWjLsqPRVk63EAXeb1g" alt="Comunidad GAPA"/>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="md:col-span-2 bg-surface-container-low rounded-xl p-8 border border-outline-variant/10">
+        <span class="material-symbols-outlined text-4xl text-primary mb-4 block" style="font-variation-settings:'FILL' 1;">spa</span>
+        <h3 class="font-headline text-3xl mb-4">Metodología GAPA</h3>
+        <p class="text-on-surface-variant leading-relaxed mb-4">Integramos técnicas de mindfulness y psicología positiva en cada sesión grupal, creando un entorno de crecimiento libre de juicios.</p>
+        <ul class="space-y-2">
+          <li class="flex items-center gap-3 text-sm font-medium"><span class="material-symbols-outlined text-primary text-xl">check_circle</span>Sesiones moderadas por expertos</li>
+          <li class="flex items-center gap-3 text-sm font-medium"><span class="material-symbols-outlined text-primary text-xl">check_circle</span>Grupos reducidos y seguros</li>
+        </ul>
+      </div>
+      <div class="bg-secondary-container/20 rounded-xl p-8 border border-secondary/10 flex flex-col justify-between">
+        <span class="material-symbols-outlined text-4xl text-secondary mb-4">forum</span>
+        <div>
+          <h3 class="font-headline text-3xl mb-2">Comunidad 24/7</h3>
+          <p class="text-on-surface-variant text-sm">Nunca caminas solo. Conéctate con personas que entienden tu proceso.</p>
+        </div>
+        <div class="mt-6 p-4 bg-surface rounded-lg border border-outline-variant/20 italic text-sm text-secondary font-medium">"Encontré la fuerza que me faltaba a través de sus historias."</div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===================== SCREEN: LOGIN ===================== -->
+<div id="screen-login" class="screen">
+  <div class="min-h-screen flex items-center justify-center px-6 bg-surface">
+    <div class="max-w-md w-full">
+      <div class="text-center mb-10">
+        <span class="material-symbols-outlined text-5xl text-primary mb-2 block">diversity_1</span>
+        <h1 class="font-headline text-4xl font-bold text-primary italic">GAPA</h1>
+        <p class="text-on-surface-variant mt-2">Bienvenido de vuelta</p>
+      </div>
+      <div class="bg-surface-container-low rounded-xl p-8 shadow-sm space-y-4">
+        <div>
+          <label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Email</label>
+          <input type="email" placeholder="tu@email.com" class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:outline-none"/>
+        </div>
+        <div>
+          <label class="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">Contraseña</label>
+          <input type="password" placeholder="••••••••" class="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:outline-none"/>
+        </div>
+        <button onclick="goTo('screen-dashboard')" class="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:opacity-90 transition-all mt-2">
+          Ingresar
+        </button>
+        <p class="text-center text-sm text-on-surface-variant">¿No tenés cuenta? <button onclick="goTo('screen-onboarding-1')" class="text-primary font-bold hover:underline">Registrarme</button></p>
+      </div>
+      <button onclick="goTo('screen-landing')" class="mt-6 flex items-center gap-2 text-on-surface-variant text-sm mx-auto hover:text-on-surface transition-colors">
+        <span class="material-symbols-outlined text-sm">arrow_back</span> Volver al inicio
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCREEN: ONBOARDING 1 ===================== -->
+<div id="screen-onboarding-1" class="screen">
+  <header class="fixed top-0 w-full z-50 bg-[#f6faf7]/80 backdrop-blur-md shadow-sm">
+    <div class="flex justify-between items-center px-6 py-4">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[#096430]">diversity_1</span>
+        <span class="font-serif italic text-2xl text-[#096430]">GAPA</span>
+      </div>
+      <div class="flex flex-col items-end">
+        <span class="text-[10px] font-medium tracking-widest uppercase text-on-surface-variant/60">Paso 1 de 3</span>
+        <div class="flex gap-1 mt-1">
+          <div class="h-1 w-8 rounded-full bg-primary"></div>
+          <div class="h-1 w-4 rounded-full bg-surface-container-highest"></div>
+          <div class="h-1 w-4 rounded-full bg-surface-container-highest"></div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <main class="flex flex-col items-center justify-center px-6 pt-24 pb-32 min-h-screen">
+    <div class="max-w-md w-full">
+      <div class="relative mb-12 aspect-square rounded-[2.5rem] overflow-hidden bg-surface-container-low shadow-lg">
+        <img alt="Comunidad" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDy506-sRkb9eyxKuQm2de1sHTOrvcFLNCC_-S6k17rIanOHD-PbtcYM1fCqS-U84ikJaC7BcHJWKhduXYk3AEI6XMQS0ptn9NWAHpTxcOjWrbv26xD3EpWmNEHDXsoCGTc87aEvXFffVuQ2E-2OLRqpNMoHOJnxn20IszBK4zk3AyZEiFeeKOiq0hUpJfcbYODu_48QkWGn_zJiBGFVZYVbS2mEt6UmBP9OHhsx6l7CVfER2l0h1GAULNrtXmkR8fFP7cmFkWRbw"/>
+      </div>
+      <div class="space-y-4">
+        <div class="inline-block px-4 py-1.5 rounded-full bg-surface-container-high text-primary font-medium text-sm">¿Qué es GAPA?</div>
+        <h1 class="text-4xl font-bold tracking-tight text-on-surface leading-tight pr-8 font-headline">
+          Somos una red de apoyo para transformar la <span class="italic text-primary">ansiedad</span> en <span class="text-secondary">fortaleza</span>
+        </h1>
+        <p class="text-on-surface-variant text-lg leading-relaxed max-w-[90%]">Un espacio seguro diseñado para el bienestar emocional, donde la comunidad y la ciencia se encuentran.</p>
+      </div>
+    </div>
+  </main>
+  <div class="fixed bottom-0 left-0 w-full p-8 flex flex-col items-center bg-gradient-to-t from-surface via-surface to-transparent">
+    <div class="max-w-md w-full">
+      <button onclick="goTo('screen-onboarding-2')" class="w-full bg-primary text-on-primary py-5 px-8 rounded-xl font-semibold text-lg shadow-lg hover:opacity-90 transition-all flex justify-between items-center">
+        <span>Siguiente</span><span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+      <button onclick="goTo('screen-landing')" class="mt-4 w-full text-center text-on-surface-variant/50 text-xs">Volver al inicio</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== SCREEN: ONBOARDING 2 ===================== -->
+<div id="screen-onboarding-2" class="screen">
+  <main class="flex flex-col px-6 pt-12 pb-24 max-w-2xl mx-auto w-full min-h-screen">
+    <div class="mb-12">
+      <div class="flex items-center justify-between mb-4">
+        <span class="text-sm font-medium text-on-surface-variant">Paso 2 de 3</span>
+        <span class="text-sm font-bold text-primary">66%</span>
+      </div>
+      <div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+        <div class="h-full bg-primary-container" style="width:66.6%"></div>
+      </div>
+    </div>
+    <header class="mb-12 ml-2">
+      <h1 class="font-headline text-4xl font-bold tracking-tight text-on-surface leading-tight mb-4">¿Cuál es tu objetivo hoy?</h1>
+      <p class="text-on-surface-variant text-lg max-w-xs">Selecciona las áreas en las que te gustaría que GAPA te acompañara.</p>
+    </header>
+    <div class="grid grid-cols-1 gap-4 mb-12">
+      <button class="group flex items-center p-6 rounded-xl text-left bg-surface-container-low border border-outline-variant/15 hover:border-primary/30 transition-all" onclick="this.classList.toggle('border-primary'); this.classList.toggle('border-outline-variant/15')">
+        <div class="w-14 h-14 bg-primary-container/10 rounded-full flex items-center justify-center mr-5"><span class="material-symbols-outlined text-primary text-3xl">psychology</span></div>
+        <div class="flex-grow"><h3 class="font-headline text-xl font-bold">Manejo de ansiedad</h3><p class="text-sm text-on-surface-variant">Ejercicios de respiración y calma inmediata.</p></div>
+      </button>
+      <button class="group flex items-center p-6 rounded-xl text-left bg-surface-container-low border border-primary/40 shadow-sm transition-all" onclick="this.classList.toggle('border-primary/40'); this.classList.toggle('border-outline-variant/15')">
+        <div class="w-14 h-14 bg-primary-container rounded-full flex items-center justify-center mr-5"><span class="material-symbols-outlined text-3xl text-white">groups</span></div>
+        <div class="flex-grow"><h3 class="font-headline text-xl font-bold">Comunidad de apoyo</h3><p class="text-sm text-on-surface-variant">Conecta con personas que entienden tu camino.</p></div>
+      </button>
+      <button class="group flex items-center p-6 rounded-xl text-left bg-surface-container-low border border-outline-variant/15 hover:border-primary/30 transition-all" onclick="this.classList.toggle('border-primary'); this.classList.toggle('border-outline-variant/15')">
+        <div class="w-14 h-14 bg-primary-container/10 rounded-full flex items-center justify-center mr-5"><span class="material-symbols-outlined text-primary text-3xl">verified_user</span></div>
+        <div class="flex-grow"><h3 class="font-headline text-xl font-bold">Guía profesional</h3><p class="text-sm text-on-surface-variant">Acceso directo a especialistas y recursos validados.</p></div>
+      </button>
+    </div>
+    <footer class="mt-auto flex flex-col gap-4">
+      <button onclick="goTo('screen-onboarding-3')" class="w-full bg-secondary text-white py-5 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-2">
+        Siguiente <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+      <button onclick="goTo('screen-onboarding-1')" class="w-full py-4 text-on-surface-variant font-medium hover:bg-surface-container-low rounded-xl transition-colors">Volver</button>
+    </footer>
+  </main>
+</div>
+
+<!-- ===================== SCREEN: ONBOARDING 3 ===================== -->
+<div id="screen-onboarding-3" class="screen">
+  <header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#f6faf7]/80 backdrop-blur-md">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-[#096430] text-2xl">diversity_1</span>
+      <span class="font-headline italic text-2xl font-bold text-[#096430]">GAPA</span>
+    </div>
+    <div class="flex flex-col items-end">
+      <span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant">Paso 3 de 3</span>
+      <div class="flex gap-1 mt-1">
+        <div class="h-1 w-4 rounded-full bg-primary-fixed-dim opacity-40"></div>
+        <div class="h-1 w-4 rounded-full bg-primary-fixed-dim opacity-40"></div>
+        <div class="h-1 w-8 rounded-full bg-primary"></div>
+      </div>
+    </div>
+  </header>
+  <main class="flex items-center justify-center px-6 pt-24 pb-12 min-h-screen">
+    <div class="max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+      <div class="md:col-span-5 space-y-6">
+        <h1 class="font-headline text-5xl font-bold text-on-surface leading-[1.1]">Elegí tu plan de bienestar</h1>
+        <p class="text-on-surface-variant text-lg leading-relaxed max-w-sm">Estás a un paso de comenzar tu transformación.</p>
+      </div>
+      <div class="md:col-span-7">
+        <div class="bg-surface-container-lowest p-8 rounded-xl shadow-lg border border-outline-variant/15">
+          <div class="flex justify-between items-start mb-10">
+            <div>
+              <span class="inline-block px-3 py-1 rounded-full bg-primary-container text-on-primary-container text-[10px] font-bold uppercase tracking-wider mb-3">Acceso Total</span>
+              <h2 class="text-2xl font-bold">Membresía GAPA</h2>
+            </div>
+            <div class="text-right">
+              <div class="text-4xl font-bold text-primary">$XX<span class="text-lg font-normal text-on-surface-variant">/mes</span></div>
+            </div>
+          </div>
+          <div class="space-y-5 mb-10">
+            <div class="flex items-start gap-4"><div class="w-6 h-6 rounded-full bg-secondary-container/20 flex items-center justify-center flex-shrink-0 mt-1"><span class="material-symbols-outlined text-secondary text-sm">check</span></div><div><h3 class="font-semibold">Sesiones ilimitadas</h3><p class="text-sm text-on-surface-variant">Encuentros guiados por profesionales especializados.</p></div></div>
+            <div class="flex items-start gap-4"><div class="w-6 h-6 rounded-full bg-secondary-container/20 flex items-center justify-center flex-shrink-0 mt-1"><span class="material-symbols-outlined text-secondary text-sm">check</span></div><div><h3 class="font-semibold">Acceso al foro</h3><p class="text-sm text-on-surface-variant">Conectá con una comunidad que entiende tu camino.</p></div></div>
+            <div class="flex items-start gap-4"><div class="w-6 h-6 rounded-full bg-secondary-container/20 flex items-center justify-center flex-shrink-0 mt-1"><span class="material-symbols-outlined text-secondary text-sm">check</span></div><div><h3 class="font-semibold">Recursos del campus</h3><p class="text-sm text-on-surface-variant">Biblioteca completa de ejercicios y meditaciones.</p></div></div>
+          </div>
+          <button onclick="goTo('screen-dashboard')" class="w-full py-5 bg-tertiary text-on-tertiary rounded-lg font-bold text-lg flex items-center justify-center gap-3 hover:opacity-90 shadow-lg">
+            Suscribirme y Comenzar <span class="material-symbols-outlined">arrow_forward</span>
+          </button>
+          <p class="mt-4 text-center text-xs text-on-surface-variant/60">Al suscribirte, aceptás nuestros términos de servicio.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ===================== SCREEN: DASHBOARD ===================== -->
+<div id="screen-dashboard" class="screen">
+  <header class="fixed top-0 w-full z-50 bg-[#f6faf7]/80 backdrop-blur-md shadow-sm">
+    <div class="flex justify-between items-center px-6 py-4">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-[#096430]">diversity_1</span>
+        <h1 class="font-serif italic text-2xl text-[#096430]">GAPA</h1>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="material-symbols-outlined text-on-surface-variant p-2 rounded-full hover:bg-surface-container-low transition-all">search</button>
+        <img onclick="goTo('screen-perfil')" alt="Profile" class="w-10 h-10 rounded-full border-2 border-primary-fixed cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtWmP34X2qZ2b-wOKE_gm6rwlaf-07K_oiHErB3YsGLtPfPp2c2tgCMUVAFMWdvV4R_bYZW5WwKm-WXX-fNeXxiJWjlLBUhoTCXZFnL_Q2PxFfd0ptaqSdmSLzsv6IWZ5u2rhoibIpo1ex67UyXeJ2ejAifpPb9-npUzXNKRAuL_JS1C82VzsZyxAygjbaBP3eeGUphzDLohsMWS3cHAx21ha_yOQceNmNx2jf6kmEvVg2s8M-2NgOY2XVOhG5IxLEVmsdbFVhqw"/>
+      </div>
+    </div>
+  </header>
+  <main class="pt-24 pb-32 px-6 max-w-4xl mx-auto space-y-10">
+    <section class="relative overflow-hidden rounded-3xl bg-primary-container p-8 text-on-primary-container shadow-xl">
+      <div class="relative z-10 space-y-2">
+        <h2 class="font-headline text-3xl font-bold">Hola, Elena</h2>
+        <p class="text-on-primary-container/80 max-w-xs">Tu santuario digital está listo. Tómate un momento para respirar.</p>
+        <div class="pt-4"><div class="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium"><span class="material-symbols-outlined text-sm">spa</span>Felicidad hoy: 85%</div></div>
+      </div>
+      <div class="absolute -right-12 -top-12 w-64 h-64 bg-primary rounded-full blur-3xl opacity-30"></div>
+    </section>
+    <section class="grid grid-cols-2 gap-4">
+      <button onclick="goTo('screen-comunidad')" class="flex flex-col items-start justify-between p-6 bg-surface-container-lowest rounded-3xl shadow-sm hover:shadow-md transition-all group aspect-square">
+        <div class="w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center text-on-secondary-container group-hover:scale-110 transition-transform"><span class="material-symbols-outlined">forum</span></div>
+        <div class="text-left"><span class="block font-headline text-xl font-bold">Ir al Foro</span><span class="text-xs text-on-surface-variant font-medium uppercase tracking-wider">Comunidad activa</span></div>
+      </button>
+      <button onclick="goTo('screen-campus')" class="flex flex-col items-start justify-between p-6 bg-surface-container-lowest rounded-3xl shadow-sm hover:shadow-md transition-all group aspect-square">
+        <div class="w-12 h-12 rounded-2xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed group-hover:scale-110 transition-transform"><span class="material-symbols-outlined">school</span></div>
+        <div class="text-left"><span class="block font-headline text-xl font-bold">Explorar Campus</span><span class="text-xs text-on-surface-variant font-medium uppercase tracking-wider">Nuevo contenido</span></div>
+      </button>
+    </section>
+    <section class="space-y-6">
+      <div class="flex justify-between items-end">
+        <div><h3 class="font-headline text-2xl font-bold">Próximas Sesiones</h3><p class="text-sm text-on-surface-variant">Tu camino hacia el bienestar grupal</p></div>
+        <button onclick="goTo('screen-sesiones')" class="text-primary font-bold text-sm hover:underline">Ver todo</button>
+      </div>
+      <div class="flex gap-6 overflow-x-auto hide-scrollbar -mx-6 px-6 pb-4">
+        <div class="flex-none w-72 bg-surface-container-low rounded-3xl overflow-hidden">
+          <div class="relative h-40"><img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuChDXUmXE8xSLTzRhneF3oZbaKPh1CODzWSYeRv21waU5dC1fHO-O_o0qjYE_FPXEu0xCC4-1-_GqDe3GJhsu55wNgnG54HDor-lysG5CDyC5R0cZxW6tAyuMWIuv_5Kyzo4NkCGW82urjIejLAnvVAoDEEuKt_-cwd7JqN7unl6VEWDi1eImbyfHR9Uz1IazHk1vskYidVugHmYYQln6_T9AnOKKxK4iOKrC_JcltUsvAp9XNK54Cav2SVWlrgJm3Hhl69ZAURcA"/><div class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur text-primary text-xs font-bold rounded-full">HOY 18:00</div></div>
+          <div class="p-5 space-y-3"><h4 class="font-headline text-lg font-bold">Respiración Consciente</h4><div class="flex items-center gap-2 text-on-surface-variant text-sm"><span class="material-symbols-outlined text-base">person</span><span>Dr. Marcos Soler</span></div>
+          <button onclick="goTo('screen-sesiones')" class="w-full py-3 bg-secondary text-white rounded-xl font-bold text-sm">Unirme ahora</button></div>
+        </div>
+        <div class="flex-none w-72 bg-surface-container-low rounded-3xl overflow-hidden">
+          <div class="relative h-40"><img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAvLXTvZT15DgbUs4IjAzDIuRdwdFSaeM5d1D86LgWQa9futUr-7OAupD3Tqa33QtudcgFoYz4FV0OZ9IgP52jZAOZl-DUmVrHwfjas6cE1BgA35svY7do1pQ_QUcNA1Cryye-WlGxD1BVR-zOefbPriqGkL0OGK6YWV8TqB2zzSdo9Mc7_TetThimm9XasWa67wn6jzmiiEVFA9p267gzoylFhKA0N5y4T-OWesB012VVfp8CvbahHDgGJ09Uo-OEFs5j0J5J5Cw"/><div class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur text-on-surface-variant text-xs font-bold rounded-full">MAÑANA 10:30</div></div>
+          <div class="p-5 space-y-3"><h4 class="font-headline text-lg font-bold">Gestión del Estrés</h4><div class="flex items-center gap-2 text-on-surface-variant text-sm"><span class="material-symbols-outlined text-base">person</span><span>Lucía Méndez</span></div>
+          <button onclick="goTo('screen-sesiones')" class="w-full py-3 bg-surface-container-highest text-on-surface rounded-xl font-bold text-sm">Reservar plaza</button></div>
+        </div>
+      </div>
+    </section>
+    <section class="bg-surface-container-highest rounded-3xl p-8 border border-outline-variant/15 text-center italic font-headline text-on-surface-variant">
+      <span class="material-symbols-outlined block mb-4 text-3xl text-primary/40">format_quote</span>
+      "El bienestar no es un destino, sino la forma en que viajamos."
+    </section>
+  </main>
+  <!-- Bottom Nav -->
+  <nav class="fixed bottom-0 w-full rounded-t-[2rem] z-50 bg-[#f6faf7]/80 backdrop-blur-lg shadow-lg">
+    <div class="flex justify-around items-center px-4 pb-6 pt-3">
+      <button onclick="goTo('screen-dashboard')" class="flex flex-col items-center text-[#096430] bg-[#e5e9e6] rounded-full px-4 py-2"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">home</span><span class="text-[10px] font-medium uppercase">Home</span></button>
+      <button onclick="goTo('screen-sesiones')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">calendar_month</span><span class="text-[10px] font-medium uppercase">Sessions</span></button>
+      <button onclick="goTo('screen-comunidad')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">groups</span><span class="text-[10px] font-medium uppercase">Community</span></button>
+      <button onclick="goTo('screen-campus')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">school</span><span class="text-[10px] font-medium uppercase">Campus</span></button>
+    </div>
+  </nav>
+</div>
+
+<!-- ===================== SCREEN: SESIONES ===================== -->
+<div id="screen-sesiones" class="screen">
+  <header class="fixed top-0 w-full z-50 bg-[#f6faf7]/80 backdrop-blur-md shadow-sm">
+    <div class="flex justify-between items-center px-6 py-4">
+      <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[#096430]">diversity_1</span><span class="font-serif italic text-2xl text-[#096430]">GAPA</span></div>
+      <img onclick="goTo('screen-perfil')" alt="Profile" class="w-10 h-10 rounded-full border-2 border-primary-fixed cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFnolOwBgmB7BEMdMZzRPY9LbUf0UcUFutNHrfCRz_DGfujC9CWm5RXY-RCoD4ACOSI246gmI7ckCkMEYUFU0rh_X3SZICy4pxvV0JOw7RU3lhTQ-ugXqU_WkbJEAkrFx5yNTDjPAXoTLuIBETfqNpAMvuHb-lHpEAvW8YOQX51XhVGEUM4zr7W3ES0CbH_x3SZICy4pxvV0JOw7RU3lhTQ-ugXqU_WkbJEAkrFx5yNTDjPAXoTLuIBETfqNpAMvuHb-lHpEAvW8YOQX51XhVGEUM4zr7W3ES0CbH_Nu6Fm4pSYswoNKeFI3hXdbCn4pmsElBAUgWYhfpaWaAJEL-2YY9f9d9FelGmi12Lya03KP8SA"/>
+    </div>
+  </header>
+  <main class="pt-24 pb-32 px-6 max-w-5xl mx-auto">
+    <section class="mb-12">
+      <h1 class="text-4xl font-bold tracking-tight text-on-surface mb-4 leading-tight font-headline">Espacios de <br/><span class="italic text-primary">Contención</span></h1>
+      <p class="text-on-surface-variant max-w-lg leading-relaxed">Encuentra calma y guía en nuestras sesiones grupales. Elige el momento que mejor se adapte a tu ritmo.</p>
+    </section>
+    <div class="mb-10">
+      <div class="relative">
+        <span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+        <input class="w-full pl-12 pr-4 py-4 rounded-xl bg-surface-container-highest border-none focus:ring-2 focus:ring-secondary/20" placeholder="Buscar por tema o facilitador..." type="text"/>
+      </div>
+    </div>
+    <div class="mb-12">
+      <div class="flex items-baseline gap-4 mb-6"><h2 class="text-2xl font-bold font-headline">Hoy</h2><span class="text-on-surface-variant text-sm uppercase tracking-widest">Martes, 15 Abr</span></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="col-span-1 md:col-span-2 bg-surface-container-low rounded-xl overflow-hidden flex flex-col md:flex-row shadow-sm">
+          <div class="md:w-1/3 relative h-48 md:h-auto">
+            <img class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCtPKUsS5k0mbf4Y5Dh3kUzST2Ar8S3F0WYtPneZ23LVYbjGjxN12W7BgBJ--eoCkKpUsa8T_df6FoAh6FnjvY6ZGmZyk497r7heKRL7h8JO_Ca0Bi1yOvFK71hLVEYgLKl1BWdKXw1R1gy_aue_qPOZ44Sf5dnzV_FwrGvRXzyoWns6jjbRfnrIg39yRTpI9RVnYANVYjo1HMa0TvzGb02I9hoLscslGyS3nCXcJi0kcUUszowLrVM52icY-BqnNqLEQ6xXeudvg" alt=""/>
+            <div class="absolute top-4 left-4 bg-tertiary text-on-tertiary px-3 py-1 rounded-full text-xs font-bold uppercase">En vivo pronto</div>
+          </div>
+          <div class="p-8 flex flex-col justify-between flex-grow">
+            <div>
+              <h3 class="text-2xl font-bold font-headline mb-2">Manejo de Ansiedad Nocturna</h3>
+              <p class="text-on-surface-variant mb-4 flex items-center gap-2"><span class="material-symbols-outlined text-base">person</span>Dr. Ricardo Salinas</p>
+              <div class="flex items-center gap-3 bg-surface-container-high p-4 rounded-lg mb-4">
+                <span class="material-symbols-outlined text-secondary">link</span>
+                <span class="text-sm font-mono text-secondary truncate">meet.google.com/gapa-ans-zpq</span>
+              </div>
+            </div>
+            <div class="flex items-center justify-between">
+              <span class="text-lg font-bold text-primary">19:00 - 20:00</span>
+              <button class="bg-secondary text-on-secondary px-8 py-3 rounded-lg font-bold hover:opacity-90 flex items-center gap-2">Unirse <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+            </div>
+          </div>
+        </div>
+        <div class="bg-surface-container-lowest border-l-4 border-primary rounded-xl p-6 shadow-sm flex flex-col justify-between">
+          <div><div class="flex justify-between mb-4"><span class="text-xs font-bold text-primary-container uppercase tracking-widest">Mindfulness</span><span class="text-sm font-medium text-on-surface-variant">21:30</span></div>
+          <h3 class="text-xl font-bold font-headline mb-2">Respiración Guiada: Nivel 1</h3><p class="text-sm text-on-surface-variant mb-4 italic">Con Sofía Valente</p></div>
+          <button class="w-full bg-surface-container-high text-on-surface py-3 rounded-lg font-bold hover:bg-primary-fixed transition-colors">Inscribirse</button>
+        </div>
+      </div>
+    </div>
+    <div class="mb-16">
+      <div class="flex items-baseline gap-4 mb-6"><h2 class="text-2xl font-bold font-headline">Mañana</h2><span class="text-on-surface-variant text-sm uppercase tracking-widest">Miércoles, 16 Abr</span></div>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-surface-container-low rounded-xl p-6 flex flex-col gap-4">
+          <div class="flex items-center gap-3"><div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center"><span class="material-symbols-outlined text-primary">groups</span></div><div><h4 class="font-bold">Grupo de Apoyo: Duelo</h4><p class="text-xs text-on-surface-variant">Lic. Martha Aranda</p></div></div>
+          <div class="flex justify-between items-center"><span class="text-sm font-semibold">10:00 AM</span><button class="text-secondary font-bold text-sm">Ver detalles</button></div>
+        </div>
+        <div class="bg-surface-container-low rounded-xl p-6 flex flex-col gap-4">
+          <div class="flex items-center gap-3"><div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center"><span class="material-symbols-outlined text-secondary">psychology</span></div><div><h4 class="font-bold">Hábitos Saludables</h4><p class="text-xs text-on-surface-variant">Dr. Kevin Lowe</p></div></div>
+          <div class="flex justify-between items-center"><span class="text-sm font-semibold">14:00 PM</span><button class="text-secondary font-bold text-sm">Ver detalles</button></div>
+        </div>
+        <div class="bg-primary-container text-on-primary-container rounded-xl p-6 flex flex-col justify-center items-center text-center">
+          <span class="material-symbols-outlined text-4xl mb-4">self_improvement</span>
+          <h4 class="font-bold text-xl mb-1">Pausa de Calma</h4>
+          <p class="text-xs opacity-80 mb-4">¿Necesitas un respiro ahora?</p>
+          <button class="bg-surface-container-lowest text-primary px-6 py-2 rounded-full font-bold text-sm shadow-sm">Iniciar Ejercicio</button>
+        </div>
+      </div>
+    </div>
+  </main>
+  <nav class="fixed bottom-0 w-full rounded-t-[2rem] z-50 bg-[#f6faf7]/80 backdrop-blur-lg shadow-lg">
+    <div class="flex justify-around items-center px-4 pb-6 pt-3">
+      <button onclick="goTo('screen-dashboard')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">home</span><span class="text-[10px] font-medium uppercase">Home</span></button>
+      <button onclick="goTo('screen-sesiones')" class="flex flex-col items-center text-[#096430] bg-[#e5e9e6] rounded-full px-4 py-2"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">calendar_month</span><span class="text-[10px] font-medium uppercase">Sessions</span></button>
+      <button onclick="goTo('screen-comunidad')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">groups</span><span class="text-[10px] font-medium uppercase">Community</span></button>
+      <button onclick="goTo('screen-campus')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">school</span><span class="text-[10px] font-medium uppercase">Campus</span></button>
+    </div>
+  </nav>
+</div>
+
+<!-- ===================== SCREEN: COMUNIDAD ===================== -->
+<div id="screen-comunidad" class="screen">
+  <header class="fixed top-0 w-full z-50 bg-[#f6faf7]/80 backdrop-blur-md shadow-sm flex justify-between items-center px-6 py-4">
+    <div class="flex items-center gap-3"><span class="material-symbols-outlined text-[#096430]">diversity_1</span><h1 class="font-serif italic text-2xl text-[#096430]">GAPA</h1></div>
+    <div class="flex items-center gap-4">
+      <div class="hidden md:flex gap-6 items-center">
+        <button onclick="goTo('screen-dashboard')" class="text-[10px] font-medium uppercase text-[#181d1b]/60 hover:bg-[#f1f5f2]/50 px-3 py-1 rounded-full">Home</button>
+        <button onclick="goTo('screen-sesiones')" class="text-[10px] font-medium uppercase text-[#181d1b]/60 hover:bg-[#f1f5f2]/50 px-3 py-1 rounded-full">Sessions</button>
+        <button class="text-[10px] font-medium uppercase text-[#096430] font-bold px-3 py-1 rounded-full bg-[#e5e9e6]">Community</button>
+        <button onclick="goTo('screen-campus')" class="text-[10px] font-medium uppercase text-[#181d1b]/60 hover:bg-[#f1f5f2]/50 px-3 py-1 rounded-full">Campus</button>
+      </div>
+      <img onclick="goTo('screen-perfil')" alt="Profile" class="w-10 h-10 rounded-full border-2 border-primary-container/20 cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuALjS57HkYPEk4CSs5Iq_DnblTn5BfVJYGhdSwlRhSS-Jxn8VGeS7ie0oJgRieqBfsaY-N0GzBf8EDBawn8bQUdC-fkKDDmlwtsAQ-Ax3yDXrYOb2G3A1KWaYDrwra6J2jxlCHaHoIBTR6uISxUes4aST_2RX247vegFLKO6RLi2aCcvoB4fKoY-tZb8SYuPu1vLlz5TjuGPodzzUFds37lVcF1iC95P8bbjNXtitMVxVUzc-URq3pClGpyzaIsjzT-2d1nmVdbLQ"/>
+    </div>
+  </header>
+  <main class="pt-24 pb-32 px-6 max-w-5xl mx-auto">
+    <div class="mb-12 ml-2">
+      <h2 class="font-headline text-5xl font-bold tracking-tight mb-2">Comunidad</h2>
+      <p class="text-on-surface-variant text-lg max-w-md italic">Un santuario digital para compartir, aprender y sanar en conjunto.</p>
+    </div>
+    <section class="flex gap-3 overflow-x-auto pb-8 hide-scrollbar">
+      <button class="px-6 py-2 rounded-full bg-primary text-on-primary font-medium text-sm shadow-md whitespace-nowrap">General</button>
+      <button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-sm hover:bg-surface-container-highest whitespace-nowrap">Técnicas</button>
+      <button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-sm hover:bg-surface-container-highest whitespace-nowrap">Testimonios</button>
+      <button class="px-6 py-2 rounded-full bg-surface-container-high text-on-surface-variant font-medium text-sm hover:bg-surface-container-highest whitespace-nowrap">Expertos</button>
+    </section>
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+      <article class="md:col-span-8 bg-surface-container-lowest rounded-xl p-8 shadow-sm border-l-4 border-primary">
+        <div class="flex items-center gap-4 mb-6">
+          <img alt="" class="w-12 h-12 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDK30f1eYkETxPU1pjGkrXSlOLrq6449VkH4WUw6No1bwtfe5T7uP47zSyx4C8IHAbfoi5_3j8O8CA4mpkINqQ_YuPO--yM0DVzRWU8M1jqZh9mmMaNFV3M_hFUj8Rc3kKnpzbh2UEIzgRAiHciENHp7vuOmyGoDKW5OSV3DcgAsZ_ZMwAK67d263-jMn6akT_dEVlM9d-U70n50iQq9MMiFOAxqkWPkyFzuuLgl5tYhDOC-wv4pgS-oTP5PsI7WciMNPiN7HBt_Q"/>
+          <div><p class="text-sm font-bold">Dr. Ricardo Salinas</p><p class="text-xs text-primary font-medium">Profesional Verificado</p></div>
+        </div>
+        <h3 class="font-headline text-3xl font-bold mb-4 leading-tight">La importancia de la respiración rítmica en episodios de ansiedad</h3>
+        <p class="text-on-surface-variant leading-relaxed mb-6">En la práctica clínica, observamos que la sincronización del ritmo cardíaco a través de la respiración diafragmática no es solo una técnica, sino un ancla biológica...</p>
+        <div class="flex items-center justify-between pt-6 border-t border-surface-container-high">
+          <div class="flex gap-6">
+            <div class="flex items-center gap-2 text-on-surface-variant"><span class="material-symbols-outlined text-xl">favorite</span><span class="text-xs font-bold uppercase tracking-wider">124</span></div>
+            <div class="flex items-center gap-2 text-on-surface-variant"><span class="material-symbols-outlined text-xl">chat_bubble</span><span class="text-xs font-bold uppercase tracking-wider">42</span></div>
+          </div>
+          <span class="text-xs font-bold uppercase tracking-widest text-primary-container cursor-pointer">Leer más</span>
+        </div>
+      </article>
+      <article class="md:col-span-4 bg-secondary-container/10 rounded-xl p-6 border-t-4 border-secondary flex flex-col justify-between">
+        <div>
+          <div class="mb-4 inline-flex items-center px-2 py-1 bg-secondary/10 text-secondary text-[10px] font-bold uppercase rounded">Testimonio</div>
+          <h3 class="font-headline text-xl font-bold mb-3">Mi primer mes sin ataques de pánico</h3>
+          <p class="text-sm text-on-surface-variant italic mb-6">"Gracias a las técnicas de GAPA y el apoyo de este foro, he recuperado espacios de mi vida que creía perdidos..."</p>
+        </div>
+        <div class="flex items-center gap-3">
+          <img alt="" class="w-8 h-8 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC5FO2ZVtHvNqw7IAtUyZqRwivUkGM7eejP5UpA7FtkkUlX0rau73SqNH8II8Hzm_ptyxpiKGqBFNGjk79srF52o5dqF7mUydLUeU-pKxhSVcumZLc3cFYHAy_BOYrjAgD__z5EsPdZclksa7SJ1X6OixuwlXpTJzhVX5haJwJSx7Fubd4ydZcOuaurM3K0gsqstxre9ejANE1zt90dXfuGcI40LsNLMWfweGVPvR0JvSH-wrqplkdNGts8MCUHs8bozEuLPaLmA"/>
+          <p class="text-xs font-semibold">Elena V.</p>
+        </div>
+      </article>
+      <article class="md:col-span-6 bg-surface-container-low rounded-xl p-8 hover:shadow-lg transition-all cursor-pointer">
+        <div class="flex items-center gap-3 mb-6"><div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center text-primary font-bold">M</div><div><p class="text-sm font-bold">Marcos Torres</p><p class="text-[10px] text-on-surface-variant uppercase tracking-widest">Hace 2 horas</p></div></div>
+        <h3 class="font-headline text-2xl font-bold mb-3">¿Cómo manejan la ansiedad social en el trabajo?</h3>
+        <p class="text-on-surface-variant mb-6 text-sm">Pronto tengo una presentación importante y siento que el pecho se me cierra solo de pensarlo. ¿Algún consejo?</p>
+        <div class="flex gap-4"><div class="flex items-center gap-2 text-on-surface-variant"><span class="material-symbols-outlined text-lg">thumb_up</span><span class="text-xs font-bold">18</span></div><div class="flex items-center gap-2 text-on-surface-variant"><span class="material-symbols-outlined text-lg">forum</span><span class="text-xs font-bold">56</span></div></div>
+      </article>
+      <article class="md:col-span-6 bg-surface-container-low rounded-xl p-8 hover:shadow-lg transition-all cursor-pointer border-t-4 border-primary-container">
+        <div class="flex items-center gap-3 mb-6"><img alt="" class="w-10 h-10 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5PIBxzv657bmuBau-bK9pOpti6inXwgfMMlEywxuEJfZYFND_mmLSsw1auc0rNop8glcoxdX-n1p4G-6SrOAHdCVa0Pf3ACcxN9ftZDnzsqhC4xxeXu9MQm_3DfuWwqfpHZmcVoCT8XbFwrLNiLv8E620gB3fw5FgBVpmYyUWiXMI0KIaKn7PHOTLUgHHLw063Qs8vtkxHP5JrCyD7OGwgfBHgfE5UytxmQhAPdUADsEl3xzx3CpI3nmBqXX9o0OrPhOzG6Uw"/><div><p class="text-sm font-bold">Dra. Sofia Mendez</p><p class="text-[10px] text-primary-container font-bold uppercase tracking-widest">Profesional</p></div></div>
+        <h3 class="font-headline text-2xl font-bold mb-3">Técnica 5-4-3-2-1 para el Grounding</h3>
+        <p class="text-on-surface-variant mb-6 text-sm">Cuando sientas que te desconectas, busca: 5 cosas que veas, 4 que toques, 3 que escuches, 2 que huelas y 1 que pruebes...</p>
+        <div class="flex gap-4"><div class="flex items-center gap-2 text-on-surface-variant"><span class="material-symbols-outlined text-lg">favorite</span><span class="text-xs font-bold">342</span></div><div class="flex items-center gap-2 text-on-surface-variant"><span class="material-symbols-outlined text-lg">share</span><span class="text-xs font-bold">12</span></div></div>
+      </article>
+    </div>
+  </main>
+  <button class="fixed bottom-28 right-8 w-16 h-16 bg-tertiary text-on-tertiary rounded-full shadow-2xl flex items-center justify-center z-40 hover:scale-110 transition-transform">
+    <span class="material-symbols-outlined text-3xl">add</span>
+  </button>
+  <nav class="fixed bottom-0 w-full rounded-t-[2rem] z-50 bg-[#f6faf7]/80 backdrop-blur-lg shadow-lg">
+    <div class="flex justify-around items-center px-4 pb-6 pt-3">
+      <button onclick="goTo('screen-dashboard')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">home</span><span class="text-[10px] font-medium uppercase">Home</span></button>
+      <button onclick="goTo('screen-sesiones')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">calendar_month</span><span class="text-[10px] font-medium uppercase">Sessions</span></button>
+      <button onclick="goTo('screen-comunidad')" class="flex flex-col items-center text-[#096430] bg-[#e5e9e6] rounded-full px-4 py-2"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">groups</span><span class="text-[10px] font-medium uppercase">Community</span></button>
+      <button onclick="goTo('screen-campus')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">school</span><span class="text-[10px] font-medium uppercase">Campus</span></button>
+    </div>
+  </nav>
+</div>
+
+<!-- ===================== SCREEN: CAMPUS ===================== -->
+<div id="screen-campus" class="screen">
+  <header class="fixed top-0 w-full z-50 bg-[#f6faf7]/80 backdrop-blur-md shadow-sm flex justify-between items-center px-6 py-4">
+    <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[#096430]">diversity_1</span><span class="font-serif italic text-2xl text-[#096430]">GAPA</span></div>
+    <div class="flex items-center gap-4">
+      <nav class="hidden md:flex gap-6 items-center">
+        <button onclick="goTo('screen-dashboard')" class="text-[#181d1b]/60 font-medium hover:bg-[#f1f5f2]/50 px-3 py-1 rounded-lg text-sm">Home</button>
+        <button onclick="goTo('screen-sesiones')" class="text-[#181d1b]/60 font-medium hover:bg-[#f1f5f2]/50 px-3 py-1 rounded-lg text-sm">Sessions</button>
+        <button onclick="goTo('screen-comunidad')" class="text-[#181d1b]/60 font-medium hover:bg-[#f1f5f2]/50 px-3 py-1 rounded-lg text-sm">Community</button>
+        <button class="text-[#096430] font-bold px-3 py-1 text-sm">Campus</button>
+      </nav>
+      <img onclick="goTo('screen-perfil')" alt="Profile" class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-container cursor-pointer" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCvtGrEYC-l0LenZ55NS9sIaIGGNeF_9nSkQCOVqNsEiRJJiYNTwRE08yNn9yLrQ70oQZXgh05ur-zo8CS4yoobhsjuTgBHsMGHYocy_vCLLS2G-_dg4FGFuWOOMxes_8KcoJwfbtGfQGe34kJLNMB-NY4m0eji6IOvqi2sKXTpAwUH0lSvBW-byHmVzPSVZo3rVMSDIXK0H5cMCgyfyrc0SrqLNQZmOXgnonAVLwH7wyk1lS0COFJwGqkKthGR-Uoqqw3RkFTUYw"/>
+    </div>
+  </header>
+  <main class="pt-24 pb-32 px-6 max-w-7xl mx-auto">
+    <section class="mb-12">
+      <div class="relative overflow-hidden rounded-xl bg-primary-container p-8 text-on-primary-container flex flex-col md:flex-row items-center gap-8 shadow-sm">
+        <div class="flex-1 space-y-4">
+          <h1 class="text-4xl font-bold tracking-tight leading-tight font-headline">Elevando el Cuidado Profesional</h1>
+          <p class="text-lg opacity-90">Bienvenido a GAPA Campus, tu centro de formación continua y recursos especializados.</p>
+        </div>
+        <div class="flex-shrink-0 w-32 h-32 rounded-full border-4 border-primary-fixed-dim/30 flex items-center justify-center bg-surface/10">
+          <span class="material-symbols-outlined text-7xl">school</span>
+        </div>
+      </div>
+    </section>
+    <section class="mb-10 overflow-x-auto hide-scrollbar">
+      <div class="flex items-center gap-3 py-2">
+        <button class="px-6 py-2.5 rounded-full bg-primary text-on-primary font-medium shadow-sm whitespace-nowrap">Todos</button>
+        <button class="px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant font-medium hover:bg-surface-variant whitespace-nowrap">Artículos</button>
+        <button class="px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant font-medium hover:bg-surface-variant whitespace-nowrap">Videos</button>
+        <button class="px-6 py-2.5 rounded-full bg-surface-container-high text-on-surface-variant font-medium hover:bg-surface-variant whitespace-nowrap">Guías</button>
+      </div>
+    </section>
+    <section class="grid grid-cols-1 md:grid-cols-12 gap-8">
+      <div class="md:col-span-8 group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
+        <div class="flex flex-col md:flex-row h-full">
+          <div class="md:w-1/2 overflow-hidden h-64 md:h-full"><img alt="" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdy23GlFYpwDAgHUrbqotqNA3IV8Uy-qI2c1fxLFCPqtv5vNOwsXHmXxwV9ZAkEihl3yd22xXQx28FDRsWfWBfQIr1MJGHgneE4zWcNpw7by--HNcPpdmuH_Gu_90eQpf5JJl6yaH1AGadmjgLZSReUrPYbMbhLo0ROa1XV4MvWZ1Hfp4gc9co9opGRp2VEX1U3T1rBE_nm_qnh6IcRGiOrPlG4EMV-0-hnjwe30GwaE1TuU1C4WrsKMZSxD0ZNEAJy6JjevqNsw"/></div>
+          <div class="md:w-1/2 p-8 flex flex-col justify-center">
+            <span class="text-secondary font-semibold text-xs tracking-widest uppercase mb-2">Destacado • Guía</span>
+            <h2 class="text-2xl font-bold mb-4 leading-snug font-headline">Protocolos Modernos de Intervención Social</h2>
+            <p class="text-on-surface-variant mb-6 text-sm leading-relaxed">Una exploración profunda sobre las nuevas dinámicas en el acompañamiento institucional y comunitario en la era digital.</p>
+            <button class="inline-flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">Leer más <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+          </div>
+        </div>
+      </div>
+      <div class="md:col-span-4 group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
+        <div class="h-48 overflow-hidden"><img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCT1mdDgTEkrvUVEyZTVGb93snWalEIR4ThVfb8rElzs-9_6JPVsDkfof_PwLi8ieZyxphZKVRRI8UgmtvOEsRISADBwX3njt4lqn5HeHBg0y2YlcOX_XBfTi5ImGEmjlpOeCBL6yOpJy6olF4xU0kXSg4nBRpZ5Mj8V3CtfqlUDkcd3oxhCIgEEFz5SzYr-YwfXqUz6JReJ6eEBUyvjIREUoCNsTNPt8rLZIz-6aq7hzkP68LK1JgrIynWTScKrrzjwq_nIcvkMQ"/></div>
+        <div class="p-6"><span class="text-secondary font-semibold text-xs tracking-widest uppercase mb-2 block">Video • 12 min</span><h3 class="text-lg font-bold mb-3 font-headline">Técnicas de Escucha Activa</h3><button class="text-primary font-bold text-sm hover:underline">Ver ahora</button></div>
+      </div>
+      <div class="md:col-span-4 group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all">
+        <div class="h-48 overflow-hidden"><img alt="" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuApaQYL4zVKrbudITC773HLvA-RBQeD_p4gyLgZQeQfvpYYvE4pl82cC75h9VvaT6zqQf81jzpu4EjllHAiMIKEHhrc4eJCpNK4JR7LIMw6LAGEv-4uS5CuZqqeLpazbgkoXIa1mfE7ajPuRqAqg_Hc2_ofCN92G-o4ij7iil-kFT9udEFPpbLv01M1dQPx2ZpIUi22Y2y7AG2d7Gn6ymlBe7PnDZY13HX9LL7tUFQwrWD-gT2pJ6uuOKkBZO--1zvsnsyGy5nabw"/></div>
+        <div class="p-6"><span class="text-secondary font-semibold text-xs tracking-widest uppercase mb-2 block">Artículo • 8 min</span><h3 class="text-lg font-bold mb-3 font-headline">Gestión de Crisis en Grupos</h3><button class="text-primary font-bold text-sm hover:underline">Leer más</button></div>
+      </div>
+      <div class="md:col-span-4 flex flex-col justify-center bg-surface-container-low rounded-xl p-8 border border-outline-variant/10">
+        <div class="w-12 h-12 bg-primary-fixed-dim rounded-lg flex items-center justify-center mb-6"><span class="material-symbols-outlined text-on-primary-fixed-variant">auto_awesome</span></div>
+        <h3 class="text-xl font-bold mb-4 font-headline">¿Buscas algo específico?</h3>
+        <p class="text-on-surface-variant mb-6 text-sm">Nuestro equipo académico puede ayudarte a encontrar el material que necesitas.</p>
+        <button class="bg-secondary text-on-secondary px-6 py-2 rounded-lg font-medium self-start shadow-sm hover:opacity-90">Consultar Tutor</button>
+      </div>
+    </section>
+  </main>
+  <nav class="fixed bottom-0 w-full rounded-t-[2rem] z-50 bg-[#f6faf7]/80 backdrop-blur-lg shadow-lg md:hidden">
+    <div class="flex justify-around items-center px-4 pb-6 pt-3">
+      <button onclick="goTo('screen-dashboard')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">home</span><span class="text-[10px] font-medium uppercase">Home</span></button>
+      <button onclick="goTo('screen-sesiones')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">calendar_month</span><span class="text-[10px] font-medium uppercase">Sessions</span></button>
+      <button onclick="goTo('screen-comunidad')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">groups</span><span class="text-[10px] font-medium uppercase">Community</span></button>
+      <button onclick="goTo('screen-campus')" class="flex flex-col items-center text-[#096430] bg-[#e5e9e6] rounded-full px-4 py-2"><span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;">school</span><span class="text-[10px] font-medium uppercase">Campus</span></button>
+    </div>
+  </nav>
+</div>
+
+<!-- ===================== SCREEN: PERFIL ===================== -->
+<div id="screen-perfil" class="screen">
+  <header class="fixed top-0 w-full z-50 bg-[#f6faf7]/80 backdrop-blur-md shadow-sm">
+    <div class="flex justify-between items-center px-6 py-4">
+      <div class="flex items-center gap-2"><span class="material-symbols-outlined text-[#096430]">diversity_1</span><span class="font-serif italic text-2xl text-[#096430]">GAPA</span></div>
+      <img alt="Profile" class="w-10 h-10 rounded-full border-2 border-primary-container object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7Ulqte3-1bikCi2DN7504zy9QIP-j_ljtM_u-RMgJup-coGKXzMbNGIsbMenVkQuw_NQwhsUPBNhnOvukKmm7SCcR4wnTh2kwE78egWO9G0SNNwY7gZMjCha1jKt6n4PGPASQlszWFOXXXZQa6ZQKod8sSvCjBDqGdJpBFuCFvaoj8mJsseMa1SIVZFtPrS4lnktE7emWeWAdn6VCEATFxixX7mMMxM93JMTrSyzz4ojyqW9OTPEfwJ2y-AJ4rXSkXcHfCnKnEQ"/>
+    </div>
+  </header>
+  <main class="flex-grow pt-24 pb-32 px-6 max-w-2xl mx-auto w-full">
+    <section class="mb-10">
+      <div class="flex flex-col md:flex-row md:items-end gap-6 mb-8">
+        <div class="relative inline-block">
+          <img class="w-32 h-44 object-cover rounded-xl shadow-lg -rotate-2" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCUWSNE10S1ufy1MAAMyBr-26PTxVaXVsukO9eF3tS54yowvhGfSg9NCl7QtYHHEiOL_PHjVxzGpIbOUOuRSZylPSBZunnc3SDliB8p_CQ6a6elHFDkgk2okHNUQ7eHDR2Lv7z-kbp7rW3PEgIH_3iwewJs2T15844j-TlenD_r_p4-cwUGa9b0OMNG0YIBii1nYPudhSRb_qgv23vU_0_kRSnIqXMVmyLxnCGlyWXCbtgl1d40EFlfjm0wKaPL_t8uSNwFwSrjvQ" alt=""/>
+          <div class="absolute -bottom-2 -right-2 bg-primary text-on-primary p-2 rounded-lg shadow-md"><span class="material-symbols-outlined text-sm">edit</span></div>
+        </div>
+        <div class="flex-1 space-y-1">
+          <h1 class="text-4xl font-bold text-on-surface tracking-tight leading-none font-headline">Elena Garces</h1>
+          <p class="text-on-surface-variant font-medium flex items-center gap-2"><span class="material-symbols-outlined text-primary text-sm">verified</span>Wellness Advocate</p>
+        </div>
+      </div>
+      <div class="bg-surface-container-low p-6 rounded-xl">
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <span class="text-xs font-bold uppercase tracking-widest text-primary/70">Membresía</span>
+            <h2 class="text-2xl font-bold">Plan Activo / Premium</h2>
+            <p class="text-on-surface-variant text-sm">Renueva el 14 de Noviembre, 2024</p>
+          </div>
+          <button class="bg-secondary text-on-secondary px-6 py-2.5 rounded-lg font-semibold text-sm hover:opacity-90 flex items-center gap-2">Gestionar</button>
+        </div>
+      </div>
+    </section>
+    <section class="space-y-4">
+      <h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant px-2">Configuración</h3>
+      <a class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container transition-colors rounded-xl group cursor-pointer" href="#">
+        <div class="flex items-center gap-4"><div class="bg-surface-container-high p-3 rounded-lg text-primary group-hover:scale-105 transition-transform"><span class="material-symbols-outlined">person</span></div><div><p class="font-bold">Información Personal</p><p class="text-xs text-on-surface-variant">Correo, teléfono y dirección</p></div></div>
+        <span class="material-symbols-outlined text-outline">chevron_right</span>
+      </a>
+      <a class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container transition-colors rounded-xl group cursor-pointer" href="#">
+        <div class="flex items-center gap-4"><div class="bg-surface-container-high p-3 rounded-lg text-primary group-hover:scale-105 transition-transform"><span class="material-symbols-outlined">notifications</span></div><div><p class="font-bold">Notificaciones</p><p class="text-xs text-on-surface-variant">Alertas y recordatorios diarios</p></div></div>
+        <span class="material-symbols-outlined text-outline">chevron_right</span>
+      </a>
+      <a class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container transition-colors rounded-xl group cursor-pointer" href="#">
+        <div class="flex items-center gap-4"><div class="bg-surface-container-high p-3 rounded-lg text-primary group-hover:scale-105 transition-transform"><span class="material-symbols-outlined">payments</span></div><div><p class="font-bold">Método de Pago</p><p class="text-xs text-on-surface-variant">Visa terminada en **** 4242</p></div></div>
+        <span class="material-symbols-outlined text-outline">chevron_right</span>
+      </a>
+      <a class="flex items-center justify-between p-5 bg-surface-container-lowest hover:bg-surface-container transition-colors rounded-xl group cursor-pointer" href="#">
+        <div class="flex items-center gap-4"><div class="bg-surface-container-high p-3 rounded-lg text-primary group-hover:scale-105 transition-transform"><span class="material-symbols-outlined">help</span></div><div><p class="font-bold">Ayuda y Soporte</p><p class="text-xs text-on-surface-variant">Centro de ayuda y contacto</p></div></div>
+        <span class="material-symbols-outlined text-outline">chevron_right</span>
+      </a>
+    </section>
+    <section class="mt-12 mb-8">
+      <button onclick="goTo('screen-landing')" class="w-full flex items-center justify-center gap-3 py-4 text-tertiary font-bold rounded-xl bg-tertiary-fixed hover:bg-tertiary-container hover:text-on-tertiary transition-all">
+        <span class="material-symbols-outlined">logout</span>Cerrar Sesión
+      </button>
+      <p class="text-center text-on-surface-variant text-[10px] mt-6 tracking-widest uppercase font-medium">GAPA v1.0 • Faro Labs</p>
+    </section>
+  </main>
+  <nav class="fixed bottom-0 w-full rounded-t-[2rem] z-50 bg-[#f6faf7]/80 backdrop-blur-lg shadow-lg">
+    <div class="flex justify-around items-center px-4 pb-6 pt-3">
+      <button onclick="goTo('screen-dashboard')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">home</span><span class="text-[10px] font-medium uppercase">Home</span></button>
+      <button onclick="goTo('screen-sesiones')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">calendar_month</span><span class="text-[10px] font-medium uppercase">Sessions</span></button>
+      <button onclick="goTo('screen-comunidad')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">groups</span><span class="text-[10px] font-medium uppercase">Community</span></button>
+      <button onclick="goTo('screen-campus')" class="flex flex-col items-center text-[#181d1b]/50 hover:opacity-80"><span class="material-symbols-outlined">school</span><span class="text-[10px] font-medium uppercase">Campus</span></button>
+    </div>
+  </nav>
+</div>
+
+<script>
+  function goTo(screenId) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    const target = document.getElementById(screenId);
+    if (target) { target.classList.add('active'); window.scrollTo(0, 0); }
+  }
+</script>
+</body>
+</html>
