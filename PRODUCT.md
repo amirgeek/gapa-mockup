@@ -13,7 +13,7 @@ GAPA es una plataforma demo funcional e interactiva, en desarrollo continuo hast
 ## Brand Personality
 Calma, confianza, comunidad.
 
-La voz debe sentirse accesible, clara y contenedora. La plataforma tiene que transmitir apoyo real y cercania humana sin perder profesionalismo. La UX debe priorizar facilidad de uso, limpieza visual y consistencia, con una sensacion de acompanamiento inmediato.
+La voz debe sentirse accesible, clara y contenedora. Los valores de marca que sostienen cada decision son empatia, comunidad, esperanza, evidencia, respeto y acompanamiento. La plataforma tiene que transmitir apoyo real y cercania humana sin perder profesionalismo. La UX debe priorizar facilidad de uso, limpieza visual y consistencia, con una sensacion de acompanamiento inmediato.
 
 ## Anti-references
 No debe parecer una senal de alerta ni un sitio de emergencias. El rojo (#B91C1C) queda limitado a aproximadamente un 5% del sistema visual, reservado para CTAs o enfasis puntual, nunca como color dominante ni de fondo.
@@ -23,6 +23,8 @@ No debe sentirse estresante, saturada o visualmente agresiva. Se deben evitar co
 No debe verse desordenada, improvisada ni generica. La identidad tiene que sentirse coherente y profesional, con Georgia para titulos y Calibri para interfaz y textos. El logo de GAPA es intocable: nunca se estira, deforma ni recibe sombras o brillos.
 
 No debe sentirse fria, distante ni puramente clinica. Aunque haya respaldo profesional, la plataforma debe sostener una calidez humana visible. Los tonos azules cumplen una funcion de confianza institucional, sin romper la cercania emocional.
+
+No debe romper el balance cromatico de marca: aproximadamente 50% verdes como base emocional, 30% azules como soporte institucional, 15% neutros para estructura y texto, y 5% rojo solo para impacto puntual.
 
 ## Design Principles
 1. First-use reassurance: desde la primera pantalla, el producto debe bajar ansiedad y orientar con claridad.

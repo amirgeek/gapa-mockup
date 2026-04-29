@@ -1,13 +1,11 @@
 import { Link } from 'react-router-dom'
+import { BrandLogo } from '../components/BrandLogo.jsx'
 
 export function LandingPage() {
   return (
     <div className="marketing-shell">
       <header className="marketing-header">
-        <div>
-          <p className="brand-kicker">Terapia grupal guiada</p>
-          <h1 className="brand-mark">GAPA</h1>
-        </div>
+        <BrandLogo subtitle="Terapia grupal guiada" />
         <div className="header-actions">
           <Link className="ghost-button" to="/login">
             Iniciar sesion

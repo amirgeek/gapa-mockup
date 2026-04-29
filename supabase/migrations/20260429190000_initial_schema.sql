@@ -8,12 +8,12 @@ create type public.resource_type as enum ('guide', 'audio', 'video', 'template')
 create or replace function public.set_updated_at()
 returns trigger
 language plpgsql
-as $$
+as $function$
 begin
   new.updated_at = timezone('utc'::text, now());
   return new;
 end;
-$$;
+$function$;
 
 create table public.profiles (
   id uuid primary key references auth.users (id) on delete cascade,
@@ -97,34 +97,34 @@ create or replace function public.is_admin(user_id uuid)
 returns boolean
 language sql
 stable
-as $$
+as $function$
   select exists (
     select 1
     from public.profiles
     where id = user_id
       and role = 'admin'
   );
-$$;
+$function$;
 
 create or replace function public.has_active_membership(user_id uuid)
 returns boolean
 language sql
 stable
-as $$
+as $function$
   select exists (
     select 1
     from public.profiles
     where id = user_id
       and membership_status = 'active'
   );
-$$;
+$function$;
 
 create or replace function public.handle_new_user()
 returns trigger
 language plpgsql
 security definer
 set search_path = public
-as $$
+as $function$
 begin
   insert into public.profiles (
     id,
@@ -144,7 +144,7 @@ begin
 
   return new;
 end;
-$$;
+$function$;
 
 drop trigger if exists on_auth_user_created on auth.users;
 create trigger on_auth_user_created

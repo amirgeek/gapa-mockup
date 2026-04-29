@@ -1,5 +1,6 @@
 import { NavLink, Outlet } from 'react-router-dom'
 import { useAppContext } from '../context/useAppContext.jsx'
+import { BrandLogo } from './BrandLogo.jsx'
 
 function AppNavLink({ to, children }) {
   return (
@@ -19,12 +20,11 @@ export function ShellLayout({ admin = false }) {
   return (
     <div className="app-shell">
       <header className="topbar">
-        <div>
-          <p className="brand-kicker">Plataforma de bienestar</p>
-          <NavLink to={admin ? '/admin' : '/app'} className="brand-mark">
-            GAPA
-          </NavLink>
-        </div>
+        <BrandLogo
+          to={admin ? '/admin' : '/app'}
+          subtitle="Plataforma de bienestar"
+          size="sm"
+        />
         <div className="topbar-actions">
           <div className="profile-chip">
             <span>{currentUser?.name}</span>

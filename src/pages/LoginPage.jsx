@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAppContext } from '../context/useAppContext.jsx'
+import { BrandLogo } from '../components/BrandLogo.jsx'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -23,6 +24,7 @@ export function LoginPage() {
   return (
     <div className="auth-shell">
       <form className="auth-card" onSubmit={handleSubmit}>
+        <BrandLogo to="/" size="lg" />
         <div>
           <p className="eyebrow">Bienvenido de vuelta</p>
           <h1>Ingresar a GAPA</h1>

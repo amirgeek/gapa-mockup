@@ -2,41 +2,42 @@
 name: GAPA
 description: Plataforma de membresia con campus, sesiones y acompanamiento emocional guiado.
 colors:
-  primary-green: "#2F6B45"
-  primary-green-soft: "#E4EFE7"
-  trust-blue: "#436B93"
-  trust-blue-soft: "#E7EEF5"
+  primary-green-dark: "#0F2D23"
+  primary-green: "#2F6B3E"
+  primary-green-light: "#6FBF73"
+  trust-blue-dark: "#0B1F2D"
+  trust-blue: "#2F80ED"
+  trust-blue-light: "#6FAFE7"
   action-red: "#B91C1C"
   neutral-bg: "#F5F5F5"
   neutral-surface: "#FCFCFA"
-  neutral-panel: "#EEF1EC"
   neutral-border: "#D6DDD4"
-  neutral-text: "#243127"
-  neutral-muted: "#617066"
+  neutral-text: "#111418"
+  neutral-muted: "#6B6B6B"
 typography:
   display:
     fontFamily: "Georgia, Times New Roman, serif"
-    fontSize: "3rem"
+    fontSize: "44px"
     fontWeight: 700
     lineHeight: 1.05
   headline:
     fontFamily: "Georgia, Times New Roman, serif"
-    fontSize: "2rem"
+    fontSize: "32px"
     fontWeight: 700
     lineHeight: 1.15
   title:
     fontFamily: "Georgia, Times New Roman, serif"
-    fontSize: "1.35rem"
+    fontSize: "24px"
     fontWeight: 700
     lineHeight: 1.2
   body:
     fontFamily: "Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif"
-    fontSize: "1rem"
+    fontSize: "16px"
     fontWeight: 400
     lineHeight: 1.6
   label:
     fontFamily: "Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif"
-    fontSize: "0.85rem"
+    fontSize: "10px"
     fontWeight: 700
     lineHeight: 1.2
     letterSpacing: "0.08em"
@@ -56,8 +57,8 @@ components:
     rounded: "{rounded.md}"
     padding: "14px 20px"
   button-secondary:
-    backgroundColor: "{colors.primary-green-soft}"
-    textColor: "{colors.primary-green}"
+    backgroundColor: "{colors.primary-green-light}"
+    textColor: "{colors.primary-green-dark}"
     rounded: "{rounded.md}"
     padding: "14px 20px"
   card:
@@ -75,7 +76,7 @@ components:
 
 GAPA debe sentirse como una plataforma de acompanamiento estable, clara y emocionalmente segura. La interfaz no busca impresionar con artificios, sino sostener con orden, legibilidad y una sensacion de calma inmediata. La experiencia tiene que ser predecible, respirada y confiable, especialmente para personas que pueden llegar con ansiedad o sobrecarga.
 
-Es un sistema visual de producto, no editorial ni promocional. La prioridad es que el usuario entienda donde esta, que puede hacer ahora y por que cada parte existe. El tono visual combina calidez humana con estructura profesional: verdes para contencion, azules para confianza institucional y una base de grises suaves que den respiro.
+Es un sistema visual de producto, no editorial ni promocional. La prioridad es que el usuario entienda donde esta, que puede hacer ahora y por que cada parte existe. El tono visual combina calidez humana con estructura profesional: 50% de verdes para base emocional, 30% de azules para confianza institucional, 15% de neutros para estructura y tipografia, y 5% de rojo para accion puntual.
 
 **Key Characteristics:**
 - Jerarquia clara, sin estridencias
@@ -89,23 +90,24 @@ Es un sistema visual de producto, no editorial ni promocional. La prioridad es q
 La paleta trabaja desde la calma y la confianza, con color funcional en lugar de decorativo.
 
 ### Primary
-- **Verde de contencion** (#2F6B45): color principal para navegacion activa, etiquetas clave, enfasis sereno y senales de progreso.
-- **Verde de apoyo** (#E4EFE7): fondos suaves para estados destacados, bloques de contexto y ayudas no invasivas.
+- **Verde Oscuro** (#0F2D23): base principal, anclaje emocional y uso institucional fuerte.
+- **Verde Medio** (#2F6B3E): navegacion activa, jerarquia principal y soporte de calma.
+- **Verde Claro** (#6FBF73): acentos positivos, estados suaves y apoyo visual.
 
 ### Secondary
-- **Azul de confianza** (#436B93): refuerzo institucional para contenido profesional, metadatos relevantes y capas de apoyo.
-- **Azul de apoyo** (#E7EEF5): fondos secundarios donde hace falta separar contenido sin endurecer la interfaz.
+- **Azul Oscuro** (#0B1F2D): base institucional y capas de mayor seriedad.
+- **Azul Francia** (#2F80ED): indicadores, enlaces, recursos profesionales y apoyo UI.
+- **Azul Claro** (#6FAFE7): fondos informativos y separacion suave.
 
 ### Tertiary
-- **Rojo de accion** (#B91C1C): reservado a CTAs y enfasis puntual. Nunca domina una pantalla ni aparece como fondo amplio.
+- **Rojo Acento** (#B91C1C): reservado a CTAs, palabras clave y enfasis puntual. Nunca domina una pantalla ni aparece como fondo amplio.
 
 ### Neutral
-- **Gris de base** (#F5F5F5): fondo principal de aplicacion.
+- **Gris Fondo** (#F5F5F5): fondo principal de aplicacion.
 - **Marfil de superficie** (#FCFCFA): cards, paneles y formularios.
-- **Gris de panel** (#EEF1EC): capas secundarias, barras y bloques de apoyo.
 - **Borde suave** (#D6DDD4): divisores, contornos y estructura.
-- **Texto principal** (#243127): lectura principal.
-- **Texto secundario** (#617066): apoyo, metadata y copy de menor prioridad.
+- **Texto principal** (#111418): lectura principal.
+- **Texto secundario** (#6B6B6B): apoyo, metadata y copy de menor prioridad.
 
 ### Named Rules
 **The Five Percent Red Rule.** El rojo solo vive en llamadas a la accion o enfasis puntuales. Si empieza a dominar visualmente, ya esta mal usado.
@@ -116,25 +118,25 @@ La paleta trabaja desde la calma y la confianza, con color funcional en lugar de
 **Body Font:** Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif  
 **Label/Mono Font:** Calibri, Candara, Segoe, Segoe UI, Optima, Arial, sans-serif
 
-**Character:** los titulos tienen una gravedad humana y confiable. El cuerpo y la interfaz deben sentirse cercanos, legibles y funcionales, sin tecnicismos visuales ni gestos demasiado de marca.
+**Character:** los titulos tienen gravedad humana y confianza. El cuerpo y la interfaz deben sentirse cercanos, legibles y funcionales.
 
 ### Hierarchy
-- **Display** (700, 3rem, 1.05): hero y aperturas principales.
-- **Headline** (700, 2rem, 1.15): encabezados de seccion y paneles principales.
-- **Title** (700, 1.35rem, 1.2): subtitulos de cards y modulos.
-- **Body** (400, 1rem, 1.6): texto principal y explicaciones, idealmente entre 65 y 75 caracteres por linea.
-- **Label** (700, 0.85rem, 0.08em): eyebrow, labels y pequenos indicadores de estructura.
+- **Display** (700, 36px a 44px, 1.05): hero y aperturas principales.
+- **Headline** (700, 28px a 32px, 1.15): encabezados de seccion y paneles principales.
+- **Title** (700, 20px a 24px, 1.2): subtitulos de cards y modulos.
+- **Body** (400, 14px a 16px, 1.6): texto principal y explicaciones, idealmente entre 65 y 75 caracteres por linea.
+- **Label** (700, 8px a 10px, 0.08em): eyebrow, labels y pequenos indicadores de estructura.
 
 ### Named Rules
-**The Predictable Reading Rule.** La tipografia nunca debe competir con la tarea. Si un bloque llama mas la atencion por estilo que por contenido, hay exceso.
+**The Strict Typeface Rule.** Titulos solo con Georgia. Cuerpo y UI solo con Calibri. No se introducen familias nuevas.
 
 ## Elevation
 
 La profundidad de GAPA es baja. El sistema se apoya principalmente en capas tonales, contornos suaves y una sombra muy liviana para separar modulos. Nada debe sentirse flotando agresivamente ni vidrio sobre vidrio.
 
 ### Shadow Vocabulary
-- **Surface Lift** (`0 10px 30px rgba(36, 49, 39, 0.05)`): cards principales y paneles destacados.
-- **Soft Edge** (`0 2px 10px rgba(36, 49, 39, 0.03)`): micro separacion en formularios o chips contextuales.
+- **Surface Lift** (`0 10px 30px rgba(17, 20, 24, 0.05)`): cards principales y paneles destacados.
+- **Soft Edge** (`0 2px 10px rgba(17, 20, 24, 0.03)`): micro separacion en formularios o chips contextuales.
 
 ### Named Rules
 **The Flat-First Rule.** La interfaz descansa casi plana. La elevacion aparece solo para ordenar, no para decorar.
@@ -153,7 +155,7 @@ La profundidad de GAPA es baja. El sistema se apoya principalmente en capas tona
 
 ### Cards / Containers
 - **Corner Style:** 28px
-- **Background:** marfil de superficie o gris de panel
+- **Background:** superficies claras y neutras
 - **Shadow Strategy:** minima, con prioridad en borde y contraste tonal
 - **Border:** siempre suave, nunca duro
 - **Internal Padding:** 24px como base
@@ -166,14 +168,21 @@ La profundidad de GAPA es baja. El sistema se apoya principalmente en capas tona
 ### Navigation
 - **Style:** clara, silenciosa y estructural. La navegacion activa debe sentirse acompanada, no gritona.
 
+### Logo
+- **Concepto:** isotipo de cuatro figuras humanas formando un corazon, con gradiente verde-azul como sintesis de calma y confianza.
+- **Regla:** siempre mantener proporciones originales, zona de respeto y contraste suficiente.
+- **Minimo digital:** 80px de ancho.
+
 ## Do's and Don'ts
 
 ### Do:
 - **Do** usar Georgia para titulos y Calibri para interfaz y cuerpo.
+- **Do** respetar la proporcion general 50% verdes, 30% azules, 15% neutros, 5% rojo.
 - **Do** mantener fondos base en torno a #F5F5F5 y superficies claras respiradas.
 - **Do** apoyar la calma en verdes y la confianza en azules, con roles consistentes.
 - **Do** usar pocas acciones primarias por pantalla.
 - **Do** dejar espacio entre bloques para bajar carga cognitiva.
+- **Do** mantener el logo en proporcion original, con contraste y sin efectos.
 
 ### Don't:
 - **Don't** convertir la plataforma en una senal de alerta o un sitio de emergencias.
@@ -181,4 +190,5 @@ La profundidad de GAPA es baja. El sistema se apoya principalmente en capas tona
 - **Don't** saturar la pantalla con contrastes agresivos, pop-ups invasivos o bloques amontonados.
 - **Don't** usar tipografias distintas de Georgia y Calibri para romper la identidad.
 - **Don't** deformar, estirar o aplicar sombras y brillos al logo de GAPA.
+- **Don't** cambiar los colores originales del isotipo o del wordmark.
 - **Don't** volver la experiencia fria, distante o puramente clinica.
