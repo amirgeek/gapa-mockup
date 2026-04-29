@@ -107,6 +107,32 @@ textarea {
   margin: 0 auto;
 }
 
+.landing-stack,
+.marketing-section,
+.section-heading,
+.journey-grid,
+.plan-grid,
+.hero-card-list {
+  display: grid;
+  gap: 1.25rem;
+}
+
+.landing-stack {
+  padding-bottom: 2.5rem;
+}
+
+.marketing-nav {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.marketing-nav a:hover {
+  color: var(--primary);
+}
+
 .brand-kicker,
 .eyebrow {
   margin: 0 0 0.4rem;
@@ -177,6 +203,10 @@ textarea {
   padding: 1.5rem 0 2.5rem;
 }
 
+.landing-hero {
+  padding-top: 0.75rem;
+}
+
 .hero-copy,
 .hero-card,
 .surface-card,
@@ -204,6 +234,14 @@ textarea {
 .content-panel {
   border-radius: 32px;
   padding: 1.25rem;
+}
+
+.section-heading h2,
+.journey-card h3,
+.plan-card h3,
+.closing-card h2 {
+  margin: 0;
+  font-family: Georgia, 'Times New Roman', serif;
 }
 
 .hero-copy h2,
@@ -339,6 +377,12 @@ textarea {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
+.marketing-panels-three,
+.journey-grid,
+.plan-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .cards-grid-wide {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
@@ -357,6 +401,54 @@ textarea {
   padding-left: 1.15rem;
   color: var(--muted);
   line-height: 1.85;
+}
+
+.hero-card-tall,
+.journey-card,
+.plan-card,
+.closing-card,
+.process-card {
+  align-content: start;
+}
+
+.hero-card-list {
+  margin-top: 0.75rem;
+}
+
+.hero-card-list span,
+.journey-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+  padding: 0.55rem 0.85rem;
+  border-radius: 999px;
+  background: var(--surface-blue);
+  color: var(--secondary-deep);
+  font-weight: 700;
+  font-size: 0.84rem;
+}
+
+.section-heading {
+  max-width: 720px;
+}
+
+.section-heading p {
+  margin: 0;
+}
+
+.journey-card {
+  min-height: 100%;
+}
+
+.plan-card h3 {
+  font-size: 2rem;
+  color: var(--primary-deep);
+}
+
+.closing-card {
+  grid-template-columns: 1.4fr auto;
+  align-items: center;
 }
 
 .auth-shell {
@@ -703,6 +795,7 @@ textarea {
 @media (max-width: 960px) {
   .hero-grid,
   .marketing-panels,
+  .marketing-panels-three,
   .cards-grid,
   .cards-grid-wide,
   .grid-two,
@@ -711,7 +804,10 @@ textarea {
   .hero-panel,
   .shell-body,
   .campus-layout,
-  .stepper-row {
+  .stepper-row,
+  .journey-grid,
+  .plan-grid,
+  .closing-card {
     grid-template-columns: 1fr;
   }
 
@@ -740,8 +836,10 @@ textarea {
   }
 
   .session-header,
-  .auth-footer {
+  .auth-footer,
+  .marketing-nav {
     flex-direction: column;
+    align-items: flex-start;
   }
 
   .option-grid,
