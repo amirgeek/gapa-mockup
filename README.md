@@ -19,6 +19,7 @@ Base funcional para pasar del mockup a una beta navegable.
 - React
 - Vite
 - React Router
+- Supabase (base inicial preparada)
 
 ## Demo accounts
 
@@ -36,10 +37,10 @@ npm run build
 
 ## Nota
 
-Esta version usa datos mock persistidos localmente. El siguiente paso natural es conectar:
+Esta version usa datos mock persistidos localmente, pero ya dejamos preparada la base de Supabase para empezar la migracion. Los siguientes pasos son:
 
-- backend y base de datos
-- auth real
+- auth real con Supabase
+- base de datos y RLS
 - Mercado Pago y Talio Pay
 - almacenamiento real para recursos del campus
 - permisos mas finos para profesionales/admin
