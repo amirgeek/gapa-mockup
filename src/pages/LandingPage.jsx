@@ -5,7 +5,7 @@ export function LandingPage() {
   return (
     <div className="marketing-shell">
       <header className="marketing-header">
-        <BrandLogo subtitle="Terapia grupal guiada" />
+        <BrandLogo />
         <div className="header-actions">
           <Link className="ghost-button" to="/login">
             Iniciar sesion
