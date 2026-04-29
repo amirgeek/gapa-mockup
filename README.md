@@ -1,16 +1,45 @@
-# React + Vite
+# GAPA v0
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Base funcional para pasar del mockup a una beta navegable.
 
-Currently, two official plugins are available:
+## Incluye
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- Landing publica
+- Login
+- Registro con membresia obligatoria antes de crear usuario
+- Roles `admin` y `user`
+- Inicio privado para usuarios loggeados
+- Sesiones con inscripcion y link de Meet visible solo para inscriptos
+- Campus con contenido por categorias
+- Panel admin para gestionar usuarios, sesiones y contenidos
+- Persistencia local con `localStorage` para demo
 
-## React Compiler
+## Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- React
+- Vite
+- React Router
 
-## Expanding the ESLint configuration
+## Demo accounts
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- Admin: `admin@gapa.app` / `admin123`
+- Usuario: `elena@gapa.app` / `demo123`
+
+## Scripts
+
+```bash
+npm install
+npm run dev
+npm run lint
+npm run build
+```
+
+## Nota
+
+Esta version usa datos mock persistidos localmente. El siguiente paso natural es conectar:
+
+- backend y base de datos
+- auth real
+- Mercado Pago y Talio Pay
+- almacenamiento real para recursos del campus
+- permisos mas finos para profesionales/admin
