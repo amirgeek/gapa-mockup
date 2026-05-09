@@ -65,12 +65,17 @@ input,
 select,
 textarea {
   width: 100%;
+  min-width: 0;
   border: 1px solid var(--border);
   background: #fff;
   border-radius: 16px;
   padding: 0.95rem 1rem;
   color: var(--text);
   transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+input[type='datetime-local'] {
+  font-size: 0.95rem;
 }
 
 input:focus,
@@ -470,6 +475,7 @@ textarea {
 .field {
   display: grid;
   gap: 0.45rem;
+  min-width: 0;
   font-weight: 600;
 }
 
