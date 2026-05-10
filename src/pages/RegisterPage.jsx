@@ -16,10 +16,25 @@ const initialState = {
   onboardingAnswers: {},
 }
 
-const steps = [
-  { id: 'profile', label: 'Perfil' },
-  { id: 'account', label: 'Cuenta' },
-  { id: 'membership', label: 'Membresia' },
+const STEPS = ['intro', 'profile', 'account', 'membership']
+
+const objectives = [
+  {
+    icon: 'psychology',
+    title: 'Manejo de ansiedad',
+    body: 'Ejercicios de respiración y calma inmediata.',
+  },
+  {
+    icon: 'groups',
+    title: 'Comunidad de apoyo',
+    body: 'Conecta con personas que entienden tu camino.',
+    selected: true,
+  },
+  {
+    icon: 'verified_user',
+    title: 'Guía profesional',
+    body: 'Acceso directo a especialistas y recursos validados.',
+  },
 ]
 
 export function RegisterPage() {
@@ -27,7 +42,7 @@ export function RegisterPage() {
   const { registerWithMembership } = useAppContext()
   const [formData, setFormData] = useState(initialState)
   const [error, setError] = useState('')
-  const [activeStep, setActiveStep] = useState(0)
+  const [step, setStep] = useState(0)
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
   const answeredCount = Object.keys(formData.onboardingAnswers).length
   const profileCategory =
@@ -54,285 +69,404 @@ export function RegisterPage() {
 
   function goToNextQuestion() {
     if (!formData.onboardingAnswers[currentQuestion.id]) {
-      setError('Elegi una opcion para seguir.')
+      setError('Elegí una opción para seguir.')
       return
     }
-
     setError('')
-
     if (activeQuestionIndex < onboardingQuestions.length - 1) {
       setActiveQuestionIndex((current) => current + 1)
       return
     }
-
-    setActiveStep(1)
-  }
-
-  function goToPrevious() {
-    setError('')
-
-    if (activeStep === 0) {
-      if (activeQuestionIndex > 0) {
-        setActiveQuestionIndex((current) => current - 1)
-      }
-      return
-    }
-
-    if (activeStep === 1) {
-      setActiveStep(0)
-      setActiveQuestionIndex(onboardingQuestions.length - 1)
-      return
-    }
-
-    setActiveStep(1)
+    setStep(2)
   }
 
   function goToMembershipStep() {
     if (!formData.name.trim() || !formData.email.trim() || !formData.password.trim()) {
-      setError('Completa nombre, email y contrasena para continuar.')
+      setError('Completá nombre, email y contraseña para continuar.')
       return
     }
-
     setError('')
-    setActiveStep(2)
+    setStep(3)
   }
 
   function handleSubmit(event) {
     event.preventDefault()
-
     if (answeredCount !== onboardingQuestions.length) {
-      setError('Completa las 10 preguntas para generar tu perfil recomendado.')
+      setError('Completá las preguntas para generar tu perfil recomendado.')
       return
     }
-
-    const result = registerWithMembership({
-      ...formData,
-      profileCategory,
-    })
-
+    const result = registerWithMembership({ ...formData, profileCategory })
     if (!result.ok) {
       setError(result.message)
       return
     }
-
     navigate('/app')
   }
 
+  const stepDots = [
+    { active: step >= 0 },
+    { active: step >= 1 },
+    { active: step >= 2 },
+  ]
+
   return (
-    <div className="auth-shell">
-      <form className="auth-card auth-card-wide" onSubmit={handleSubmit}>
-        <div>
-          <p className="eyebrow">Onboarding GAPA</p>
-          <h1>Activa tu membresia con un recorrido claro y contenido</h1>
-          <p className="muted-copy">
-            Primero entendemos tu momento actual, despues guardamos tu cuenta y por ultimo activamos
-            la membresia.
-          </p>
-        </div>
-
-        <div className="stepper-row">
-          {steps.map((step, index) => (
-            <div
-              key={step.id}
-              className={index <= activeStep ? 'step-pill step-pill-active' : 'step-pill'}
-            >
-              <span>{index + 1}</span>
-              <strong>{step.label}</strong>
-            </div>
-          ))}
-        </div>
-
-        {activeStep === 0 ? (
-          <div className="membership-card form-stack">
-            <div className="session-header">
-              <div>
-                <p className="eyebrow">Cuestionario de perfil</p>
-                <h3>Te guiamos hacia el contenido que hoy mas puede ayudarte</h3>
+    <div className="min-h-screen bg-surface text-on-surface">
+      {/* Step 0: Intro */}
+      {step === 0 && (
+        <>
+          <header className="fixed top-0 w-full z-50 bg-[#f6faf7]/80 backdrop-blur-md shadow-sm">
+            <div className="flex justify-between items-center px-6 py-4">
+              <div className="flex items-center gap-2">
+                <span className="material-symbols-outlined text-primary">diversity_1</span>
+                <span className="font-headline italic text-2xl text-primary">GAPA</span>
               </div>
-              <span className="status-badge status-badge-active">
+              <div className="flex flex-col items-end">
+                <span className="text-[10px] font-medium tracking-widest uppercase text-on-surface-variant/60">
+                  Paso 1 de 3
+                </span>
+                <div className="flex gap-1 mt-1">
+                  <div className="h-1 w-8 rounded-full bg-primary"></div>
+                  <div className="h-1 w-4 rounded-full bg-surface-container-highest"></div>
+                  <div className="h-1 w-4 rounded-full bg-surface-container-highest"></div>
+                </div>
+              </div>
+            </div>
+          </header>
+          <main className="flex flex-col items-center justify-center px-6 pt-24 pb-32 min-h-screen">
+            <div className="max-w-md w-full">
+              <div className="relative mb-12 aspect-square rounded-[2.5rem] overflow-hidden bg-surface-container-low shadow-lg">
+                <img
+                  alt="Comunidad"
+                  className="w-full h-full object-cover"
+                  src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1200&q=80"
+                />
+              </div>
+              <div className="space-y-4">
+                <div className="inline-block px-4 py-1.5 rounded-full bg-surface-container-high text-primary font-medium text-sm">
+                  ¿Qué es GAPA?
+                </div>
+                <h1 className="text-4xl font-bold tracking-tight text-on-surface leading-tight pr-8 font-headline">
+                  Somos una red de apoyo para transformar la{' '}
+                  <span className="italic text-primary">ansiedad</span> en{' '}
+                  <span className="text-secondary">fortaleza</span>
+                </h1>
+                <p className="text-on-surface-variant text-lg leading-relaxed max-w-[90%]">
+                  Un espacio seguro diseñado para el bienestar emocional, donde la comunidad y la
+                  ciencia se encuentran.
+                </p>
+              </div>
+            </div>
+          </main>
+          <div className="fixed bottom-0 left-0 w-full p-8 flex flex-col items-center bg-gradient-to-t from-surface via-surface to-transparent">
+            <div className="max-w-md w-full">
+              <button
+                type="button"
+                onClick={() => setStep(1)}
+                className="w-full bg-primary text-on-primary py-5 px-8 rounded-xl font-semibold text-lg shadow-lg hover:opacity-90 transition-all flex justify-between items-center"
+              >
+                <span>Siguiente</span>
+                <span className="material-symbols-outlined">arrow_forward</span>
+              </button>
+              <Link to="/" className="mt-4 w-full text-center text-on-surface-variant/50 text-xs block">
+                Volver al inicio
+              </Link>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Step 1: Objectives / Questions */}
+      {step === 1 && (
+        <main className="flex flex-col px-6 pt-12 pb-24 max-w-2xl mx-auto w-full min-h-screen">
+          <div className="mb-12">
+            <div className="flex items-center justify-between mb-4">
+              <span className="text-sm font-medium text-on-surface-variant">Paso 2 de 3</span>
+              <span className="text-sm font-bold text-primary">
                 {activeQuestionIndex + 1}/{onboardingQuestions.length}
               </span>
             </div>
-
-            <p className="muted-copy">
-              Responde estas preguntas cortas. Con eso armamos tu categoria interna y personalizamos
-              la seccion `Recomendado para vos`.
-            </p>
-
-            <div className="progress-track">
-              <div className="progress-fill" style={{ width: `${progressPercentage}%` }} />
-            </div>
-
-            <section className="question-card question-card-featured">
-              <p className="question-number">Pregunta {activeQuestionIndex + 1}</p>
-              <h4>{currentQuestion.prompt}</h4>
-              <div className="option-grid option-grid-single">
-                {currentQuestion.options.map((option) => {
-                  const isSelected = formData.onboardingAnswers[currentQuestion.id] === option.category
-
-                  return (
-                    <button
-                      key={option.label}
-                      type="button"
-                      className={isSelected ? 'option-chip option-chip-active' : 'option-chip'}
-                      onClick={() => handleAnswer(option.category)}
-                    >
-                      {option.label}
-                    </button>
-                  )
-                })}
-              </div>
-            </section>
-
-            <div className="onboarding-actions">
-              <button
-                type="button"
-                className="ghost-button"
-                onClick={goToPrevious}
-                disabled={activeQuestionIndex === 0}
-              >
-                Volver
-              </button>
-              <button type="button" className="primary-button" onClick={goToNextQuestion}>
-                {activeQuestionIndex === onboardingQuestions.length - 1
-                  ? 'Continuar con tu cuenta'
-                  : 'Siguiente pregunta'}
-              </button>
-            </div>
-
-            <div className="profile-preview">
-              <span className="eyebrow">Perfil sugerido</span>
-              <strong>{profileCategory ?? 'Se calcula al completar las 10 preguntas'}</strong>
-              <div className="tag-row">
-                {profileCategories.map((category) => (
-                  <span
-                    key={category}
-                    className={category === profileCategory ? 'tag tag-active' : 'tag'}
-                  >
-                    {category}
-                  </span>
-                ))}
-              </div>
+            <div className="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+              <div
+                className="h-full bg-primary-container rounded-full"
+                style={{ width: `${progressPercentage}%` }}
+              ></div>
             </div>
           </div>
-        ) : null}
 
-        {activeStep === 1 ? (
-          <div className="membership-card form-stack">
-            <div className="session-header">
-              <div>
-                <p className="eyebrow">Tu cuenta</p>
-                <h3>Guardamos tu recorrido para personalizar la experiencia</h3>
-              </div>
-              <span className="status-badge">Paso 2 de 3</span>
+          <header className="mb-10 ml-2">
+            <h1 className="font-headline text-4xl font-bold tracking-tight text-on-surface leading-tight mb-4">
+              {currentQuestion.prompt}
+            </h1>
+            <p className="text-on-surface-variant text-lg max-w-xs">
+              Selecciona la opción que mejor describe tu momento.
+            </p>
+          </header>
+
+          <div className="grid grid-cols-1 gap-4 mb-12">
+            {currentQuestion.options.map((option) => {
+              const isSelected = formData.onboardingAnswers[currentQuestion.id] === option.category
+              return (
+                <button
+                  key={option.label}
+                  type="button"
+                  onClick={() => handleAnswer(option.category)}
+                  className={`flex items-center p-6 rounded-xl text-left border transition-all ${
+                    isSelected
+                      ? 'border-primary/40 bg-primary-container/10 shadow-sm'
+                      : 'border-outline-variant/15 bg-surface-container-low hover:border-primary/30'
+                  }`}
+                >
+                  <div
+                    className={`w-14 h-14 rounded-full flex items-center justify-center mr-5 ${
+                      isSelected ? 'bg-primary-container' : 'bg-primary-container/10'
+                    }`}
+                  >
+                    <span
+                      className={`material-symbols-outlined text-3xl ${
+                        isSelected ? 'text-white' : 'text-primary'
+                      }`}
+                    >
+                      psychology
+                    </span>
+                  </div>
+                  <div className="flex-grow">
+                    <h3 className="font-headline text-lg font-bold">{option.label}</h3>
+                    <p className="text-sm text-on-surface-variant">{option.category}</p>
+                  </div>
+                  {isSelected && (
+                    <span className="material-symbols-outlined text-primary ml-2">check_circle</span>
+                  )}
+                </button>
+              )
+            })}
+          </div>
+
+          {error ? <p className="text-sm font-bold text-error mb-4">{error}</p> : null}
+
+          <footer className="mt-auto flex flex-col gap-4">
+            <button
+              type="button"
+              onClick={goToNextQuestion}
+              className="w-full bg-secondary text-white py-5 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-2"
+            >
+              {activeQuestionIndex === onboardingQuestions.length - 1
+                ? 'Continuar'
+                : 'Siguiente'}{' '}
+              <span className="material-symbols-outlined">arrow_forward</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (activeQuestionIndex > 0) {
+                  setActiveQuestionIndex((c) => c - 1)
+                } else {
+                  setStep(0)
+                }
+              }}
+              className="w-full py-4 text-on-surface-variant font-medium hover:bg-surface-container-low rounded-xl transition-colors"
+            >
+              Volver
+            </button>
+          </footer>
+        </main>
+      )}
+
+      {/* Step 2: Account */}
+      {step === 2 && (
+        <main className="flex flex-col px-6 pt-12 pb-24 max-w-2xl mx-auto w-full min-h-screen">
+          <div className="mb-8">
+            <button
+              type="button"
+              onClick={() => setStep(1)}
+              className="flex items-center gap-2 text-on-surface-variant text-sm hover:text-on-surface"
+            >
+              <span className="material-symbols-outlined text-sm">arrow_back</span>
+              Volver
+            </button>
+          </div>
+
+          <header className="mb-10">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-on-surface-variant">Paso 3 de 3</span>
+              <span className="text-sm font-bold text-secondary">90%</span>
             </div>
-
-            <div className="grid-two">
-              <label className="field">
-                <span>Nombre y apellido</span>
-                <input
-                  type="text"
-                  value={formData.name}
-                  onChange={(event) => updateField('name', event.target.value)}
-                  placeholder="Tu nombre"
-                />
-              </label>
-
-              <label className="field">
-                <span>Email</span>
-                <input
-                  type="email"
-                  value={formData.email}
-                  onChange={(event) => updateField('email', event.target.value)}
-                  placeholder="tu@email.com"
-                />
-              </label>
+            <div className="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden mb-6">
+              <div className="h-full bg-secondary rounded-full" style={{ width: '90%' }}></div>
             </div>
+            <h1 className="font-headline text-4xl font-bold tracking-tight text-on-surface leading-tight mb-4">
+              Guardamos tu recorrido
+            </h1>
+            <p className="text-on-surface-variant text-lg">
+              Personalizamos la experiencia con tus datos.
+            </p>
+          </header>
 
-            <label className="field">
-              <span>Contrasena</span>
+          <div className="space-y-4 mb-8">
+            <div>
+              <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">
+                Nombre y apellido
+              </label>
+              <input
+                type="text"
+                value={formData.name}
+                onChange={(e) => updateField('name', e.target.value)}
+                placeholder="Tu nombre"
+                className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">
+                Email
+              </label>
+              <input
+                type="email"
+                value={formData.email}
+                onChange={(e) => updateField('email', e.target.value)}
+                placeholder="tu@email.com"
+                className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:outline-none"
+              />
+            </div>
+            <div>
+              <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">
+                Contraseña
+              </label>
               <input
                 type="password"
                 value={formData.password}
-                onChange={(event) => updateField('password', event.target.value)}
-                placeholder="Minimo para demo"
+                onChange={(e) => updateField('password', e.target.value)}
+                placeholder="Mínimo 6 caracteres"
+                className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:outline-none"
               />
-            </label>
-
-            <div className="profile-banner">
-              <span className="eyebrow">Categoria detectada</span>
-              <strong>{profileCategory}</strong>
-              <p>
-                Cuando entres al campus, la seccion `Recomendado para vos` va a priorizar recursos
-                relacionados con este perfil.
-              </p>
-            </div>
-
-            <div className="onboarding-actions">
-              <button type="button" className="ghost-button" onClick={goToPrevious}>
-                Volver
-              </button>
-              <button type="button" className="primary-button" onClick={goToMembershipStep}>
-                Continuar a membresia
-              </button>
             </div>
           </div>
-        ) : null}
 
-        {activeStep === 2 ? (
-          <>
-            <div className="payment-grid">
-              <label className="choice-card">
-                <span>Plan</span>
-                <select value={formData.plan} onChange={(event) => updateField('plan', event.target.value)}>
-                  <option>Mensual</option>
-                  <option>Trimestral</option>
-                </select>
-              </label>
-
-              <label className="choice-card">
-                <span>Medio de pago</span>
-                <select
-                  value={formData.paymentProvider}
-                  onChange={(event) => updateField('paymentProvider', event.target.value)}
-                >
-                  <option>Mercado Pago</option>
-                  <option>Talio Pay</option>
-                </select>
-              </label>
-            </div>
-
-            <div className="membership-card membership-card-strong form-stack">
-              <p className="eyebrow">Membresia GAPA</p>
-              <h3>$XX / mes</h3>
-              <p className="muted-copy">
-                En la version final este paso se integrara con Mercado Pago y Talio Pay. En esta
-                demo, simulamos el alta completa solo despues del pago.
+          {profileCategory && (
+            <div className="bg-primary-container/10 border border-primary/20 rounded-xl p-6 mb-8">
+              <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">
+                Categoría detectada
+              </span>
+              <strong className="font-headline text-xl">{profileCategory}</strong>
+              <p className="text-sm text-on-surface-variant mt-1">
+                La sección &ldquo;Recomendado para vos&rdquo; priorizará recursos para este perfil.
               </p>
-              <ul className="feature-list">
-                <li>Sin membresia no se crea el usuario</li>
-                <li>Acceso al campus y sesiones</li>
-                <li>Recomendaciones segun tu categoria interna</li>
-              </ul>
-              <div className="onboarding-actions">
-                <button type="button" className="ghost-button" onClick={goToPrevious}>
+            </div>
+          )}
+
+          {error ? <p className="text-sm font-bold text-error mb-4">{error}</p> : null}
+
+          <button
+            type="button"
+            onClick={goToMembershipStep}
+            className="w-full bg-secondary text-white py-5 rounded-xl font-bold text-lg shadow-lg flex items-center justify-center gap-2"
+          >
+            Continuar a membresía <span className="material-symbols-outlined">arrow_forward</span>
+          </button>
+        </main>
+      )}
+
+      {/* Step 3: Membership / Payment */}
+      {step === 3 && (
+        <form onSubmit={handleSubmit}>
+          <main className="flex items-center justify-center px-6 pt-12 pb-24 min-h-screen">
+            <div className="max-w-4xl w-full grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
+              <div className="md:col-span-5 space-y-6">
+                <button
+                  type="button"
+                  onClick={() => setStep(2)}
+                  className="flex items-center gap-2 text-on-surface-variant text-sm hover:text-on-surface"
+                >
+                  <span className="material-symbols-outlined text-sm">arrow_back</span>
                   Volver
                 </button>
-                <button className="primary-button" type="submit">
-                  Pagar y crear cuenta
-                </button>
+                <h1 className="font-headline text-5xl font-bold text-on-surface leading-[1.1]">
+                  Elegí tu plan de bienestar
+                </h1>
+                <p className="text-on-surface-variant text-lg leading-relaxed max-w-sm">
+                  Estás a un paso de comenzar tu transformación.
+                </p>
+              </div>
+
+              <div className="md:col-span-7">
+                <div className="bg-surface-container-lowest p-8 rounded-xl shadow-lg border border-outline-variant/15">
+                  <div className="flex justify-between items-start mb-6">
+                    <div>
+                      <span className="inline-block px-3 py-1 rounded-full bg-primary-container text-on-primary-container text-[10px] font-bold uppercase tracking-wider mb-3">
+                        Acceso Total
+                      </span>
+                      <h2 className="text-2xl font-bold">Membresía GAPA</h2>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-4xl font-bold text-primary">
+                        $XX<span className="text-lg font-normal text-on-surface-variant">/mes</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4 mb-6">
+                    <div>
+                      <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">
+                        Plan
+                      </label>
+                      <select
+                        value={formData.plan}
+                        onChange={(e) => updateField('plan', e.target.value)}
+                        className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                      >
+                        <option>Mensual</option>
+                        <option>Trimestral</option>
+                      </select>
+                    </div>
+                    <div>
+                      <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">
+                        Medio de pago
+                      </label>
+                      <select
+                        value={formData.paymentProvider}
+                        onChange={(e) => updateField('paymentProvider', e.target.value)}
+                        className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:outline-none"
+                      >
+                        <option>Mercado Pago</option>
+                        <option>Talio Pay</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div className="space-y-4 mb-8">
+                    {[
+                      { title: 'Sesiones ilimitadas', body: 'Encuentros guiados por profesionales.' },
+                      { title: 'Acceso al foro', body: 'Conectá con una comunidad que entiende tu camino.' },
+                      { title: 'Recursos del campus', body: 'Biblioteca completa de ejercicios y meditaciones.' },
+                    ].map((item) => (
+                      <div key={item.title} className="flex items-start gap-4">
+                        <div className="w-6 h-6 rounded-full bg-secondary-container/20 flex items-center justify-center flex-shrink-0 mt-1">
+                          <span className="material-symbols-outlined text-secondary text-sm">check</span>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">{item.title}</h3>
+                          <p className="text-sm text-on-surface-variant">{item.body}</p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {error ? <p className="text-sm font-bold text-error mb-4">{error}</p> : null}
+
+                  <button
+                    type="submit"
+                    className="w-full py-5 bg-tertiary text-on-tertiary rounded-lg font-bold text-lg flex items-center justify-center gap-3 hover:opacity-90 shadow-lg"
+                  >
+                    Suscribirme y Comenzar{' '}
+                    <span className="material-symbols-outlined">arrow_forward</span>
+                  </button>
+                  <p className="mt-4 text-center text-xs text-on-surface-variant/60">
+                    Al suscribirte, aceptás nuestros términos de servicio.
+                  </p>
+                </div>
               </div>
             </div>
-          </>
-        ) : null}
-
-        {error ? <p className="form-error">{error}</p> : null}
-
-        <div className="auth-footer">
-          <Link to="/">Volver al inicio</Link>
-          <Link to="/login">Ya tengo cuenta</Link>
-        </div>
-      </form>
+          </main>
+        </form>
+      )}
     </div>
   )
 }

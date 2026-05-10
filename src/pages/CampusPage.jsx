@@ -1,167 +1,267 @@
 import { useMemo, useState } from 'react'
 import { useAppContext } from '../context/useAppContext.jsx'
 
+const campusImages = [
+  'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80',
+]
+
 export function CampusPage() {
   const { state, currentUser } = useAppContext()
   const categories = useMemo(
-    () => ['Recomendado para vos', 'Todas', ...new Set(state.campusItems.map((item) => item.category))],
+    () => ['Todos', 'Recomendados', ...new Set(state.campusItems.map((item) => item.category))],
     [state.campusItems],
   )
-  const [selectedCategory, setSelectedCategory] = useState('Recomendado para vos')
+  const [selectedCategory, setSelectedCategory] = useState('Todos')
+  const [selectedItemId, setSelectedItemId] = useState(state.campusItems[0]?.id ?? null)
 
   const filteredItems =
-    selectedCategory === 'Recomendado para vos'
+    selectedCategory === 'Recomendados'
       ? state.campusItems.filter((item) =>
           item.audienceProfiles?.includes(currentUser?.profileCategory),
         )
-      : selectedCategory === 'Todas'
+      : selectedCategory === 'Todos'
         ? state.campusItems
         : state.campusItems.filter((item) => item.category === selectedCategory)
-
-  const [selectedItemId, setSelectedItemId] = useState(state.campusItems[0]?.id ?? null)
 
   const selectedItem =
     filteredItems.find((item) => item.id === selectedItemId) ?? filteredItems[0] ?? null
 
   function handleCategoryChange(category) {
     setSelectedCategory(category)
-
     const nextItems =
-      category === 'Recomendado para vos'
+      category === 'Recomendados'
         ? state.campusItems.filter((item) =>
             item.audienceProfiles?.includes(currentUser?.profileCategory),
           )
-        : category === 'Todas'
+        : category === 'Todos'
           ? state.campusItems
           : state.campusItems.filter((item) => item.category === category)
-
     setSelectedItemId(nextItems[0]?.id ?? null)
   }
 
   return (
-    <div className="page-stack">
-      <section className="page-header">
-        <div>
-          <p className="eyebrow">Campus</p>
-          <h1>Biblioteca de contenidos profesionales</h1>
-          <p>
-            Los profesionales pueden subir recursos y organizarlos por categoria para que el usuario
-            encuentre rapido lo que necesita.
-          </p>
-          {currentUser?.profileCategory ? (
-            <div className="profile-banner">
-              <span className="eyebrow">Tu categoria interna</span>
-              <strong>{currentUser.profileCategory}</strong>
-              <p>
-                La seccion `Recomendado para vos` prioriza recursos asociados a este perfil.
-              </p>
-            </div>
-          ) : null}
+    <div className="max-w-7xl mx-auto py-6">
+      {/* Hero Banner */}
+      <section className="mb-12 px-6">
+        <div className="relative overflow-hidden rounded-xl bg-primary-container p-8 text-on-primary-container flex flex-col md:flex-row items-center gap-8 shadow-sm">
+          <div className="flex-1 space-y-4">
+            <h1 className="text-4xl font-bold tracking-tight leading-tight font-headline">
+              Elevando el Cuidado Profesional
+            </h1>
+            <p className="text-lg opacity-90">
+              Bienvenido a GAPA Campus, tu centro de formación continua y recursos especializados.
+            </p>
+            {currentUser?.profileCategory && (
+              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
+                <span className="material-symbols-outlined text-sm">verified</span>
+                Perfil: {currentUser.profileCategory}
+              </div>
+            )}
+          </div>
+          <div className="flex-shrink-0 w-32 h-32 rounded-full border-4 border-primary-fixed-dim/30 flex items-center justify-center bg-surface/10">
+            <span className="material-symbols-outlined text-7xl">school</span>
+          </div>
         </div>
       </section>
 
-      <div className="tag-row">
-        {categories.map((category) => (
-          <button
-            key={category}
-            type="button"
-            className={category === selectedCategory ? 'tag tag-active' : 'tag'}
-            onClick={() => handleCategoryChange(category)}
-          >
-            {category}
-          </button>
-        ))}
-      </div>
+      {/* Category Filter */}
+      <section className="mb-10 overflow-x-auto hide-scrollbar px-6">
+        <div className="flex items-center gap-3 py-2">
+          {categories.map((category) => (
+            <button
+              key={category}
+              type="button"
+              onClick={() => handleCategoryChange(category)}
+              className={`px-6 py-2.5 rounded-full font-medium whitespace-nowrap transition-all ${
+                category === selectedCategory
+                  ? 'bg-primary text-on-primary shadow-sm'
+                  : 'bg-surface-container-high text-on-surface-variant hover:bg-surface-variant'
+              }`}
+            >
+              {category}
+            </button>
+          ))}
+        </div>
+      </section>
 
-      <div className="campus-layout">
-        <section className="campus-library">
-          {filteredItems.map((item) => {
-            const isActive = item.id === selectedItem?.id
+      {/* Content Grid */}
+      <section className="grid grid-cols-1 md:grid-cols-12 gap-8 px-6">
+        {filteredItems.length === 0 ? (
+          <div className="md:col-span-12 text-center py-20">
+            <span className="material-symbols-outlined text-6xl text-outline mb-4 block">
+              menu_book
+            </span>
+            <h3 className="font-headline text-2xl mb-2">Sin contenido en esta categoría</h3>
+            <p className="text-on-surface-variant">
+              Cambiá el filtro o publicá nuevos recursos desde el panel admin.
+            </p>
+          </div>
+        ) : (
+          <>
+            {/* Featured (first item) */}
+            {filteredItems[0] && (
+              <div
+                className="md:col-span-8 group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all cursor-pointer"
+                onClick={() => setSelectedItemId(filteredItems[0].id)}
+              >
+                <div className="flex flex-col md:flex-row h-full">
+                  <div className="md:w-1/2 overflow-hidden h-64 md:h-full">
+                    <img
+                      alt=""
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      src={campusImages[0]}
+                    />
+                  </div>
+                  <div className="md:w-1/2 p-8 flex flex-col justify-center">
+                    <span className="text-secondary font-semibold text-xs tracking-widest uppercase mb-2">
+                      Destacado · {filteredItems[0].type}
+                    </span>
+                    <h2 className="text-2xl font-bold mb-4 leading-snug font-headline">
+                      {filteredItems[0].title}
+                    </h2>
+                    <p className="text-on-surface-variant mb-6 text-sm leading-relaxed">
+                      {filteredItems[0].excerpt}
+                    </p>
+                    <div className="flex items-center gap-3 text-xs text-on-surface-variant mb-6">
+                      <span>{filteredItems[0].author}</span>
+                      <span>·</span>
+                      <span>{filteredItems[0].readTime}</span>
+                    </div>
+                    <button className="inline-flex items-center gap-2 text-primary font-bold hover:gap-4 transition-all">
+                      Leer más{' '}
+                      <span className="material-symbols-outlined text-sm">arrow_forward</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
 
-            return (
-              <button
+            {/* Second item */}
+            {filteredItems[1] && (
+              <div
+                className="md:col-span-4 group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all cursor-pointer"
+                onClick={() => setSelectedItemId(filteredItems[1].id)}
+              >
+                <div className="h-48 overflow-hidden">
+                  <img
+                    alt=""
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    src={campusImages[1]}
+                  />
+                </div>
+                <div className="p-6">
+                  <span className="text-secondary font-semibold text-xs tracking-widest uppercase mb-2 block">
+                    {filteredItems[1].type} · {filteredItems[1].readTime}
+                  </span>
+                  <h3 className="text-lg font-bold mb-3 font-headline">{filteredItems[1].title}</h3>
+                  <p className="text-on-surface-variant text-sm mb-3">{filteredItems[1].excerpt}</p>
+                  <button className="text-primary font-bold text-sm hover:underline">
+                    Leer más
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Remaining items */}
+            {filteredItems.slice(2).map((item, index) => (
+              <div
                 key={item.id}
-                type="button"
-                className={isActive ? 'campus-card campus-card-active' : 'campus-card'}
+                className="md:col-span-4 group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all cursor-pointer"
                 onClick={() => setSelectedItemId(item.id)}
               >
-                <div className="session-header">
-                  <div>
-                    <p className="eyebrow">
-                      {item.category} · {item.type}
-                    </p>
-                    <h2>{item.title}</h2>
-                  </div>
-                  <span className={isActive ? 'status-badge status-badge-active' : 'status-badge'}>
-                    {item.readTime}
+                <div className="h-48 overflow-hidden">
+                  <img
+                    alt=""
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    src={campusImages[(index + 2) % campusImages.length]}
+                  />
+                </div>
+                <div className="p-6">
+                  <span className="text-secondary font-semibold text-xs tracking-widest uppercase mb-2 block">
+                    {item.type} · {item.readTime}
                   </span>
+                  <h3 className="text-lg font-bold mb-3 font-headline">{item.title}</h3>
+                  <button className="text-primary font-bold text-sm hover:underline">
+                    Leer más
+                  </button>
                 </div>
-                <p>{item.excerpt}</p>
-                <div className="meta-list">
-                  <span>{item.author}</span>
-                  <span>{item.audienceProfiles?.join(' · ')}</span>
-                  <span>Ver recurso</span>
-                </div>
+              </div>
+            ))}
+
+            {/* CTA Card */}
+            <div className="md:col-span-4 flex flex-col justify-center bg-surface-container-low rounded-xl p-8 border border-outline-variant/10">
+              <div className="w-12 h-12 bg-primary-fixed-dim rounded-lg flex items-center justify-center mb-6">
+                <span className="material-symbols-outlined text-on-primary-fixed-variant">
+                  auto_awesome
+                </span>
+              </div>
+              <h3 className="text-xl font-bold mb-4 font-headline">¿Buscás algo específico?</h3>
+              <p className="text-on-surface-variant mb-6 text-sm">
+                Nuestro equipo académico puede ayudarte a encontrar el material que necesitás.
+              </p>
+              <button className="bg-secondary text-on-secondary px-6 py-2 rounded-lg font-medium self-start shadow-sm hover:opacity-90">
+                Consultar Tutor
               </button>
-            )
-          })}
-        </section>
+            </div>
+          </>
+        )}
+      </section>
 
-        <aside className="surface-card campus-detail">
-          {selectedItem ? (
-            <>
-              <div className="campus-detail-header">
-                <div>
-                  <p className="eyebrow">
-                    {selectedItem.category} · {selectedItem.type}
-                  </p>
-                  <h2>{selectedItem.title}</h2>
+      {/* Selected Item Detail */}
+      {selectedItem && (
+        <section className="mt-12 px-6">
+          <div className="bg-surface-container-lowest rounded-xl p-8 shadow-sm border border-outline-variant/10">
+            <div className="flex items-start justify-between mb-6">
+              <div>
+                <span className="text-xs font-bold text-secondary uppercase tracking-widest mb-2 block">
+                  {selectedItem.category} · {selectedItem.type}
+                </span>
+                <h2 className="font-headline text-3xl font-bold mb-2">{selectedItem.title}</h2>
+                <div className="flex items-center gap-3 text-sm text-on-surface-variant">
+                  <span>{selectedItem.author}</span>
+                  <span>·</span>
+                  <span>{selectedItem.readTime}</span>
+                  <span>·</span>
+                  <span>Membresía activa</span>
                 </div>
-                <span className="status-badge status-badge-active">{selectedItem.readTime}</span>
               </div>
-
-              <div className="meta-list">
-                <span>{selectedItem.author}</span>
-                <span>{selectedItem.audienceProfiles?.join(' · ')}</span>
-                <span>Contenido desbloqueado por membresia</span>
-              </div>
-
               {currentUser?.profileCategory &&
-              selectedItem.audienceProfiles?.includes(currentUser.profileCategory) ? (
-                <div className="profile-banner">
-                  <span className="eyebrow">Por que aparece aca</span>
-                  <strong>Coincide con tu categoria: {currentUser.profileCategory}</strong>
-                  <p>
-                    Este recurso forma parte de la seleccion inicial pensada para tu recorrido
-                    dentro de GAPA.
-                  </p>
-                </div>
-              ) : null}
-
-              <div className="campus-prose">
-                {selectedItem.content.map((paragraph) => (
-                  <p key={paragraph}>{paragraph}</p>
-                ))}
-              </div>
-
-              <div className="content-box">
-                <p className="eyebrow">Ideas clave</p>
-                <ul className="feature-list compact-list">
+                selectedItem.audienceProfiles?.includes(currentUser.profileCategory) && (
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 bg-primary-container/10 text-primary rounded-full text-xs font-bold">
+                    <span className="material-symbols-outlined text-sm">verified</span>
+                    Recomendado para vos
+                  </div>
+                )}
+            </div>
+            <div className="space-y-4 mb-8">
+              {selectedItem.content.map((paragraph) => (
+                <p key={paragraph} className="text-on-surface leading-relaxed">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+            {selectedItem.takeaways?.length > 0 && (
+              <div className="bg-surface-container-low rounded-xl p-6">
+                <p className="text-xs font-bold uppercase tracking-widest text-primary mb-4">
+                  Ideas clave
+                </p>
+                <ul className="space-y-2">
                   {selectedItem.takeaways.map((takeaway) => (
-                    <li key={takeaway}>{takeaway}</li>
+                    <li key={takeaway} className="flex items-start gap-3 text-sm">
+                      <span className="material-symbols-outlined text-primary text-sm mt-0.5">
+                        check_circle
+                      </span>
+                      {takeaway}
+                    </li>
                   ))}
                 </ul>
               </div>
-            </>
-          ) : (
-            <div className="empty-state">
-              <p className="eyebrow">Campus</p>
-              <h2>No hay contenidos en esta categoria</h2>
-              <p>Cambia el filtro o publica nuevos recursos desde el panel admin.</p>
-            </div>
-          )}
-        </aside>
-      </div>
+            )}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

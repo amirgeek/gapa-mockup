@@ -1,207 +1,164 @@
 import { Link } from 'react-router-dom'
-import { BrandLogo } from '../components/BrandLogo.jsx'
-
-const pillars = [
-  {
-    eyebrow: 'Calma',
-    title: 'Un entorno claro para bajar friccion desde el primer ingreso',
-    body:
-      'La experiencia esta pensada para orientar rapido, sostener una lectura tranquila y evitar sobrecarga visual en momentos sensibles.',
-  },
-  {
-    eyebrow: 'Confianza',
-    title: 'Acompanamiento profesional con sesiones, campus y recorrido guiado',
-    body:
-      'La membresia organiza acceso a encuentros, recursos y seguimiento dentro de una plataforma simple de usar.',
-  },
-  {
-    eyebrow: 'Comunidad',
-    title: 'No se trata solo de contenido, se trata de no atravesarlo en soledad',
-    body:
-      'GAPA combina profesionales, recursos y comunidad para construir una experiencia de apoyo continuo.',
-  },
-]
-
-const steps = [
-  'Completar un onboarding breve para detectar tu categoria interna.',
-  'Activar la membresia para acceder a la plataforma completa.',
-  'Entrar a sesiones, campus y recomendaciones personalizadas.',
-]
-
-const plans = [
-  {
-    name: 'Membresia mensual',
-    detail: 'Para validar adopcion y uso continuo.',
-    items: ['Acceso al campus', 'Inscripcion a sesiones', 'Recomendado para vos'],
-  },
-  {
-    name: 'Membresia trimestral',
-    detail: 'Pensada para procesos con mayor continuidad.',
-    items: ['Todo lo mensual', 'Seguimiento mas sostenido', 'Mejor marco para retencion'],
-  },
-]
 
 export function LandingPage() {
   return (
-    <div className="marketing-shell">
-      <header className="marketing-header">
-        <BrandLogo />
-        <nav className="marketing-nav">
-          <a href="#nosotros">Nosotros</a>
-          <a href="#como-funciona">Como funciona</a>
-          <a href="#planes">Planes</a>
-        </nav>
-        <div className="header-actions">
-          <Link className="ghost-button" to="/login">
-            Iniciar sesion
-          </Link>
-          <Link className="primary-button" to="/registro">
-            Activar membresia
-          </Link>
+    <div className="bg-surface text-on-surface min-h-screen">
+      <header className="fixed top-0 w-full z-50 bg-[#f6faf7]/90 backdrop-blur-md shadow-sm">
+        <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
+          <div className="flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary">diversity_1</span>
+            <span className="font-headline italic text-2xl font-bold text-primary">GAPA</span>
+          </div>
+          <div className="flex gap-3">
+            <Link
+              to="/login"
+              className="border-2 border-secondary text-secondary px-5 py-2 rounded-xl font-semibold text-sm hover:bg-secondary/5 transition-all"
+            >
+              Iniciar Sesión
+            </Link>
+            <Link
+              to="/registro"
+              className="bg-tertiary text-on-tertiary px-5 py-2 rounded-xl font-semibold text-sm hover:opacity-90 transition-all"
+            >
+              Registrarme
+            </Link>
+          </div>
         </div>
       </header>
 
-      <main className="marketing-main landing-stack">
-        <section className="hero-grid landing-hero">
-          <div className="hero-copy">
-            <div className="hero-badge">Grupo de afrontamiento, sesiones y campus en un solo lugar</div>
-            <h2>
-              Un espacio digital de apoyo para <span>atravesar la ansiedad con mas contencion</span>
-            </h2>
-            <p>
-              GAPA es una plataforma de membresia pensada para acompanar a personas de la comunidad
-              hispanoparlante que buscan un entorno claro, humano y profesional para su proceso.
+      <main className="pt-28 pb-20 px-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-20">
+          <div className="lg:col-span-7">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-container/10 text-primary mb-8">
+              <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
+              <span className="text-xs font-semibold tracking-widest uppercase">Terapia grupal guiada por profesionales</span>
+            </div>
+            <h1 className="font-headline text-5xl md:text-7xl text-on-surface leading-[1.1] tracking-tight mb-8">
+              Tu espacio seguro para{' '}
+              <span className="italic text-primary block">sanar en comunidad</span>
+            </h1>
+            <p className="text-on-surface-variant text-lg max-w-xl mb-10 leading-relaxed">
+              Redescubre tu bienestar emocional a través del apoyo colectivo y la guía experta.
             </p>
-            <div className="cta-row">
-              <Link className="primary-button" to="/registro">
-                Quiero conocer GAPA
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Link
+                to="/registro"
+                className="bg-tertiary text-on-tertiary px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 shadow-lg flex items-center justify-center gap-2"
+              >
+                Comenzar gratis{' '}
+                <span className="material-symbols-outlined">arrow_forward</span>
               </Link>
-              <Link className="secondary-button" to="/login">
+              <Link
+                to="/login"
+                className="border-2 border-secondary text-secondary px-8 py-4 rounded-xl font-semibold text-lg hover:bg-secondary/5 flex items-center justify-center"
+              >
                 Ya tengo cuenta
               </Link>
             </div>
           </div>
-
-          <div className="hero-card hero-card-tall">
-            <p className="eyebrow">Sobre GAPA</p>
-            <h3>Grupo de Afrontamiento contra Problemas de Ansiedad</h3>
-            <p>
-              La propuesta combina acompanamiento, orientacion y acceso ordenado a recursos para que
-              cada usuario sienta apoyo real desde el primer contacto.
-            </p>
-            <div className="hero-card-list">
-              <span>Sesiones con profesionales</span>
-              <span>Campus con contenido segmentado</span>
-              <span>Onboarding con perfil interno</span>
+          <div className="lg:col-span-5">
+            <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl">
+              <img
+                className="w-full h-full object-cover"
+                src="https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1200&q=80"
+                alt="Comunidad GAPA"
+              />
             </div>
           </div>
-        </section>
+        </div>
 
-        <section id="nosotros" className="marketing-section">
-          <div className="section-heading">
-            <p className="eyebrow">Nosotros</p>
-            <h2>Una plataforma construida sobre empatia, evidencia y acompanamiento</h2>
-            <p>
-              GAPA busca traducir contencion emocional en una experiencia digital ordenada. Nada en
-              la interfaz deberia sentirse agresivo, confuso o distante.
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="md:col-span-2 bg-surface-container-low rounded-xl p-8 border border-outline-variant/10">
+            <span
+              className="material-symbols-outlined text-4xl text-primary mb-4 block"
+              style={{ fontVariationSettings: "'FILL' 1" }}
+            >
+              spa
+            </span>
+            <h3 className="font-headline text-3xl mb-4">Metodología GAPA</h3>
+            <p className="text-on-surface-variant leading-relaxed mb-4">
+              Integramos técnicas de mindfulness y psicología positiva en cada sesión grupal,
+              creando un entorno de crecimiento libre de juicios.
             </p>
-          </div>
-
-          <div className="marketing-panels marketing-panels-three">
-            {pillars.map((pillar) => (
-              <article key={pillar.title} className="info-card">
-                <p className="eyebrow">{pillar.eyebrow}</p>
-                <h3>{pillar.title}</h3>
-                <p>{pillar.body}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section id="como-funciona" className="marketing-section">
-          <div className="section-heading">
-            <p className="eyebrow">Como funciona</p>
-            <h2>El recorrido esta pensado para llevar a valor sin abrumar</h2>
-          </div>
-
-          <div className="journey-grid">
-            <article className="surface-card journey-card">
-              <span className="journey-number">1</span>
-              <h3>Conocemos tu momento actual</h3>
-              <p>
-                Un cuestionario breve perfila al usuario para ordenar mejor el punto de partida
-                dentro del campus.
-              </p>
-            </article>
-            <article className="surface-card journey-card">
-              <span className="journey-number">2</span>
-              <h3>La membresia habilita el acceso completo</h3>
-              <p>
-                El alta no se separa del modelo de negocio: la cuenta se crea junto con la
-                activacion de la membresia.
-              </p>
-            </article>
-            <article className="surface-card journey-card">
-              <span className="journey-number">3</span>
-              <h3>El usuario entra a sesiones, campus y recomendaciones</h3>
-              <p>
-                Todo queda dentro de un mismo flujo: recursos, agenda y contenidos asociados a su
-                categoria interna.
-              </p>
-            </article>
-          </div>
-
-          <div className="surface-card process-card">
-            <p className="eyebrow">Recorrido resumido</p>
-            <ul className="feature-list">
-              {steps.map((step) => (
-                <li key={step}>{step}</li>
-              ))}
+            <ul className="space-y-2">
+              <li className="flex items-center gap-3 text-sm font-medium">
+                <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
+                Sesiones moderadas por expertos
+              </li>
+              <li className="flex items-center gap-3 text-sm font-medium">
+                <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
+                Grupos reducidos y seguros
+              </li>
             </ul>
           </div>
+          <div className="bg-secondary-container/20 rounded-xl p-8 border border-secondary/10 flex flex-col justify-between">
+            <span className="material-symbols-outlined text-4xl text-secondary mb-4">forum</span>
+            <div>
+              <h3 className="font-headline text-3xl mb-2">Comunidad 24/7</h3>
+              <p className="text-on-surface-variant text-sm">
+                Nunca caminas solo. Conéctate con personas que entienden tu proceso.
+              </p>
+            </div>
+            <div className="mt-6 p-4 bg-surface rounded-lg border border-outline-variant/20 italic text-sm text-secondary font-medium">
+              "Encontré la fuerza que me faltaba a través de sus historias."
+            </div>
+          </div>
+        </div>
+
+        <section className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
+          {[
+            {
+              icon: 'psychology',
+              color: 'text-primary',
+              title: 'Calma',
+              body: 'Un entorno claro para bajar fricción desde el primer ingreso. La experiencia está pensada para orientar rápido.',
+            },
+            {
+              icon: 'verified_user',
+              color: 'text-secondary',
+              title: 'Confianza',
+              body: 'Acompañamiento profesional con sesiones, campus y recorrido guiado dentro de una plataforma simple de usar.',
+            },
+            {
+              icon: 'groups',
+              color: 'text-tertiary',
+              title: 'Comunidad',
+              body: 'GAPA combina profesionales, recursos y comunidad para construir una experiencia de apoyo continuo.',
+            },
+          ].map((pillar) => (
+            <article
+              key={pillar.title}
+              className="bg-surface-container-low rounded-xl p-8 border border-outline-variant/10"
+            >
+              <span className={`material-symbols-outlined text-3xl ${pillar.color} mb-4 block`}>
+                {pillar.icon}
+              </span>
+              <h3 className="font-headline text-xl font-bold mb-2">{pillar.title}</h3>
+              <p className="text-on-surface-variant text-sm leading-relaxed">{pillar.body}</p>
+            </article>
+          ))}
         </section>
 
-        <section id="planes" className="marketing-section">
-          <div className="section-heading">
-            <p className="eyebrow">Planes</p>
-            <h2>La membresia es la puerta de entrada a la experiencia completa</h2>
-            <p>
-              Hoy la demo muestra dos formatos simples para presentar el modelo. El foco esta en
-              dejar claro que el valor no es solo acceso, sino acompanamiento continuo.
-            </p>
-          </div>
-
-          <div className="plan-grid">
-            {plans.map((plan) => (
-              <article key={plan.name} className="surface-card plan-card">
-                <p className="eyebrow">{plan.name}</p>
-                <h3>$XX</h3>
-                <p>{plan.detail}</p>
-                <ul className="feature-list">
-                  {plan.items.map((item) => (
-                    <li key={item}>{item}</li>
-                  ))}
-                </ul>
-              </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="surface-card closing-card">
-          <div>
-            <p className="eyebrow">Empezar</p>
-            <h2>Una plataforma clara para que el usuario sienta apoyo desde la primera pantalla</h2>
-            <p>
-              Si queres recorrer la experiencia completa, el siguiente paso es entrar por el
-              onboarding y activar la membresia.
-            </p>
-          </div>
-          <div className="cta-row">
-            <Link className="primary-button" to="/registro">
-              Ver onboarding
+        <section className="mt-20 surface-card bg-surface-container-low rounded-xl p-12 text-center">
+          <h2 className="font-headline text-4xl mb-4">
+            Una plataforma clara para que el usuario sienta apoyo desde la primera pantalla
+          </h2>
+          <p className="text-on-surface-variant max-w-xl mx-auto mb-8 leading-relaxed">
+            Si querés recorrer la experiencia completa, el siguiente paso es entrar por el
+            onboarding y activar la membresía.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <Link
+              to="/registro"
+              className="bg-tertiary text-on-tertiary px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 shadow-lg flex items-center justify-center gap-2"
+            >
+              Comenzar gratis <span className="material-symbols-outlined">arrow_forward</span>
             </Link>
-            <Link className="ghost-button" to="/login">
-              Ingresar
+            <Link
+              to="/login"
+              className="border-2 border-secondary text-secondary px-8 py-4 rounded-xl font-semibold text-lg hover:bg-secondary/5 flex items-center justify-center"
+            >
+              Ya tengo cuenta
             </Link>
           </div>
         </section>
