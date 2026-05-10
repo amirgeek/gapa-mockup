@@ -1,6 +1,8 @@
-import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 import { useAppContext } from '../context/useAppContext.jsx'
+import { BrandLogo } from '../components/BrandLogo.jsx'
+import { AppIcon } from '../components/AppIcon.jsx'
 
 export function LoginPage() {
   const navigate = useNavigate()
@@ -21,67 +23,91 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 bg-surface">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-10">
-          <span className="material-symbols-outlined text-5xl text-primary mb-2 block">diversity_1</span>
-          <h1 className="font-headline text-4xl font-bold text-primary italic">GAPA</h1>
-          <p className="text-on-surface-variant mt-2">Bienvenido de vuelta</p>
+    <div className="auth-page">
+      <div className="auth-art">
+        <img
+          src="https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1400&q=80"
+          alt="Espacio sereno de GAPA"
+        />
+        <div className="auth-art-content">
+          <BrandLogo to="/" inverted />
+          <div className="auth-art-quote">
+            <p className="eyebrow" style={{ color: 'var(--green-light)' }}>
+              Una sala que ya está armada
+            </p>
+            <p className="quote" style={{ color: '#FBFBFA' }}>
+              “Volver a entrar es lo más parecido a abrir la puerta de un lugar conocido.”
+            </p>
+            <p className="attr">Camila R., miembro desde marzo</p>
+          </div>
         </div>
+      </div>
 
-        <form className="bg-surface-container-low rounded-xl p-8 shadow-sm space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">
-              Email
-            </label>
-            <input
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData((c) => ({ ...c, email: e.target.value }))}
-              placeholder="tu@email.com"
-              className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:outline-none"
-            />
+      <div className="auth-form-side">
+        <form className="auth-form" onSubmit={handleSubmit}>
+          <div className="stack-sm">
+            <p className="eyebrow">Iniciar sesión</p>
+            <h2 className="h2">Bienvenida de vuelta.</h2>
+            <p className="body-sm">Ingresá con tu correo y tu agenda te espera ordenada.</p>
           </div>
 
-          <div>
-            <label className="text-xs font-bold uppercase tracking-widest text-on-surface-variant mb-2 block">
-              Contraseña
-            </label>
-            <input
-              type="password"
-              value={formData.password}
-              onChange={(e) => setFormData((c) => ({ ...c, password: e.target.value }))}
-              placeholder="••••••••"
-              className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:outline-none"
-            />
-          </div>
-
-          {error ? (
-            <p className="text-sm font-bold text-error">{error}</p>
-          ) : null}
-
-          <button
-            type="submit"
-            className="w-full bg-primary text-on-primary py-4 rounded-xl font-bold text-lg hover:opacity-90 transition-all mt-2"
-          >
-            Ingresar
+          <button type="button" className="social-btn">
+            <span style={{ fontFamily: 'Georgia, Times New Roman, serif' }}>G</span> Continuar con
+            Google
           </button>
 
-          <p className="text-center text-sm text-on-surface-variant">
-            ¿No tenés cuenta?{' '}
-            <Link to="/registro" className="text-primary font-bold hover:underline">
-              Registrarme
+          <div className="auth-divider">
+            <span>o con tu correo</span>
+          </div>
+
+          <div className="field">
+            <label htmlFor="login-email">Correo</label>
+            <input
+              id="login-email"
+              type="email"
+              value={formData.email}
+              onChange={(event) => setFormData((current) => ({ ...current, email: event.target.value }))}
+              placeholder="tu@correo.com"
+              required
+            />
+          </div>
+
+          <div className="field">
+            <label htmlFor="login-password">Contraseña</label>
+            <input
+              id="login-password"
+              type="password"
+              value={formData.password}
+              onChange={(event) =>
+                setFormData((current) => ({ ...current, password: event.target.value }))
+              }
+              placeholder="••••••••"
+              required
+            />
+          </div>
+
+          <div className="row-between" style={{ fontSize: 14 }}>
+            <label className="row" style={{ gap: 8, color: 'var(--muted)' }}>
+              <input type="checkbox" style={{ width: 16 }} defaultChecked />
+              Recordarme
+            </label>
+            <span style={{ color: 'var(--blue)', fontWeight: 700 }}>Olvidé mi contraseña</span>
+          </div>
+
+          {error ? <p className="form-error">{error}</p> : null}
+
+          <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }}>
+            Entrar
+            <AppIcon name="arrow" size={16} />
+          </button>
+
+          <p className="body-sm" style={{ textAlign: 'center' }}>
+            ¿Todavía no tenés cuenta?{' '}
+            <Link to="/registro" style={{ color: 'var(--green-deep)', fontWeight: 700 }}>
+              Activar membresía
             </Link>
           </p>
         </form>
-
-        <Link
-          to="/"
-          className="mt-6 flex items-center gap-2 text-on-surface-variant text-sm mx-auto hover:text-on-surface transition-colors justify-center"
-        >
-          <span className="material-symbols-outlined text-sm">arrow_back</span>
-          Volver al inicio
-        </Link>
       </div>
     </div>
   )

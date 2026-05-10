@@ -1,5 +1,25 @@
 import { Link } from 'react-router-dom'
 import { useAppContext } from '../context/useAppContext.jsx'
+import { AppIcon } from '../components/AppIcon.jsx'
+
+const sessionImages = [
+  'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?auto=format&fit=crop&w=1200&q=80',
+]
+
+const resourceImages = [
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=900&q=80',
+  'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1200&q=80',
+]
+
+function formatDate(dateString) {
+  return new Intl.DateTimeFormat('es-AR', {
+    day: '2-digit',
+    month: 'short',
+  }).format(new Date(dateString))
+}
 
 function formatTime(dateString) {
   return new Intl.DateTimeFormat('es-AR', {
@@ -8,158 +28,160 @@ function formatTime(dateString) {
   }).format(new Date(dateString))
 }
 
-const sessionImages = [
-  'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80',
-]
-
 export function DashboardPage() {
   const { currentUser, state, enrollInSession } = useAppContext()
-  const upcomingSessions = state.sessions.slice(0, 3)
+  const upcomingSessions = [...state.sessions].sort((a, b) => a.datetime.localeCompare(b.datetime))
+  const featured = upcomingSessions[0]
+  const recommendedResources = state.campusItems.filter((item) =>
+    item.audienceProfiles?.includes(currentUser?.profileCategory),
+  )
 
   return (
-    <div className="px-6 max-w-4xl mx-auto space-y-10 py-6">
-      {/* Greeting Banner */}
-      <section className="relative overflow-hidden rounded-3xl bg-primary-container p-8 text-on-primary-container shadow-xl">
-        <div className="relative z-10 space-y-2">
-          <h2 className="font-headline text-3xl font-bold">
-            Hola, {currentUser?.name?.split(' ')[0] ?? 'bienvenido'}
-          </h2>
-          <p className="text-on-primary-container/80 max-w-xs">
-            Tu santuario digital está listo. Tómate un momento para respirar.
+    <div className="dashboard-grid">
+      <section className="dash-hero">
+        <div>
+          <p className="eyebrow no-rule" style={{ color: 'var(--green-light)' }}>
+            Tu próxima sesión
           </p>
-          {currentUser?.profileCategory && (
-            <div className="pt-4">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
-                <span className="material-symbols-outlined text-sm">spa</span>
-                Perfil: {currentUser.profileCategory}
+          <h2 className="h2" style={{ marginTop: 10, color: '#FBFBFA' }}>
+            {featured?.title ?? 'Tu agenda se está armando'}
+          </h2>
+          <p className="body" style={{ color: 'rgba(251,251,250,0.82)', marginTop: 12 }}>
+            Hola, {currentUser?.name?.split(' ')[0] ?? 'miembro'}. Acá ves primero lo que importa:
+            sesión siguiente, recursos recomendados y seguimiento ordenado.
+          </p>
+          {featured ? (
+            <>
+              <div className="row-wrap" style={{ marginTop: 16 }}>
+                <span className="status confirmed">Inscripción abierta</span>
+                <span style={{ color: 'rgba(251,251,250,0.72)', fontSize: 14 }}>
+                  {formatDate(featured.datetime)} · {formatTime(featured.datetime)} · {featured.duration}
+                </span>
               </div>
-            </div>
-          )}
+              <div className="row-wrap" style={{ marginTop: 22 }}>
+                <button type="button" className="btn btn-on-dark" onClick={() => enrollInSession(featured.id)}>
+                  Reservar lugar
+                  <AppIcon name="arrow" size={16} />
+                </button>
+                <Link to="/app/sesiones" className="btn btn-ghost-on-dark">
+                  Ver agenda completa
+                </Link>
+              </div>
+            </>
+          ) : null}
         </div>
-        <div className="absolute -right-12 -top-12 w-64 h-64 bg-primary rounded-full blur-3xl opacity-30"></div>
+        <div className="hero-art">
+          <img src={sessionImages[0]} alt="Espacio de calma" />
+        </div>
       </section>
 
-      {/* Quick Actions */}
-      <section className="grid grid-cols-2 gap-4">
-        <Link
-          to="/app/comunidad"
-          className="flex flex-col items-start justify-between p-6 bg-surface-container-lowest rounded-3xl shadow-sm hover:shadow-md transition-all group aspect-square"
-        >
-          <div className="w-12 h-12 rounded-2xl bg-secondary-container flex items-center justify-center text-on-secondary-container group-hover:scale-110 transition-transform">
-            <span className="material-symbols-outlined">forum</span>
-          </div>
-          <div className="text-left">
-            <span className="block font-headline text-xl font-bold">Ir al Foro</span>
-            <span className="text-xs text-on-surface-variant font-medium uppercase tracking-wider">
-              Comunidad activa
-            </span>
-          </div>
-        </Link>
-
-        <Link
-          to="/app/campus"
-          className="flex flex-col items-start justify-between p-6 bg-surface-container-lowest rounded-3xl shadow-sm hover:shadow-md transition-all group aspect-square"
-        >
-          <div className="w-12 h-12 rounded-2xl bg-primary-fixed flex items-center justify-center text-on-primary-fixed group-hover:scale-110 transition-transform">
-            <span className="material-symbols-outlined">school</span>
-          </div>
-          <div className="text-left">
-            <span className="block font-headline text-xl font-bold">Explorar Campus</span>
-            <span className="text-xs text-on-surface-variant font-medium uppercase tracking-wider">
-              Nuevo contenido
-            </span>
-          </div>
-        </Link>
-      </section>
-
-      {/* Upcoming Sessions */}
-      <section className="space-y-6">
-        <div className="flex justify-between items-end">
+      {currentUser?.profileCategory ? (
+        <section className="member-banner">
+          <div className="dot" />
           <div>
-            <h3 className="font-headline text-2xl font-bold">Próximas Sesiones</h3>
-            <p className="text-sm text-on-surface-variant">Tu camino hacia el bienestar grupal</p>
+            <strong>Tu recorrido inicial es {currentUser.profileCategory}.</strong>
+            <span style={{ color: 'var(--muted)' }}>
+              {' '}
+              Ajustamos campus, sesiones sugeridas y comunidad alrededor de ese perfil.
+            </span>
           </div>
-          <Link to="/app/sesiones" className="text-primary font-bold text-sm hover:underline">
-            Ver todo
-          </Link>
+        </section>
+      ) : null}
+
+      <section className="grid-4">
+        <article className="stat-tile">
+          <span className="label">Sesiones inscriptas</span>
+          <span className="value">{currentUser?.joinedSessionIds?.length ?? 0}</span>
+          <span className="trend">Tu seguimiento activo</span>
+        </article>
+        <article className="stat-tile">
+          <span className="label">Sesiones totales</span>
+          <span className="value">{state.sessions.length}</span>
+          <span className="trend">Agenda compartida</span>
+        </article>
+        <article className="stat-tile">
+          <span className="label">Recursos campus</span>
+          <span className="value">{state.campusItems.length}</span>
+          <span className="trend">Biblioteca activa</span>
+        </article>
+        <article className="stat-tile">
+          <span className="label">Recomendados</span>
+          <span className="value">{recommendedResources.length}</span>
+          <span className="trend">Curados para vos</span>
+        </article>
+      </section>
+
+      <section className="grid-2">
+        <div className="stack">
+          <div className="row-between">
+            <h3 className="h3">Tu agenda de la semana</h3>
+            <Link to="/app/sesiones" className="btn btn-ghost btn-sm">
+              Ver todas
+            </Link>
+          </div>
+          <div className="stack" style={{ gap: 14 }}>
+            {upcomingSessions.slice(0, 3).map((session) => {
+              const isJoined = currentUser?.joinedSessionIds?.includes(session.id)
+              return (
+                <article key={session.id} className="session-card">
+                  <div className="session-date">
+                    <span className="day">{formatDate(session.datetime).split(' ')[0]}</span>
+                    <span className="month">{formatDate(session.datetime).split(' ')[1]}</span>
+                  </div>
+                  <div>
+                    <h3 className="h4">{session.title}</h3>
+                    <div className="session-meta">
+                      <span>{session.professional}</span>
+                      <span>{formatTime(session.datetime)}</span>
+                    </div>
+                  </div>
+                  <span className={`status ${isJoined ? 'confirmed' : 'open'}`}>
+                    {isJoined ? 'Inscripta' : 'Disponible'}
+                  </span>
+                </article>
+              )
+            })}
+          </div>
         </div>
 
-        <div className="flex gap-6 overflow-x-auto hide-scrollbar -mx-6 px-6 pb-4">
-          {upcomingSessions.map((session, index) => {
-            const isJoined = currentUser?.joinedSessionIds?.includes(session.id)
-            return (
-              <div
-                key={session.id}
-                className="flex-none w-72 bg-surface-container-low rounded-3xl overflow-hidden"
-              >
-                <div className="relative h-40">
-                  <img
-                    alt=""
-                    className="w-full h-full object-cover"
-                    src={sessionImages[index % sessionImages.length]}
-                  />
-                  <div className="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur text-on-surface-variant text-xs font-bold rounded-full">
-                    {formatTime(session.datetime)}
-                  </div>
-                </div>
-                <div className="p-5 space-y-3">
-                  <h4 className="font-headline text-lg font-bold">{session.title}</h4>
-                  <div className="flex items-center gap-2 text-on-surface-variant text-sm">
-                    <span className="material-symbols-outlined text-base">person</span>
-                    <span>{session.professional}</span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => enrollInSession(session.id)}
-                    disabled={isJoined}
-                    className={`w-full py-3 rounded-xl font-bold text-sm ${
-                      isJoined
-                        ? 'bg-surface-container-highest text-on-surface-variant cursor-default'
-                        : 'bg-secondary text-white hover:opacity-90'
-                    }`}
-                  >
-                    {isJoined ? 'Ya inscripto' : index === 0 ? 'Unirme ahora' : 'Reservar plaza'}
-                  </button>
+        <div className="stack">
+          <div className="row-between">
+            <h3 className="h3">Para tu momento</h3>
+            <Link to="/app/campus" className="btn btn-ghost btn-sm">
+              Ir al campus
+            </Link>
+          </div>
+          {recommendedResources.slice(0, 1).map((item, index) => (
+            <article key={item.id} className="resource-card">
+              <div className="resource-cover">
+                <img src={resourceImages[index % resourceImages.length]} alt={item.title} />
+                <span className="cover-tag">
+                  {item.type} · {item.readTime}
+                </span>
+              </div>
+              <div className="body">
+                <h3 className="h3">{item.title}</h3>
+                <div className="resource-meta">
+                  <strong>{item.author}</strong>
+                  <span>Recomendado para vos</span>
                 </div>
               </div>
-            )
-          })}
+            </article>
+          ))}
+          {recommendedResources.slice(1, 3).map((item, index) => (
+            <article key={item.id} className="card" style={{ padding: 18 }}>
+              <div className="row" style={{ justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div>
+                  <h3 className="h4">{item.title}</h3>
+                  <p className="body-sm" style={{ marginTop: 6 }}>
+                    {item.author} · {item.readTime}
+                  </p>
+                </div>
+                <span className="tag neutral">{index === 0 ? 'Audio' : 'Lectura'}</span>
+              </div>
+            </article>
+          ))}
         </div>
-      </section>
-
-      {/* Stats Row */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {[
-          { value: currentUser?.joinedSessionIds?.length ?? 0, label: 'Sesiones reservadas' },
-          { value: state.sessions.length, label: 'Sesiones totales' },
-          { value: state.campusItems.length, label: 'Recursos campus' },
-          {
-            value: state.campusItems.filter((i) =>
-              i.audienceProfiles?.includes(currentUser?.profileCategory),
-            ).length,
-            label: 'Recomendados',
-          },
-        ].map((stat) => (
-          <div
-            key={stat.label}
-            className="bg-surface-container-lowest rounded-2xl p-5 text-center shadow-sm"
-          >
-            <strong className="block text-3xl font-bold text-primary font-headline">
-              {stat.value}
-            </strong>
-            <span className="text-xs text-on-surface-variant font-medium">{stat.label}</span>
-          </div>
-        ))}
-      </section>
-
-      {/* Quote */}
-      <section className="bg-surface-container-highest rounded-3xl p-8 border border-outline-variant/15 text-center italic font-headline text-on-surface-variant">
-        <span className="material-symbols-outlined block mb-4 text-3xl text-primary/40">
-          format_quote
-        </span>
-        "El bienestar no es un destino, sino la forma en que viajamos."
       </section>
     </div>
   )

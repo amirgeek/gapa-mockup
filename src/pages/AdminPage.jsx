@@ -40,6 +40,10 @@ export function AdminPage() {
     event.preventDefault()
     createCampusItem({
       ...campusForm,
+      content: campusForm.content
+        .split('\n')
+        .map((line) => line.trim())
+        .filter(Boolean),
       audienceProfiles: [campusForm.audienceProfile],
     })
     setCampusForm(campusInitialState)
@@ -47,21 +51,23 @@ export function AdminPage() {
 
   return (
     <div className="page-stack">
-      <section className="page-header">
-        <div>
-          <p className="eyebrow">Administracion</p>
-          <h1>Panel para operar toda la plataforma demo</h1>
-          <p>
-            Desde aca se ordena la operacion de usuarios, sesiones y contenidos. La idea es validar
-            el modelo completo antes de conectar backend y pagos reales.
-          </p>
-        </div>
+      <section className="page-cover">
+        <p className="eyebrow" style={{ color: 'var(--green-light)' }}>
+          Administración
+        </p>
+        <h1 style={{ color: '#FBFBFA', marginTop: 10 }}>Operación completa de la plataforma.</h1>
+        <p className="lead" style={{ marginTop: 16, maxWidth: '58ch' }}>
+          Desde acá se administran usuarios, sesiones y contenidos. La idea sigue siendo validar el
+          modelo completo antes de conectar backend, pagos y auth reales.
+        </p>
       </section>
 
       <section className="cards-grid">
         <article className="surface-card">
           <p className="eyebrow">Usuarios</p>
-          <h2>{state.users.length} registrados</h2>
+          <h2 className="h3" style={{ marginTop: 10 }}>
+            {state.users.length} registrados
+          </h2>
           <div className="table-list">
             {state.users.map((user) => (
               <div key={user.id} className="table-row">
@@ -80,15 +86,26 @@ export function AdminPage() {
 
         <article className="surface-card">
           <p className="eyebrow">Resumen operativo</p>
-          <h2>Todo en un solo lugar</h2>
+          <h2 className="h3" style={{ marginTop: 10 }}>
+            Todo en un solo lugar
+          </h2>
           <div className="stats-grid">
-            <article className="stat-card">
-              <strong>{state.sessions.length}</strong>
-              <span>Sesiones cargadas</span>
+            <article className="stat-tile">
+              <span className="label">Sesiones</span>
+              <span className="value">{state.sessions.length}</span>
+              <span className="trend">Agenda cargada</span>
             </article>
-            <article className="stat-card">
-              <strong>{state.campusItems.length}</strong>
-              <span>Recursos publicados</span>
+            <article className="stat-tile">
+              <span className="label">Recursos</span>
+              <span className="value">{state.campusItems.length}</span>
+              <span className="trend">Campus publicado</span>
+            </article>
+            <article className="stat-tile">
+              <span className="label">Miembros</span>
+              <span className="value">
+                {state.users.filter((user) => user.role !== 'admin').length}
+              </span>
+              <span className="trend">Base activa</span>
             </article>
           </div>
         </article>
@@ -96,11 +113,12 @@ export function AdminPage() {
 
       <section className="cards-grid">
         <form className="surface-card form-stack" onSubmit={handleSessionSubmit}>
-          <p className="eyebrow">Nueva sesion</p>
-          <h2>Cargar encuentro con Meet</h2>
+          <p className="eyebrow">Nueva sesión</p>
+          <h2 className="h3">Cargar encuentro con Meet</h2>
+
           <div className="grid-two">
             <label className="field">
-              <span>Titulo</span>
+              <span>Título</span>
               <input
                 value={sessionForm.title}
                 onChange={(event) =>
@@ -110,7 +128,7 @@ export function AdminPage() {
               />
             </label>
             <label className="field">
-              <span>Categoria</span>
+              <span>Categoría</span>
               <input
                 value={sessionForm.category}
                 onChange={(event) =>
@@ -120,6 +138,7 @@ export function AdminPage() {
               />
             </label>
           </div>
+
           <div className="grid-two">
             <label className="field">
               <span>Profesional</span>
@@ -143,9 +162,10 @@ export function AdminPage() {
               />
             </label>
           </div>
+
           <div className="grid-two">
             <label className="field">
-              <span>Duracion</span>
+              <span>Duración</span>
               <input
                 value={sessionForm.duration}
                 onChange={(event) =>
@@ -168,6 +188,7 @@ export function AdminPage() {
               />
             </label>
           </div>
+
           <label className="field">
             <span>Link de Meet</span>
             <input
@@ -179,8 +200,9 @@ export function AdminPage() {
               required
             />
           </label>
+
           <label className="field">
-            <span>Descripcion</span>
+            <span>Descripción</span>
             <textarea
               value={sessionForm.description}
               onChange={(event) =>
@@ -190,17 +212,19 @@ export function AdminPage() {
               required
             />
           </label>
+
           <button className="primary-button" type="submit">
-            Guardar sesion
+            Guardar sesión
           </button>
         </form>
 
         <form className="surface-card form-stack" onSubmit={handleCampusSubmit}>
           <p className="eyebrow">Nuevo contenido</p>
-          <h2>Publicar recurso en campus</h2>
+          <h2 className="h3">Publicar recurso en campus</h2>
+
           <div className="grid-two">
             <label className="field">
-              <span>Titulo</span>
+              <span>Título</span>
               <input
                 value={campusForm.title}
                 onChange={(event) =>
@@ -210,7 +234,7 @@ export function AdminPage() {
               />
             </label>
             <label className="field">
-              <span>Categoria</span>
+              <span>Categoría</span>
               <input
                 value={campusForm.category}
                 onChange={(event) =>
@@ -220,6 +244,7 @@ export function AdminPage() {
               />
             </label>
           </div>
+
           <div className="grid-two">
             <label className="field">
               <span>Autor</span>
@@ -246,6 +271,7 @@ export function AdminPage() {
               </select>
             </label>
           </div>
+
           <label className="field">
             <span>Perfil recomendado</span>
             <select
@@ -260,6 +286,7 @@ export function AdminPage() {
               <option>Habitos y bienestar</option>
             </select>
           </label>
+
           <label className="field">
             <span>Bajada</span>
             <input
@@ -270,6 +297,7 @@ export function AdminPage() {
               required
             />
           </label>
+
           <label className="field">
             <span>Contenido</span>
             <textarea
@@ -278,9 +306,11 @@ export function AdminPage() {
                 setCampusForm((current) => ({ ...current, content: event.target.value }))
               }
               rows="6"
+              placeholder="Un párrafo por línea"
               required
             />
           </label>
+
           <button className="primary-button" type="submit">
             Publicar contenido
           </button>

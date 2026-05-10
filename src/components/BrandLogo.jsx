@@ -1,13 +1,16 @@
 import { Link } from 'react-router-dom'
 
-export function BrandLogo({ to = '/', size = 'md' }) {
-  const iconSize = size === 'lg' ? 'text-5xl' : size === 'sm' ? 'text-xl' : 'text-2xl'
-  const textSize = size === 'lg' ? 'text-4xl' : size === 'sm' ? 'text-xl' : 'text-2xl'
+export function BrandLogo({ to = '/', size = 'md', inverted = false }) {
+  const lockupClass = size === 'lg' ? 'brand-lockup brand-lockup-lg' : 'brand-lockup'
 
   return (
-    <Link to={to} className="flex items-center gap-2" aria-label="GAPA">
-      <span className={`material-symbols-outlined text-primary ${iconSize}`}>diversity_1</span>
-      <span className={`font-headline italic font-bold text-primary ${textSize}`}>GAPA</span>
+    <Link to={to} className={lockupClass} aria-label="GAPA">
+      <span className="brand-mark">
+        <img src="/gapa-logo.png" alt="Logo de GAPA" />
+      </span>
+      <span className="brand-word" style={inverted ? { color: '#FBFBFA' } : undefined}>
+        GAPA
+      </span>
     </Link>
   )
 }

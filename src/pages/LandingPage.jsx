@@ -1,168 +1,397 @@
 import { Link } from 'react-router-dom'
+import { BrandLogo } from '../components/BrandLogo.jsx'
+import { AppIcon } from '../components/AppIcon.jsx'
+
+const pillars = [
+  {
+    eyebrow: 'Calma',
+    title: 'Un entorno claro, sin estímulos innecesarios.',
+    body: 'Cada pantalla está pensada para bajar carga cognitiva. Sin alarmas, sin ruido, sin decisiones de más.',
+    foot: 'Diseño basado en evidencia',
+  },
+  {
+    eyebrow: 'Confianza',
+    title: 'Profesionales matriculados y sesiones grupales reales.',
+    body: 'Sesiones con agenda visible, cupos concretos y acceso privado solo para quienes están inscriptos.',
+    foot: 'Equipo verificado',
+  },
+  {
+    eyebrow: 'Comunidad',
+    title: 'Atravesarlo acompañado cambia la experiencia.',
+    body: 'La membresía abre acceso a campus, comunidad y seguimiento para sostener un proceso continuo.',
+    foot: 'Comunidad hispanohablante',
+  },
+]
+
+const steps = [
+  {
+    n: '01',
+    title: 'Onboarding breve para conocernos.',
+    body: 'Entendemos tu momento actual y organizamos un punto de partida claro dentro del campus.',
+  },
+  {
+    n: '02',
+    title: 'Activás la membresía.',
+    body: 'El alta crea tu cuenta y desbloquea sesiones, campus y comunidad al mismo tiempo.',
+  },
+  {
+    n: '03',
+    title: 'Entrás a tu recorrido.',
+    body: 'Agenda, recursos curados y seguimiento ordenado en una sola plataforma.',
+  },
+]
+
+const plans = [
+  {
+    name: 'Mensual',
+    flag: 'Empezar',
+    price: '$14.900',
+    suffix: 'por mes, cancelable cuando quieras',
+    desc: 'Para probar la plataforma y ver cómo encaja en tu semana.',
+    items: [
+      'Acceso al campus completo',
+      'Inscripción a 4 sesiones grupales por mes',
+      'Recorrido personalizado según onboarding',
+      'Comunidad y agenda compartida',
+    ],
+  },
+  {
+    name: 'Trimestral',
+    flag: 'Recomendada',
+    price: '$11.900',
+    suffix: 'por mes, pago cada 3 meses',
+    desc: 'Pensada para procesos con continuidad real y mejor seguimiento.',
+    featured: true,
+    items: [
+      'Todo lo del plan mensual',
+      'Sesiones grupales ilimitadas',
+      'Seguimiento profesional cada 4 semanas',
+      'Acceso anticipado a nuevos talleres',
+    ],
+  },
+  {
+    name: 'Anual',
+    flag: 'Compromiso',
+    price: '$9.500',
+    suffix: 'por mes, pago anual',
+    desc: 'Para sostener un proceso largo con el mejor precio por mes.',
+    items: [
+      'Todo lo del plan trimestral',
+      'Sesión individual de orientación al inicio',
+      'Acceso a talleres en vivo y archivo',
+      'Pausa de membresía hasta 30 días',
+    ],
+  },
+]
+
+const team = [
+  {
+    name: 'Dra. María Eugenia Soler',
+    role: 'Directora clínica, Mat. 12.483',
+    image:
+      'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    name: 'Lic. Tomás Iribarren',
+    role: 'Psicólogo, ansiedad y pánico',
+    image:
+      'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=900&q=80',
+  },
+  {
+    name: 'Lic. Florencia Castro',
+    role: 'Psicóloga, procesos grupales',
+    image:
+      'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=900&q=80',
+  },
+]
+
+const faqs = [
+  {
+    q: '¿GAPA reemplaza a un tratamiento clínico?',
+    a: 'No. GAPA es un acompañamiento grupal y un campus de recursos. Puede convivir con un tratamiento individual y sumar estructura a tu proceso.',
+  },
+  {
+    q: '¿Cómo son las sesiones grupales?',
+    a: 'Son encuentros por video, en grupos chicos, conducidos por psicólogos matriculados. Duran entre 60 y 75 minutos y trabajan una temática concreta.',
+  },
+  {
+    q: '¿Puedo cancelar la membresía?',
+    a: 'Sí. La membresía se puede cancelar sin formularios extensos y se mantiene activa hasta el final del período pago.',
+  },
+]
 
 export function LandingPage() {
   return (
-    <div className="bg-surface text-on-surface min-h-screen">
-      <header className="fixed top-0 w-full z-50 bg-[#f6faf7]/90 backdrop-blur-md shadow-sm">
-        <div className="flex justify-between items-center px-6 py-4 max-w-7xl mx-auto">
-          <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary">diversity_1</span>
-            <span className="font-headline italic text-2xl font-bold text-primary">GAPA</span>
-          </div>
-          <div className="flex gap-3">
-            <Link
-              to="/login"
-              className="border-2 border-secondary text-secondary px-5 py-2 rounded-xl font-semibold text-sm hover:bg-secondary/5 transition-all"
-            >
-              Iniciar Sesión
+    <div className="shell">
+      <header className="nav">
+        <div className="wrap nav-inner">
+          <BrandLogo />
+          <nav className="nav-links">
+            <a href="#como-funciona" className="nav-link">
+              Cómo funciona
+            </a>
+            <a href="#equipo" className="nav-link">
+              Profesionales
+            </a>
+            <a href="#planes" className="nav-link">
+              Planes
+            </a>
+            <a href="#preguntas" className="nav-link">
+              Preguntas
+            </a>
+          </nav>
+          <div className="nav-cta">
+            <Link to="/login" className="btn btn-ghost btn-sm">
+              Iniciar sesión
             </Link>
-            <Link
-              to="/registro"
-              className="bg-tertiary text-on-tertiary px-5 py-2 rounded-xl font-semibold text-sm hover:opacity-90 transition-all"
-            >
-              Registrarme
+            <Link to="/registro" className="btn btn-primary btn-sm">
+              Activar membresía
             </Link>
           </div>
         </div>
       </header>
 
-      <main className="pt-28 pb-20 px-6 max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-20">
-          <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-container/10 text-primary mb-8">
-              <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'FILL' 1" }}>verified</span>
-              <span className="text-xs font-semibold tracking-widest uppercase">Terapia grupal guiada por profesionales</span>
+      <section className="hero">
+        <img
+          className="hero-media"
+          src="https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1600&q=80"
+          alt="Comunidad en un espacio sereno"
+        />
+        <div className="hero-content wrap">
+          <div className="hero-grid">
+            <div>
+              <p className="eyebrow hero-eyebrow">
+                Grupo de Afrontamiento contra Problemas de Ansiedad
+              </p>
+              <h1 style={{ marginTop: 16 }}>
+                Cuando la ansiedad pide pausa, <em>acá hay una sala que ya está armada.</em>
+              </h1>
+              <p className="lead">
+                Una plataforma de membresía con sesiones profesionales, campus de recursos y
+                comunidad hispanohablante, pensada para sostener un proceso sin sobrecargar.
+              </p>
+              <div className="row-wrap" style={{ marginTop: 28 }}>
+                <Link to="/registro" className="btn btn-primary btn-lg">
+                  Activar membresía
+                  <AppIcon name="arrow" size={16} />
+                </Link>
+                <Link to="/login" className="btn btn-ghost-on-dark btn-lg">
+                  Ya soy miembro
+                </Link>
+              </div>
+              <div className="hero-meta-row">
+                <div className="hero-meta">
+                  <strong>2.400+</strong>miembros activos
+                </div>
+                <div className="hero-meta">
+                  <strong>18</strong>profesionales matriculados
+                </div>
+                <div className="hero-meta">
+                  <strong>96%</strong>renueva al 3er mes
+                </div>
+              </div>
             </div>
-            <h1 className="font-headline text-5xl md:text-7xl text-on-surface leading-[1.1] tracking-tight mb-8">
-              Tu espacio seguro para{' '}
-              <span className="italic text-primary block">sanar en comunidad</span>
-            </h1>
-            <p className="text-on-surface-variant text-lg max-w-xl mb-10 leading-relaxed">
-              Redescubre tu bienestar emocional a través del apoyo colectivo y la guía experta.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                to="/registro"
-                className="bg-tertiary text-on-tertiary px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 shadow-lg flex items-center justify-center gap-2"
-              >
-                Comenzar gratis{' '}
-                <span className="material-symbols-outlined">arrow_forward</span>
-              </Link>
-              <Link
-                to="/login"
-                className="border-2 border-secondary text-secondary px-8 py-4 rounded-xl font-semibold text-lg hover:bg-secondary/5 flex items-center justify-center"
-              >
-                Ya tengo cuenta
-              </Link>
+            <div className="hero-tile">
+              <p className="eyebrow hero-eyebrow no-rule">Próxima sesión abierta</p>
+              <h3 style={{ marginTop: 8 }}>Rumiación nocturna y técnicas para frenar el bucle</h3>
+              <p className="body-sm" style={{ color: 'rgba(251,251,250,0.78)', marginTop: 10 }}>
+                Lic. Tomás Iribarren, jueves 21:00 ART, 12 lugares disponibles para una práctica
+                concreta y guiada.
+              </p>
+              <div style={{ marginTop: 18, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.16)' }}>
+                <span className="quote" style={{ color: '#FBFBFA', fontSize: 42 }}>
+                  7
+                </span>
+                <p className="body-sm" style={{ color: 'rgba(251,251,250,0.78)' }}>
+                  cupos disponibles antes del cierre de inscripción
+                </p>
+              </div>
             </div>
           </div>
-          <div className="lg:col-span-5">
-            <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl">
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="wrap stack-lg">
+          <div className="stack" style={{ maxWidth: 760 }}>
+            <p className="eyebrow">Por qué GAPA</p>
+            <h2 className="h2">
+              No es una app de meditación. <em className="accent">Es una plataforma de acompañamiento profesional.</em>
+            </h2>
+            <p className="lead muted">
+              Cada decisión de producto busca bajar ansiedad, ordenar el proceso y sostener una
+              sensación de acompañamiento inmediato.
+            </p>
+          </div>
+          <div className="pillars-grid">
+            {pillars.map((pillar) => (
+              <article key={pillar.eyebrow} className="card">
+                <div className="stack">
+                  <p className="eyebrow">{pillar.eyebrow}</p>
+                  <h3 className="h3">{pillar.title}</h3>
+                </div>
+                <p className="body">{pillar.body}</p>
+                <div className="pillar-foot">{pillar.foot}</div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="como-funciona" className="section" style={{ background: 'var(--bg-deeper)' }}>
+        <div className="wrap stack-lg">
+          <div className="grid-2" style={{ alignItems: 'end' }}>
+            <div className="stack">
+              <p className="eyebrow">Cómo funciona</p>
+              <h2 className="h2">Un recorrido predecible, sin sorpresas innecesarias.</h2>
+            </div>
+            <p className="body muted" style={{ maxWidth: '50ch' }}>
+              El objetivo es pasar de “no sé por dónde empezar” a tener una agenda clara de la
+              semana, con sesiones, recursos y un punto de contacto humano.
+            </p>
+          </div>
+          <div className="steps-grid">
+            {steps.map((step) => (
+              <article key={step.n} className="card step-card">
+                <div className="quote" style={{ fontSize: 30 }}>
+                  {step.n}
+                </div>
+                <p className="eyebrow muted no-rule">Paso {step.n}</p>
+                <h3 className="h3">{step.title}</h3>
+                <p className="body">{step.body}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-tight">
+        <div className="wrap">
+          <article className="testimonial">
+            <div className="testimonial-photo">
               <img
-                className="w-full h-full object-cover"
-                src="https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1200&q=80"
-                alt="Comunidad GAPA"
+                className="photo-fill"
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80"
+                alt="Miembro de GAPA"
               />
             </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-2 bg-surface-container-low rounded-xl p-8 border border-outline-variant/10">
-            <span
-              className="material-symbols-outlined text-4xl text-primary mb-4 block"
-              style={{ fontVariationSettings: "'FILL' 1" }}
-            >
-              spa
-            </span>
-            <h3 className="font-headline text-3xl mb-4">Metodología GAPA</h3>
-            <p className="text-on-surface-variant leading-relaxed mb-4">
-              Integramos técnicas de mindfulness y psicología positiva en cada sesión grupal,
-              creando un entorno de crecimiento libre de juicios.
-            </p>
-            <ul className="space-y-2">
-              <li className="flex items-center gap-3 text-sm font-medium">
-                <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
-                Sesiones moderadas por expertos
-              </li>
-              <li className="flex items-center gap-3 text-sm font-medium">
-                <span className="material-symbols-outlined text-primary text-xl">check_circle</span>
-                Grupos reducidos y seguros
-              </li>
-            </ul>
-          </div>
-          <div className="bg-secondary-container/20 rounded-xl p-8 border border-secondary/10 flex flex-col justify-between">
-            <span className="material-symbols-outlined text-4xl text-secondary mb-4">forum</span>
-            <div>
-              <h3 className="font-headline text-3xl mb-2">Comunidad 24/7</h3>
-              <p className="text-on-surface-variant text-sm">
-                Nunca caminas solo. Conéctate con personas que entienden tu proceso.
+            <div className="testimonial-body">
+              <p className="eyebrow" style={{ color: 'var(--green-light)' }}>
+                Historia real
               </p>
+              <p className="quote">
+                “Llegué con miedo de volver a sentir lo mismo. En GAPA encontré orden, agenda y
+                gente que ya pasó por algo parecido.”
+              </p>
+              <div className="testimonial-attr">
+                <strong>Camila R.</strong>
+                <span>Miembro desde marzo, Buenos Aires</span>
+              </div>
             </div>
-            <div className="mt-6 p-4 bg-surface rounded-lg border border-outline-variant/20 italic text-sm text-secondary font-medium">
-              "Encontré la fuerza que me faltaba a través de sus historias."
+          </article>
+        </div>
+      </section>
+
+      <section id="equipo" className="section">
+        <div className="wrap stack-lg">
+          <div className="stack" style={{ maxWidth: 760 }}>
+            <p className="eyebrow">Profesionales</p>
+            <h2 className="h2">Un equipo clínico presente, visible y humano.</h2>
+          </div>
+          <div className="team-grid">
+            {team.map((member) => (
+              <article key={member.name} className="card team-card">
+                <div className="team-photo">
+                  <img src={member.image} alt={member.name} />
+                </div>
+                <div className="stack-sm">
+                  <h3 className="h3">{member.name}</h3>
+                  <p className="body-sm">{member.role}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="planes" className="section" style={{ background: 'var(--bg-deeper)' }}>
+        <div className="wrap stack-lg">
+          <div className="stack" style={{ maxWidth: 760 }}>
+            <p className="eyebrow">Planes</p>
+            <h2 className="h2">Una sola membresía, distintos ritmos de continuidad.</h2>
+          </div>
+          <div className="plans-grid">
+            {plans.map((plan) => (
+              <article key={plan.name} className={`plan-card ${plan.featured ? 'featured' : ''}`}>
+                <div className="row-between">
+                  <h3 className="h3">{plan.name}</h3>
+                  <span className="plan-flag tag">{plan.flag}</span>
+                </div>
+                <div>
+                  <div className="plan-price">{plan.price}</div>
+                  <p className="body-sm">{plan.suffix}</p>
+                </div>
+                <p className="body">{plan.desc}</p>
+                <ul className="plan-items">
+                  {plan.items.map((item) => (
+                    <li key={item} className="row">
+                      <AppIcon name="check" size={16} />
+                      <span>{item}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Link to="/registro" className="btn btn-primary" style={{ width: '100%' }}>
+                  Elegir {plan.name.toLowerCase()}
+                </Link>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="preguntas" className="section">
+        <div className="wrap stack-lg">
+          <div className="stack" style={{ maxWidth: 760 }}>
+            <p className="eyebrow">Preguntas frecuentes</p>
+            <h2 className="h2">Respuestas claras, sin vueltas.</h2>
+          </div>
+          <div className="faq-list">
+            {faqs.map((faq) => (
+              <article key={faq.q} className="faq-item">
+                <div className="faq-q">
+                  <h4 className="h4">{faq.q}</h4>
+                </div>
+                <p className="faq-a body">{faq.a}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="section-tight">
+        <div className="wrap">
+          <div className="page-cover">
+            <p className="eyebrow" style={{ color: 'var(--green-light)' }}>
+              Empezar
+            </p>
+            <h2 className="h2" style={{ color: '#FBFBFA', marginTop: 10 }}>
+              Si querés ver cómo se ordena tu proceso, el próximo paso es entrar.
+            </h2>
+            <p className="lead" style={{ maxWidth: '44ch', marginTop: 16 }}>
+              Ya podés recorrer onboarding, membresía, sesiones, campus, comunidad y panel
+              administrativo dentro de la plataforma.
+            </p>
+            <div className="row-wrap" style={{ marginTop: 26 }}>
+              <Link to="/registro" className="btn btn-primary btn-lg">
+                Activar membresía
+              </Link>
+              <Link to="/login" className="btn btn-ghost-on-dark btn-lg">
+                Iniciar sesión
+              </Link>
             </div>
           </div>
         </div>
-
-        <section className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {[
-            {
-              icon: 'psychology',
-              color: 'text-primary',
-              title: 'Calma',
-              body: 'Un entorno claro para bajar fricción desde el primer ingreso. La experiencia está pensada para orientar rápido.',
-            },
-            {
-              icon: 'verified_user',
-              color: 'text-secondary',
-              title: 'Confianza',
-              body: 'Acompañamiento profesional con sesiones, campus y recorrido guiado dentro de una plataforma simple de usar.',
-            },
-            {
-              icon: 'groups',
-              color: 'text-tertiary',
-              title: 'Comunidad',
-              body: 'GAPA combina profesionales, recursos y comunidad para construir una experiencia de apoyo continuo.',
-            },
-          ].map((pillar) => (
-            <article
-              key={pillar.title}
-              className="bg-surface-container-low rounded-xl p-8 border border-outline-variant/10"
-            >
-              <span className={`material-symbols-outlined text-3xl ${pillar.color} mb-4 block`}>
-                {pillar.icon}
-              </span>
-              <h3 className="font-headline text-xl font-bold mb-2">{pillar.title}</h3>
-              <p className="text-on-surface-variant text-sm leading-relaxed">{pillar.body}</p>
-            </article>
-          ))}
-        </section>
-
-        <section className="mt-20 surface-card bg-surface-container-low rounded-xl p-12 text-center">
-          <h2 className="font-headline text-4xl mb-4">
-            Una plataforma clara para que el usuario sienta apoyo desde la primera pantalla
-          </h2>
-          <p className="text-on-surface-variant max-w-xl mx-auto mb-8 leading-relaxed">
-            Si querés recorrer la experiencia completa, el siguiente paso es entrar por el
-            onboarding y activar la membresía.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              to="/registro"
-              className="bg-tertiary text-on-tertiary px-8 py-4 rounded-xl font-semibold text-lg hover:opacity-90 shadow-lg flex items-center justify-center gap-2"
-            >
-              Comenzar gratis <span className="material-symbols-outlined">arrow_forward</span>
-            </Link>
-            <Link
-              to="/login"
-              className="border-2 border-secondary text-secondary px-8 py-4 rounded-xl font-semibold text-lg hover:bg-secondary/5 flex items-center justify-center"
-            >
-              Ya tengo cuenta
-            </Link>
-          </div>
-        </section>
-      </main>
+      </section>
     </div>
   )
 }
