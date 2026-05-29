@@ -55,6 +55,11 @@ export function ShellLayout({ admin = false }) {
   const navigate = useNavigate()
   const page = usePageCopy(admin)
 
+  async function handleLogout() {
+    await logout()
+    navigate('/')
+  }
+
   return (
     <div className="app-shell">
       <div className="app-layout">
@@ -96,10 +101,7 @@ export function ShellLayout({ admin = false }) {
               type="button"
               className="side-link"
               style={{ marginTop: 8, width: '100%' }}
-              onClick={() => {
-                logout()
-                navigate('/')
-              }}
+              onClick={handleLogout}
             >
               <AppIcon name="logout" />
               <span>Cerrar sesión</span>

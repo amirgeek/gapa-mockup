@@ -6,13 +6,17 @@ import { AppIcon } from '../components/AppIcon.jsx'
 
 export function LoginPage() {
   const navigate = useNavigate()
-  const { login } = useAppContext()
+  const { login, isUsingSupabaseAuth } = useAppContext()
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
-    const result = login(formData.email, formData.password)
+    setSubmitting(true)
+    setError('')
+    const result = await login(formData.email, formData.password)
+    setSubmitting(false)
 
     if (!result.ok) {
       setError(result.message)
@@ -48,7 +52,10 @@ export function LoginPage() {
           <div className="stack-sm">
             <p className="eyebrow">Iniciar sesión</p>
             <h2 className="h2">Bienvenida de vuelta.</h2>
-            <p className="body-sm">Ingresá con tu correo y tu agenda te espera ordenada.</p>
+            <p className="body-sm">
+              Ingresá con tu correo y tu agenda te espera ordenada.
+              {isUsingSupabaseAuth ? ' Esta vez ya con autenticación real de Supabase.' : ''}
+            </p>
           </div>
 
           <button type="button" className="social-btn">
@@ -96,8 +103,13 @@ export function LoginPage() {
 
           {error ? <p className="form-error">{error}</p> : null}
 
-          <button type="submit" className="btn btn-primary btn-lg" style={{ width: '100%' }}>
-            Entrar
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg"
+            style={{ width: '100%', opacity: submitting ? 0.7 : 1 }}
+            disabled={submitting}
+          >
+            {submitting ? 'Entrando...' : 'Entrar'}
             <AppIcon name="arrow" size={16} />
           </button>
 

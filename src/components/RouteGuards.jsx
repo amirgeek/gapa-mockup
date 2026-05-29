@@ -2,8 +2,12 @@ import { Navigate, useLocation } from 'react-router-dom'
 import { useAppContext } from '../context/useAppContext.jsx'
 
 export function PrivateRoute({ children }) {
-  const { currentUser } = useAppContext()
+  const { currentUser, authReady } = useAppContext()
   const location = useLocation()
+
+  if (!authReady) {
+    return null
+  }
 
   if (!currentUser) {
     return <Navigate to="/login" replace state={{ from: location.pathname }} />
@@ -13,7 +17,11 @@ export function PrivateRoute({ children }) {
 }
 
 export function PublicOnlyRoute({ children }) {
-  const { currentUser } = useAppContext()
+  const { currentUser, authReady } = useAppContext()
+
+  if (!authReady) {
+    return null
+  }
 
   if (!currentUser) {
     return children
@@ -23,7 +31,11 @@ export function PublicOnlyRoute({ children }) {
 }
 
 export function AdminOnlyRoute({ children }) {
-  const { currentUser } = useAppContext()
+  const { currentUser, authReady } = useAppContext()
+
+  if (!authReady) {
+    return null
+  }
 
   if (!currentUser) {
     return <Navigate to="/login" replace />

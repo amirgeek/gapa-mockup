@@ -20,13 +20,14 @@ const initialState = {
 
 export function RegisterPage() {
   const navigate = useNavigate()
-  const { registerWithMembership } = useAppContext()
+  const { registerWithMembership, isUsingSupabaseAuth } = useAppContext()
   const [formData, setFormData] = useState(initialState)
   const [error, setError] = useState('')
   const [step, setStep] = useState(0)
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
   const [paymentMessage, setPaymentMessage] = useState('')
   const [creatingPreference, setCreatingPreference] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   const answeredCount = Object.keys(formData.onboardingAnswers).length
   const onboardingSummary =
@@ -113,7 +114,7 @@ export function RegisterPage() {
     }
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
 
     if (answeredCount !== onboardingQuestions.length) {
@@ -121,11 +122,15 @@ export function RegisterPage() {
       return
     }
 
-    const result = registerWithMembership({
+    setSubmitting(true)
+
+    const result = await registerWithMembership({
       ...formData,
       profileCategory,
       onboardingSummary,
     })
+
+    setSubmitting(false)
 
     if (!result.ok) {
       setError(result.message)
@@ -393,6 +398,7 @@ export function RegisterPage() {
                 <p className="body-sm" style={{ marginTop: 8 }}>
                   Aunque hoy falten las credenciales, el proyecto ya queda listo para crear la
                   preferencia de pago en backend apenas cargues el access token.
+                  {isUsingSupabaseAuth ? ' Además, el alta ya se intenta guardar en Supabase Auth y profiles.' : ''}
                 </p>
                 <div className="row-wrap" style={{ marginTop: 18 }}>
                   <button
@@ -442,8 +448,13 @@ export function RegisterPage() {
                 <button type="button" className="btn btn-ghost" onClick={() => setStep(1)}>
                   Atrás
                 </button>
-                <button type="submit" className="btn btn-primary">
-                  Activar membresía
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  disabled={submitting}
+                  style={{ opacity: submitting ? 0.7 : 1 }}
+                >
+                  {submitting ? 'Activando...' : 'Activar membresía'}
                   <AppIcon name="arrow" size={16} />
                 </button>
               </div>
