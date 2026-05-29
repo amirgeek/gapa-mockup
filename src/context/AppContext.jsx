@@ -111,6 +111,108 @@ export function AppProvider({ children }) {
       }))
     }
 
+    function saveProcessGoals(goals) {
+      if (!currentUser) {
+        return { ok: false, message: 'No hay usuario activo.' }
+      }
+
+      const cleanedGoals = goals.map((goal) => goal.trim()).filter(Boolean)
+
+      setState((current) => ({
+        ...current,
+        users: current.users.map((user) =>
+          user.id === currentUser.id ? { ...user, processGoals: cleanedGoals } : user,
+        ),
+      }))
+
+      return { ok: true }
+    }
+
+    function saveProcessEntry(entryData) {
+      if (!currentUser) {
+        return { ok: false, message: 'No hay usuario activo.' }
+      }
+
+      const nextEntry = {
+        id: `entry-${crypto.randomUUID()}`,
+        createdAt: new Date().toISOString(),
+        ...entryData,
+      }
+
+      setState((current) => ({
+        ...current,
+        users: current.users.map((user) =>
+          user.id === currentUser.id
+            ? {
+                ...user,
+                processEntries: [nextEntry, ...(user.processEntries ?? [])].slice(0, 12),
+              }
+            : user,
+        ),
+      }))
+
+      return { ok: true }
+    }
+
+    function addExposureStep(step) {
+      if (!currentUser) {
+        return { ok: false, message: 'No hay usuario activo.' }
+      }
+
+      const cleanedStep = step.trim()
+
+      if (!cleanedStep) {
+        return { ok: false, message: 'Escribí un desafío primero.' }
+      }
+
+      const nextStep = {
+        id: `exposure-${crypto.randomUUID()}`,
+        text: cleanedStep,
+        status: 'pendiente',
+        createdAt: new Date().toISOString(),
+      }
+
+      setState((current) => ({
+        ...current,
+        users: current.users.map((user) =>
+          user.id === currentUser.id
+            ? {
+                ...user,
+                exposureSteps: [...(user.exposureSteps ?? []), nextStep].slice(-8),
+              }
+            : user,
+        ),
+      }))
+
+      return { ok: true }
+    }
+
+    function logSosUse(tool) {
+      if (!currentUser) {
+        return { ok: false, message: 'No hay usuario activo.' }
+      }
+
+      const nextUse = {
+        id: `sos-${crypto.randomUUID()}`,
+        tool,
+        usedAt: new Date().toISOString(),
+      }
+
+      setState((current) => ({
+        ...current,
+        users: current.users.map((user) =>
+          user.id === currentUser.id
+            ? {
+                ...user,
+                sosHistory: [nextUse, ...(user.sosHistory ?? [])].slice(0, 10),
+              }
+            : user,
+        ),
+      }))
+
+      return { ok: true }
+    }
+
     function createSession(sessionData) {
       const newSession = {
         id: `session-${crypto.randomUUID()}`,
@@ -146,6 +248,10 @@ export function AppProvider({ children }) {
       registerWithMembership,
       enrollInSession,
       saveDailyCheckIn,
+      saveProcessGoals,
+      saveProcessEntry,
+      addExposureStep,
+      logSosUse,
       createSession,
       createCampusItem,
     }

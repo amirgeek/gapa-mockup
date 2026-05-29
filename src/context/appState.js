@@ -28,6 +28,31 @@ export const seedState = {
         'Dormir con menos rumiación',
         'Sostener una rutina semanal simple',
       ],
+      processEntries: [
+        {
+          id: 'entry-1',
+          createdAt: '2026-05-28T20:30:00.000Z',
+          situation: 'Recibir un mensaje de trabajo fuera de horario',
+          thought: 'Seguro hice algo mal y mañana va a explotar un problema.',
+          response: 'Me quedé releyendo el mensaje y evitando dejar el celular.',
+          outcome: 'La ansiedad subió esa noche y dormí con tensión.',
+        },
+      ],
+      exposureSteps: [
+        {
+          id: 'exposure-1',
+          text: 'Responder un mensaje sin releerlo cinco veces.',
+          status: 'pendiente',
+          createdAt: '2026-05-29T08:00:00.000Z',
+        },
+      ],
+      sosHistory: [
+        {
+          id: 'sos-1',
+          tool: 'Grounding 5-4-3-2-1',
+          usedAt: '2026-05-29T09:15:00.000Z',
+        },
+      ],
     },
   ],
   sessions: [

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { useAppContext } from '../context/useAppContext.jsx'
 import { AppIcon } from '../components/AppIcon.jsx'
 
@@ -55,6 +55,27 @@ const sosTools = [
   'Protocolo “si estoy con ansiedad ahora, hago esto”',
 ]
 
+const sosProtocols = {
+  'Respiración guiada de 2 minutos': [
+    'Apoyá ambos pies en el piso y aflojá hombros y mandíbula.',
+    'Inhalá en 4 tiempos por nariz.',
+    'Exhalá en 6 tiempos por boca, sin forzarte.',
+    'Repetilo durante 2 minutos y dejá que el cuerpo baje de a poco.',
+  ],
+  'Grounding 5-4-3-2-1': [
+    'Nombrá 5 cosas que ves a tu alrededor.',
+    'Tocá 4 superficies distintas y notá su textura.',
+    'Escuchá 3 sonidos presentes.',
+    'Identificá 2 olores y 1 sabor o sensación en la boca.',
+  ],
+  'Protocolo “si estoy con ansiedad ahora, hago esto”': [
+    'Nombrá en voz baja: “esto es ansiedad, no peligro”.',
+    'Elegí una herramienta corporal corta: respiración o grounding.',
+    'No tomes decisiones grandes en los próximos 10 minutos.',
+    'Elegí una acción pequeña y segura para sostenerte ahora.',
+  ],
+}
+
 function formatDate(dateString) {
   return new Intl.DateTimeFormat('es-AR', {
     day: '2-digit',
@@ -70,8 +91,27 @@ function formatTime(dateString) {
 }
 
 export function DashboardPage() {
-  const { currentUser, state, enrollInSession, saveDailyCheckIn } = useAppContext()
+  const {
+    currentUser,
+    state,
+    enrollInSession,
+    saveDailyCheckIn,
+    saveProcessGoals,
+    saveProcessEntry,
+    addExposureStep,
+    logSosUse,
+  } = useAppContext()
   const [activeModule, setActiveModule] = useState('entender')
+  const [goalsDraft, setGoalsDraft] = useState(() => (currentUser?.processGoals ?? []).join('\n'))
+  const [entryForm, setEntryForm] = useState({
+    situation: '',
+    thought: '',
+    response: '',
+    outcome: '',
+  })
+  const [exposureInput, setExposureInput] = useState('')
+  const [activeSosTool, setActiveSosTool] = useState(sosTools[0])
+  const [feedback, setFeedback] = useState('')
   const today = new Date().toISOString().slice(0, 10)
   const todaysCheckIn = currentUser?.dailyCheckIns?.find((entry) => entry.date === today)?.level ?? null
 
@@ -80,16 +120,60 @@ export function DashboardPage() {
   const recommendedResources = state.campusItems.filter((item) =>
     item.audienceProfiles?.includes(currentUser?.profileCategory),
   )
+  const processEntries = currentUser?.processEntries ?? []
+  const exposureSteps = currentUser?.exposureSteps ?? []
+  const sosHistory = currentUser?.sosHistory ?? []
 
-  const moduleContent = useMemo(() => {
-    const processGoals = currentUser?.processGoals?.length
-      ? currentUser.processGoals
-      : [
-          'Entender mejor mi patrón de ansiedad',
-          'Aprender herramientas concretas',
-          'Sostener una rutina emocional más estable',
-        ]
+  function handleSaveGoals() {
+    const goals = goalsDraft
+      .split('\n')
+      .map((goal) => goal.trim())
+      .filter(Boolean)
 
+    const result = saveProcessGoals(goals)
+
+    if (result?.ok) {
+      setFeedback('Objetivos actualizados.')
+    }
+  }
+
+  function handleEntrySubmit(event) {
+    event.preventDefault()
+
+    const result = saveProcessEntry(entryForm)
+
+    if (result?.ok) {
+      setEntryForm({
+        situation: '',
+        thought: '',
+        response: '',
+        outcome: '',
+      })
+      setFeedback('Mapa de ansiedad guardado.')
+    }
+  }
+
+  function handleAddExposure(event) {
+    event.preventDefault()
+
+    const result = addExposureStep(exposureInput)
+
+    if (result?.ok) {
+      setExposureInput('')
+      setFeedback('Desafío agregado a tu hoja de ruta.')
+    }
+  }
+
+  function handleUseSosTool(tool) {
+    setActiveSosTool(tool)
+    const result = logSosUse(tool)
+
+    if (result?.ok) {
+      setFeedback(`Herramienta registrada: ${tool}.`)
+    }
+  }
+
+  const moduleContent = (() => {
     if (activeModule === 'entender') {
       return (
         <div className="stack">
@@ -165,26 +249,119 @@ export function DashboardPage() {
           <div className="grid-two">
             <article className="card" style={{ padding: 20 }}>
               <p className="eyebrow no-rule">Objetivos actuales</p>
-              <ul className="takeaways-list" style={{ marginTop: 14 }}>
-                {processGoals.map((goal) => (
-                  <li key={goal}>
-                    <span style={{ color: 'var(--green)' }}>•</span>
-                    <span>{goal}</span>
-                  </li>
-                ))}
-              </ul>
+              <textarea
+                rows={5}
+                style={{ marginTop: 14 }}
+                value={goalsDraft}
+                onChange={(event) => setGoalsDraft(event.target.value)}
+                placeholder="Un objetivo por línea"
+              />
+              <div className="row-wrap" style={{ marginTop: 14 }}>
+                <button type="button" className="btn btn-primary btn-sm" onClick={handleSaveGoals}>
+                  Guardar objetivos
+                </button>
+              </div>
             </article>
             <article className="card" style={{ padding: 20 }}>
               <p className="eyebrow no-rule">Seguimiento personal</p>
               <div className="stack-sm" style={{ marginTop: 14 }}>
                 <p className="body-sm">Registro de ansiedad: {todaysCheckIn ?? 'sin cargar hoy'}/10</p>
-                <p className="body-sm">Próximo paso sugerido: exposición gradual a una situación segura.</p>
+                <p className="body-sm">
+                  Próximo paso sugerido: {exposureSteps[0]?.text ?? 'sumar una exposición gradual simple.'}
+                </p>
                 <p className="body-sm">
                   Recursos recomendados hoy: {recommendedResources.length} según tu patrón interno.
                 </p>
               </div>
             </article>
           </div>
+          <div className="grid-two">
+            <article className="card" style={{ padding: 20 }}>
+              <div className="row-between">
+                <p className="eyebrow no-rule">Mapa rápido de ansiedad</p>
+                <span className="tag neutral">Situación · pensamiento · respuesta</span>
+              </div>
+              <form className="stack-sm" style={{ marginTop: 14 }} onSubmit={handleEntrySubmit}>
+                <input
+                  value={entryForm.situation}
+                  onChange={(event) =>
+                    setEntryForm((current) => ({ ...current, situation: event.target.value }))
+                  }
+                  placeholder="Situación que activó la ansiedad"
+                />
+                <input
+                  value={entryForm.thought}
+                  onChange={(event) =>
+                    setEntryForm((current) => ({ ...current, thought: event.target.value }))
+                  }
+                  placeholder="Qué pensé"
+                />
+                <input
+                  value={entryForm.response}
+                  onChange={(event) =>
+                    setEntryForm((current) => ({ ...current, response: event.target.value }))
+                  }
+                  placeholder="Qué hice o evité"
+                />
+                <textarea
+                  rows={3}
+                  value={entryForm.outcome}
+                  onChange={(event) =>
+                    setEntryForm((current) => ({ ...current, outcome: event.target.value }))
+                  }
+                  placeholder="Qué pasó después"
+                />
+                <button type="submit" className="btn btn-primary btn-sm">
+                  Guardar registro
+                </button>
+              </form>
+            </article>
+            <article className="card" style={{ padding: 20 }}>
+              <div className="row-between">
+                <p className="eyebrow no-rule">Exposición gradual</p>
+                <span className="tag neutral">{exposureSteps.length} desafíos</span>
+              </div>
+              <form className="stack-sm" style={{ marginTop: 14 }} onSubmit={handleAddExposure}>
+                <input
+                  value={exposureInput}
+                  onChange={(event) => setExposureInput(event.target.value)}
+                  placeholder="Ej: responder un audio sin postergarlo"
+                />
+                <button type="submit" className="btn btn-ghost btn-sm">
+                  Agregar desafío
+                </button>
+              </form>
+              <div className="stack-sm" style={{ marginTop: 14 }}>
+                {exposureSteps.slice(0, 3).map((step) => (
+                  <div key={step.id} className="card" style={{ padding: 14 }}>
+                    <p className="body-sm">{step.text}</p>
+                  </div>
+                ))}
+              </div>
+            </article>
+          </div>
+          <article className="card" style={{ padding: 20 }}>
+            <div className="row-between">
+              <p className="eyebrow no-rule">Últimos registros</p>
+              <span className="tag neutral">{processEntries.length} guardados</span>
+            </div>
+            <div className="stack-sm" style={{ marginTop: 14 }}>
+              {processEntries.slice(0, 3).map((entry) => (
+                <div key={entry.id} className="card" style={{ padding: 16 }}>
+                  <strong style={{ display: 'block', color: 'var(--green-deep)' }}>{entry.situation}</strong>
+                  <p className="body-sm" style={{ marginTop: 8 }}>
+                    <strong>Pensamiento:</strong> {entry.thought}
+                  </p>
+                  <p className="body-sm">
+                    <strong>Respuesta:</strong> {entry.response}
+                  </p>
+                  <p className="body-sm">
+                    <strong>Resultado:</strong> {entry.outcome}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </article>
           <article className="card" style={{ padding: 20 }}>
             <p className="eyebrow no-rule">Recorrido guiado</p>
             <div className="grid-4" style={{ marginTop: 14 }}>
@@ -214,7 +391,13 @@ export function DashboardPage() {
             <article key={tool} className="card" style={{ padding: 18 }}>
               <div className="row-between">
                 <p className="body">{tool}</p>
-                <span className="tag neutral">2-5 min</span>
+                <button
+                  type="button"
+                  className="btn btn-ghost btn-sm"
+                  onClick={() => handleUseSosTool(tool)}
+                >
+                  Usar ahora
+                </button>
               </div>
             </article>
           ))}
@@ -230,9 +413,25 @@ export function DashboardPage() {
             pequeña que me sostenga los próximos diez minutos.
           </p>
         </article>
+        <article className="card" style={{ padding: 20 }}>
+          <div className="row-between">
+            <p className="eyebrow no-rule">Herramienta activa</p>
+            <span className="tag neutral">{sosHistory.length} usos registrados</span>
+          </div>
+          <h4 className="h4" style={{ marginTop: 12 }}>
+            {activeSosTool}
+          </h4>
+          <div className="stack-sm" style={{ marginTop: 14 }}>
+            {sosProtocols[activeSosTool].map((step) => (
+              <div key={step} className="card" style={{ padding: 14 }}>
+                <p className="body-sm">{step}</p>
+              </div>
+            ))}
+          </div>
+        </article>
       </div>
     )
-  }, [activeModule, currentUser, enrollInSession, featuredSession, recommendedResources.length, todaysCheckIn, upcomingSessions])
+  })()
 
   return (
     <div className="dashboard-grid">
@@ -333,6 +532,13 @@ export function DashboardPage() {
         <article className="card">{moduleContent}</article>
 
         <div className="stack">
+          {feedback ? (
+            <article className="card" style={{ padding: 16, background: 'var(--green-wash)' }}>
+              <p className="body-sm" style={{ color: 'var(--green-deep)' }}>
+                {feedback}
+              </p>
+            </article>
+          ) : null}
           <article className="card" style={{ padding: 22 }}>
             <div className="row-between">
               <h3 className="h3">Próxima reunión</h3>
