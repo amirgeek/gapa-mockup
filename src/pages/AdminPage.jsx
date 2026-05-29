@@ -280,10 +280,15 @@ export function AdminPage() {
                 setCampusForm((current) => ({ ...current, audienceProfile: event.target.value }))
               }
             >
-              <option>Ansiedad y regulacion</option>
-              <option>Descanso y estres</option>
-              <option>Vinculos y autoestima</option>
-              <option>Habitos y bienestar</option>
+              <option>Ansiedad generalizada</option>
+              <option>Pánico</option>
+              <option>Ansiedad social</option>
+              <option>Fobia específica</option>
+              <option>TOC</option>
+              <option>Somatización</option>
+              <option>Ánimo depresivo</option>
+              <option>Desregulación emocional</option>
+              <option>Pensamiento desorganizado</option>
             </select>
           </label>
 

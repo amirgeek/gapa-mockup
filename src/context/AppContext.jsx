@@ -52,6 +52,7 @@ export function AppProvider({ children }) {
         membershipPlan: formData.plan,
         profileCategory: formData.profileCategory,
         onboardingAnswers: formData.onboardingAnswers,
+        onboardingSummary: formData.onboardingSummary ?? null,
       }
 
       setState((current) => ({
@@ -80,6 +81,33 @@ export function AppProvider({ children }) {
             ? { ...session, enrolledUserIds: [...session.enrolledUserIds, currentUser.id] }
             : session,
         ),
+      }))
+    }
+
+    function saveDailyCheckIn(level) {
+      if (!currentUser) {
+        return
+      }
+
+      const today = new Date().toISOString().slice(0, 10)
+
+      setState((current) => ({
+        ...current,
+        users: current.users.map((user) => {
+          if (user.id !== currentUser.id) {
+            return user
+          }
+
+          const existing = user.dailyCheckIns ?? []
+          const nextCheckIns = existing.some((entry) => entry.date === today)
+            ? existing.map((entry) => (entry.date === today ? { ...entry, level } : entry))
+            : [...existing, { date: today, level }]
+
+          return {
+            ...user,
+            dailyCheckIns: nextCheckIns,
+          }
+        }),
       }))
     }
 
@@ -117,6 +145,7 @@ export function AppProvider({ children }) {
       logout,
       registerWithMembership,
       enrollInSession,
+      saveDailyCheckIn,
       createSession,
       createCampusItem,
     }

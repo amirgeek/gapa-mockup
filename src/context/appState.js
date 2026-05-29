@@ -11,6 +11,7 @@ export const seedState = {
       role: 'admin',
       membershipStatus: 'active',
       joinedSessionIds: [],
+      dailyCheckIns: [],
     },
     {
       id: 'user-1',
@@ -20,7 +21,13 @@ export const seedState = {
       role: 'user',
       membershipStatus: 'active',
       joinedSessionIds: ['session-1'],
-      profileCategory: 'Ansiedad y regulacion',
+      profileCategory: 'Ansiedad generalizada',
+      dailyCheckIns: [{ date: '2026-05-29', level: 4 }],
+      processGoals: [
+        'Entender qué dispara mi ansiedad',
+        'Dormir con menos rumiación',
+        'Sostener una rutina semanal simple',
+      ],
     },
   ],
   sessions: [
@@ -72,7 +79,7 @@ export const seedState = {
       author: 'Dra. Sofia Mendez',
       type: 'Guia',
       readTime: '6 min',
-      audienceProfiles: ['Ansiedad y regulacion', 'Habitos y bienestar'],
+      audienceProfiles: ['Pánico', 'Ansiedad generalizada', 'Somatización'],
       excerpt: 'Ejercicio rapido para volver al presente cuando la ansiedad sube.',
       content: [
         'La tecnica 5-4-3-2-1 es una herramienta de grounding pensada para esos momentos en los que la ansiedad acelera el cuerpo y parece llevarse toda tu atencion. No intenta pelearse con lo que sentis: busca devolverte referencia, peso y presencia.',
@@ -92,7 +99,7 @@ export const seedState = {
       author: 'Dr. Ricardo Salinas',
       type: 'Audio',
       readTime: '9 min',
-      audienceProfiles: ['Descanso y estres', 'Ansiedad y regulacion'],
+      audienceProfiles: ['Ansiedad generalizada', 'Ánimo depresivo', 'Somatización'],
       excerpt: 'Rutina corta para bajar revoluciones y preparar el descanso.',
       content: [
         'Este recurso propone una secuencia breve para usar todas las noches: respiracion lenta, escaneo corporal y una transicion suave hacia el descanso. La idea es cortar la hiperactivacion que suele aparecer cuando por fin frenamos.',
@@ -112,7 +119,7 @@ export const seedState = {
       author: 'Lic. Julia Ferreyra',
       type: 'Plantilla',
       readTime: '4 min',
-      audienceProfiles: ['Habitos y bienestar', 'Vinculos y autoestima'],
+      audienceProfiles: ['Ánimo depresivo', 'Desregulación emocional', 'Ansiedad generalizada'],
       excerpt: 'Plantilla simple para sostener pequenas acciones de bienestar.',
       content: [
         'Esta plantilla no busca exigirte mas, sino ayudarte a sostener pequenas acciones que suelen caerse cuando la semana se complica. El objetivo es ver tu autocuidado como sistema y no como actos aislados.',
@@ -132,7 +139,7 @@ export const seedState = {
       author: 'Lic. Mariana Costa',
       type: 'Guia',
       readTime: '8 min',
-      audienceProfiles: ['Vinculos y autoestima'],
+      audienceProfiles: ['Ansiedad social', 'Desregulación emocional'],
       excerpt: 'Claves para empezar a poner limites sin sentir que estas fallando.',
       content: [
         'Poner limites no es alejarte de los demas: es cuidar la relacion para no entrar desde el agotamiento, el resentimiento o la culpa. Muchas veces el problema no es no saber lo que necesitas, sino sentir que expresarlo va a generar conflicto.',

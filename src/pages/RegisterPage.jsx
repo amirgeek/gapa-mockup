@@ -3,7 +3,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAppContext } from '../context/useAppContext.jsx'
 import { AppIcon } from '../components/AppIcon.jsx'
 import { BrandLogo } from '../components/BrandLogo.jsx'
-import { calculateProfileCategory, onboardingQuestions } from '../data/onboardingProfile.js'
+import { createMercadoPagoPreference } from '../lib/mercadoPago.js'
+import {
+  getOnboardingSummary,
+  onboardingQuestions,
+} from '../data/onboardingProfile.js'
 
 const initialState = {
   name: '',
@@ -21,12 +25,15 @@ export function RegisterPage() {
   const [error, setError] = useState('')
   const [step, setStep] = useState(0)
   const [activeQuestionIndex, setActiveQuestionIndex] = useState(0)
+  const [paymentMessage, setPaymentMessage] = useState('')
+  const [creatingPreference, setCreatingPreference] = useState(false)
 
   const answeredCount = Object.keys(formData.onboardingAnswers).length
-  const profileCategory =
+  const onboardingSummary =
     answeredCount === onboardingQuestions.length
-      ? calculateProfileCategory(formData.onboardingAnswers)
+      ? getOnboardingSummary(formData.onboardingAnswers)
       : null
+  const profileCategory = onboardingSummary?.profileCategory ?? null
   const currentQuestion = onboardingQuestions[activeQuestionIndex]
   const currentAnswer = formData.onboardingAnswers[currentQuestion?.id]
 
@@ -34,13 +41,13 @@ export function RegisterPage() {
     setFormData((current) => ({ ...current, [key]: value }))
   }
 
-  function pickAnswer(category) {
+  function pickAnswer(value) {
     setError('')
     setFormData((current) => ({
       ...current,
       onboardingAnswers: {
         ...current.onboardingAnswers,
-        [currentQuestion.id]: category,
+        [currentQuestion.id]: value,
       },
     }))
   }
@@ -77,6 +84,35 @@ export function RegisterPage() {
     setStep(2)
   }
 
+  async function handleMercadoPagoCheckout() {
+    setError('')
+    setPaymentMessage('')
+    setCreatingPreference(true)
+
+    try {
+      const preference = await createMercadoPagoPreference({
+        plan: formData.plan,
+        email: formData.email,
+        fullName: formData.name,
+      })
+
+      const checkoutUrl = preference.initPoint || preference.sandboxInitPoint
+
+      if (checkoutUrl) {
+        window.open(checkoutUrl, '_blank', 'noopener,noreferrer')
+        setPaymentMessage(
+          'Ya dejamos el checkout listo en otra pestaña. Cuando tengas credenciales reales, este flujo queda operativo.',
+        )
+      } else {
+        setPaymentMessage('La preferencia se creó, pero no recibimos un link de checkout.')
+      }
+    } catch (checkoutError) {
+      setPaymentMessage(checkoutError.message)
+    } finally {
+      setCreatingPreference(false)
+    }
+  }
+
   function handleSubmit(event) {
     event.preventDefault()
 
@@ -85,7 +121,11 @@ export function RegisterPage() {
       return
     }
 
-    const result = registerWithMembership({ ...formData, profileCategory })
+    const result = registerWithMembership({
+      ...formData,
+      profileCategory,
+      onboardingSummary,
+    })
 
     if (!result.ok) {
       setError(result.message)
@@ -130,26 +170,26 @@ export function RegisterPage() {
                 <p className="eyebrow">Paso 1 de 3</p>
                 <h2 className="h2">{currentQuestion.prompt}</h2>
                 <p className="body-sm">
-                  Seleccioná la opción que mejor describa tu momento actual. Esto define lo que
-                  vas a ver recomendado dentro del campus.
+                  {currentQuestion.helper}
                 </p>
                 <p className="body-sm" style={{ color: 'var(--green)' }}>
-                  Pregunta {activeQuestionIndex + 1} de {onboardingQuestions.length}
+                  {currentQuestion.section} · Pregunta {activeQuestionIndex + 1} de{' '}
+                  {onboardingQuestions.length}
                 </p>
               </div>
 
               <div className="stack" style={{ gap: 12 }}>
                 {currentQuestion.options.map((option) => (
                   <button
-                    key={option.label}
+                    key={option.value}
                     type="button"
-                    className={`choice ${currentAnswer === option.category ? 'selected' : ''}`}
-                    onClick={() => pickAnswer(option.category)}
+                    className={`choice ${currentAnswer === option.value ? 'selected' : ''}`}
+                    onClick={() => pickAnswer(option.value)}
                   >
                     <div className="choice-dot" />
                     <div>
                       <strong>{option.label}</strong>
-                      <span>{option.category}</span>
+                      <span>{option.description}</span>
                     </div>
                   </button>
                 ))}
@@ -175,10 +215,30 @@ export function RegisterPage() {
                 <p className="eyebrow">Paso 2 de 3</p>
                 <h2 className="h2">Guardamos tu cuenta.</h2>
                 <p className="body-sm">
-                  Ya detectamos tu recorrido recomendado:
+                  Ya detectamos un perfil interno predominante:
                   <strong style={{ color: 'var(--green-deep)' }}> {profileCategory}</strong>.
                 </p>
               </div>
+
+              {onboardingSummary?.supportMessage ? (
+                <div
+                  className="card"
+                  style={{
+                    padding: 20,
+                    borderColor:
+                      onboardingSummary.riskLevel === 'frecuentemente'
+                        ? 'rgba(185, 28, 28, 0.3)'
+                        : 'rgba(47, 107, 62, 0.22)',
+                  }}
+                >
+                  <p className="eyebrow no-rule" style={{ color: 'var(--red)' }}>
+                    Contención recomendada
+                  </p>
+                  <p className="body-sm" style={{ marginTop: 8 }}>
+                    {onboardingSummary.supportMessage}
+                  </p>
+                </div>
+              ) : null}
 
               <div className="field">
                 <label htmlFor="register-name">Nombre y apellido</label>
@@ -290,10 +350,91 @@ export function RegisterPage() {
                   {profileCategory}
                 </h3>
                 <p className="body-sm" style={{ marginTop: 8 }}>
-                  Al entrar al campus vas a ver una categoría “Recomendado para vos” con recursos
-                  filtrados según este perfil.
+                  Al entrar al campus vas a ver “Recomendado para vos” filtrado según este patrón
+                  interno y tu nivel actual de malestar.
                 </p>
+                {onboardingSummary ? (
+                  <div className="grid-two" style={{ marginTop: 18 }}>
+                    <div>
+                      <p className="eyebrow muted no-rule">Ansiedad hoy</p>
+                      <strong
+                        style={{
+                          fontFamily: 'Georgia, Times New Roman, serif',
+                          fontSize: 18,
+                          fontWeight: 400,
+                          color: 'var(--green-deep)',
+                        }}
+                      >
+                        {onboardingSummary.intensityNow}/10
+                      </strong>
+                    </div>
+                    <div>
+                      <p className="eyebrow muted no-rule">Bienestar afectado</p>
+                      <strong
+                        style={{
+                          fontFamily: 'Georgia, Times New Roman, serif',
+                          fontSize: 18,
+                          fontWeight: 400,
+                          color: 'var(--green-deep)',
+                        }}
+                      >
+                        {onboardingSummary.wellbeingLevel}/10
+                      </strong>
+                    </div>
+                  </div>
+                ) : null}
               </div>
+
+              <div className="card" style={{ padding: 20 }}>
+                <p className="eyebrow no-rule">Pago e integración</p>
+                <h3 className="h3" style={{ marginTop: 8 }}>
+                  Mercado Pago ya queda preparado para Checkout Pro
+                </h3>
+                <p className="body-sm" style={{ marginTop: 8 }}>
+                  Aunque hoy falten las credenciales, el proyecto ya queda listo para crear la
+                  preferencia de pago en backend apenas cargues el access token.
+                </p>
+                <div className="row-wrap" style={{ marginTop: 18 }}>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={handleMercadoPagoCheckout}
+                    disabled={creatingPreference || formData.paymentProvider !== 'Mercado Pago'}
+                    style={{
+                      opacity:
+                        creatingPreference || formData.paymentProvider !== 'Mercado Pago' ? 0.6 : 1,
+                    }}
+                  >
+                    {creatingPreference ? 'Preparando checkout...' : 'Preparar pago en Mercado Pago'}
+                  </button>
+                  <span className="tag neutral">{formData.paymentProvider}</span>
+                </div>
+                {paymentMessage ? (
+                  <p className="body-sm" style={{ marginTop: 12 }}>
+                    {paymentMessage}
+                  </p>
+                ) : null}
+              </div>
+
+              {onboardingSummary?.supportMessage ? (
+                <div
+                  className="card"
+                  style={{
+                    padding: 20,
+                    borderColor:
+                      onboardingSummary.riskLevel === 'frecuentemente'
+                        ? 'rgba(185, 28, 28, 0.3)'
+                        : 'rgba(47, 107, 62, 0.22)',
+                  }}
+                >
+                  <p className="eyebrow no-rule" style={{ color: 'var(--red)' }}>
+                    Prioridad de acompañamiento
+                  </p>
+                  <p className="body-sm" style={{ marginTop: 8 }}>
+                    {onboardingSummary.supportMessage}
+                  </p>
+                </div>
+              ) : null}
 
               {error ? <p className="form-error">{error}</p> : null}
 
@@ -309,6 +450,10 @@ export function RegisterPage() {
 
               <p className="body-sm" style={{ textAlign: 'center' }}>
                 ¿Ya tenés cuenta? <Link to="/login" style={{ color: 'var(--green-deep)', fontWeight: 700 }}>Iniciar sesión</Link>
+              </p>
+              <p className="body-sm" style={{ textAlign: 'center', color: 'var(--muted)' }}>
+                Mientras faltan credenciales productivas, podés seguir usando esta activación demo
+                para validar el flujo completo.
               </p>
             </form>
           ) : null}
