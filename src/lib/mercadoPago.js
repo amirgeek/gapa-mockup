@@ -17,3 +17,5 @@ export async function createMercadoPagoPreference(payload) {
 
   return data
 }
+
+export const createMercadoPagoSubscription = createMercadoPagoPreference

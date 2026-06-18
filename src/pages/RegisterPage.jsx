@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAppContext } from '../context/useAppContext.jsx'
 import { AppIcon } from '../components/AppIcon.jsx'
 import { BrandLogo } from '../components/BrandLogo.jsx'
-import { createMercadoPagoPreference } from '../lib/mercadoPago.js'
+import { createMercadoPagoSubscription } from '../lib/mercadoPago.js'
 import {
   getOnboardingSummary,
   onboardingQuestions,
@@ -91,21 +91,21 @@ export function RegisterPage() {
     setCreatingPreference(true)
 
     try {
-      const preference = await createMercadoPagoPreference({
+      const subscription = await createMercadoPagoSubscription({
         plan: formData.plan,
         email: formData.email,
         fullName: formData.name,
       })
 
-      const checkoutUrl = preference.initPoint || preference.sandboxInitPoint
+      const checkoutUrl = subscription.initPoint
 
       if (checkoutUrl) {
         window.open(checkoutUrl, '_blank', 'noopener,noreferrer')
         setPaymentMessage(
-          'Ya dejamos el checkout listo en otra pestaña. Cuando tengas credenciales reales, este flujo queda operativo.',
+          'Ya dejamos la suscripción lista en otra pestaña. Si aprobás el alta, Mercado Pago debería continuar con el flujo recurrente.',
         )
       } else {
-        setPaymentMessage('La preferencia se creó, pero no recibimos un link de checkout.')
+        setPaymentMessage('La suscripción se creó, pero no recibimos un link de checkout.')
       }
     } catch (checkoutError) {
       setPaymentMessage(checkoutError.message)
@@ -393,11 +393,12 @@ export function RegisterPage() {
               <div className="card" style={{ padding: 20 }}>
                 <p className="eyebrow no-rule">Pago e integración</p>
                 <h3 className="h3" style={{ marginTop: 8 }}>
-                  Mercado Pago ya queda preparado para Checkout Pro
+                  Mercado Pago ya queda orientado a suscripción recurrente
                 </h3>
                 <p className="body-sm" style={{ marginTop: 8 }}>
-                  Aunque hoy falten las credenciales, el proyecto ya queda listo para crear la
-                  preferencia de pago en backend apenas cargues el access token.
+                  En vez de un pago único, ahora el backend intenta generar una suscripción
+                  recurrente en Mercado Pago. Para la demo la dejamos apuntando a una membresía
+                  base de ARS 20.000 por mes.
                   {isUsingSupabaseAuth ? ' Además, el alta ya se intenta guardar en Supabase Auth y profiles.' : ''}
                 </p>
                 <div className="row-wrap" style={{ marginTop: 18 }}>
@@ -411,7 +412,7 @@ export function RegisterPage() {
                         creatingPreference || formData.paymentProvider !== 'Mercado Pago' ? 0.6 : 1,
                     }}
                   >
-                    {creatingPreference ? 'Preparando checkout...' : 'Preparar pago en Mercado Pago'}
+                    {creatingPreference ? 'Preparando suscripción...' : 'Preparar suscripción en Mercado Pago'}
                   </button>
                   <span className="tag neutral">{formData.paymentProvider}</span>
                 </div>
