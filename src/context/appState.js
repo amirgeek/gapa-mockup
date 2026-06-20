@@ -1,0 +1,282 @@
+export const STORAGE_KEY = 'gapa-app-state'
+
+export const seedState = {
+  currentUserId: null,
+  users: [
+    {
+      id: 'admin-1',
+      name: 'Admin GAPA',
+      email: 'admin@gapa.app',
+      password: 'admin123',
+      role: 'admin',
+      membershipStatus: 'active',
+      joinedSessionIds: [],
+      dailyCheckIns: [],
+    },
+    {
+      id: 'user-1',
+      name: 'Elena Vargas',
+      email: 'elena@gapa.app',
+      password: 'demo123',
+      role: 'user',
+      membershipStatus: 'active',
+      joinedSessionIds: ['session-1'],
+      profileCategory: 'Ansiedad generalizada',
+      dailyCheckIns: [{ date: '2026-05-29', level: 4 }],
+      processGoals: [
+        'Entender qué dispara mi ansiedad',
+        'Dormir con menos rumiación',
+        'Sostener una rutina semanal simple',
+      ],
+      processEntries: [
+        {
+          id: 'entry-1',
+          createdAt: '2026-05-28T20:30:00.000Z',
+          situation: 'Recibir un mensaje de trabajo fuera de horario',
+          thought: 'Seguro hice algo mal y mañana va a explotar un problema.',
+          response: 'Me quedé releyendo el mensaje y evitando dejar el celular.',
+          outcome: 'La ansiedad subió esa noche y dormí con tensión.',
+        },
+      ],
+      exposureSteps: [
+        {
+          id: 'exposure-1',
+          text: 'Responder un mensaje sin releerlo cinco veces.',
+          status: 'pendiente',
+          createdAt: '2026-05-29T08:00:00.000Z',
+        },
+      ],
+      sosHistory: [
+        {
+          id: 'sos-1',
+          tool: 'Grounding 5-4-3-2-1',
+          usedAt: '2026-05-29T09:15:00.000Z',
+        },
+      ],
+    },
+  ],
+  sessions: [
+    {
+      id: 'session-1',
+      title: 'Respiracion Consciente',
+      category: 'Mindfulness',
+      professional: 'Dr. Marcos Soler',
+      datetime: '2026-05-02T18:00:00',
+      duration: '60 min',
+      description: 'Practica grupal para bajar activacion, regular la respiracion y sumar herramientas de calma.',
+      meetLink: 'https://meet.google.com/gapa-respiracion',
+      capacity: 18,
+      enrolledUserIds: ['user-1'],
+      featured: true,
+    },
+    {
+      id: 'session-2',
+      title: 'Gestion del Estres Diario',
+      category: 'Ansiedad',
+      professional: 'Lic. Lucia Mendez',
+      datetime: '2026-05-03T10:30:00',
+      duration: '75 min',
+      description: 'Encuentro guiado para identificar detonantes y sostener rutinas de autocuidado.',
+      meetLink: 'https://meet.google.com/gapa-estres',
+      capacity: 24,
+      enrolledUserIds: [],
+      featured: false,
+    },
+    {
+      id: 'session-3',
+      title: 'Grupo de Apoyo para Duelo',
+      category: 'Comunidad',
+      professional: 'Lic. Marta Aranda',
+      datetime: '2026-05-04T19:30:00',
+      duration: '90 min',
+      description: 'Espacio cuidado para transitar procesos de perdida en compania y con guia profesional.',
+      meetLink: 'https://meet.google.com/gapa-duelo',
+      capacity: 16,
+      enrolledUserIds: [],
+      featured: false,
+    },
+  ],
+  campusItems: [
+    {
+      id: 'campus-5',
+      title: 'Que es la ansiedad y por que no siempre es peligrosa',
+      category: 'Info / Psicoeducacion',
+      author: 'Equipo clinico GAPA',
+      type: 'Guia',
+      readTime: '12 min',
+      audienceProfiles: [
+        'Ansiedad generalizada',
+        'Pánico',
+        'Ansiedad social',
+        'Fobia específica',
+        'TOC',
+        'Somatización',
+        'Ánimo depresivo',
+        'Desregulación emocional',
+      ],
+      excerpt:
+        'Una base conceptual para entender la ansiedad como respuesta natural, no como una señal de peligro en si misma.',
+      content: [
+        'La ansiedad es una respuesta psicofisiologica anticipatoria frente a una amenaza percibida. Es normal, todos la tenemos y en muchos contextos cumple una funcion util: prepararnos, anticiparnos, estudiar para un examen, estar atentos o tomar recaudos frente a algo importante.',
+        'Podemos pensarla como una solucion instintiva que ayudo a la supervivencia. Cuando un organismo detecta peligro, el cuerpo se prepara para luchar o huir. Esa respuesta tiene mucho sentido frente a peligros naturales o fisicos, como un animal, una tormenta o un incendio.',
+        'El problema aparece cuando usamos esa misma respuesta corporal en situaciones de origen social o simbolico, como una reunion, una exposicion, una deuda o una entrevista. En esos casos, la activacion existe, pero la salida de lucha o huida ya no es la respuesta mas adecuada.',
+        'Si lo decimos simple: muchas veces la ansiedad es la respuesta corporal al miedo. Y el miedo es una de las emociones basicas con las que venimos equipados. Las emociones, entre ellas alegria, tristeza, enojo, asco, sorpresa y miedo, son respuestas biologicas preinstaladas que en contextos adecuados nos ayudan a vivir mejor.',
+        'Lo que se aprende no es tener emociones, sino a que cosas responder con miedo. Ese aprendizaje se construye por experiencia y por discursos. Por eso cada persona puede focalizar la ansiedad en situaciones muy distintas segun su historia, vivencias, crianza y modos de afrontamiento.',
+        'Entender esto baja bastante la alarma: la ansiedad no significa que algo este mal en vos. Significa que tu sistema de alerta esta interpretando una situacion como amenazante y te esta preparando para responder, aunque a veces esa respuesta ya no sea la mas util.',
+      ],
+      takeaways: [
+        'La ansiedad es una respuesta normal y necesaria.',
+        'No todo lo que activa ansiedad representa un peligro real.',
+        'El foco de ansiedad se aprende segun historia, experiencias y contexto.',
+        'Entender la ansiedad como respuesta baja la sensacion de amenaza.',
+      ],
+    },
+    {
+      id: 'campus-6',
+      title: 'Ansiedad normal vs ansiedad disfuncional',
+      category: 'Info / Psicoeducacion',
+      author: 'Equipo clinico GAPA',
+      type: 'Guia',
+      readTime: '8 min',
+      audienceProfiles: [
+        'Ansiedad generalizada',
+        'Pánico',
+        'Ansiedad social',
+        'Fobia específica',
+        'TOC',
+        'Somatización',
+        'Ánimo depresivo',
+        'Desregulación emocional',
+      ],
+      excerpt:
+        'Como distinguir cuando la ansiedad te organiza y cuando empieza a bloquear, desordenar o limitar tu vida.',
+      content: [
+        'La ansiedad se vuelve disfuncional cuando se activa sin un peligro real, alcanza intensidades muy altas, se sostiene demasiado en el tiempo o empieza a empujarte a evitar situaciones importantes.',
+        'La ansiedad normal suele ser proporcional, transitoria y moviliza accion. Te ayuda a prepararte, actuar y responder mejor. La ansiedad disfuncional, en cambio, es desproporcionada, persistente y puede bloquearte, desorganizarte o reducir tu margen de accion.',
+        'Una forma util de pensarlo es esta: la ansiedad aparece cuando la persona no logra emitir una respuesta adecuada frente a una situacion. Entonces se arma un ciclo donde la situacion se evalua como amenazante, la respuesta no aparece o es ineficaz, sube la ansiedad, aparece evitacion y el problema se mantiene.',
+        'En lo clinico, esto puede verse en formas diversas: ansiedad generalizada, panico, fobias, somatizaciones, depresion o incluso otros cuadros donde la ansiedad funciona como organizador del malestar.',
+        'Los pensamientos tipicos suelen sonar asi: “no puedo”, “algo malo va a pasar”, “no se que hacer”. Y las conductas que mas la sostienen suelen ser evitar, controlar en exceso o buscar seguridad de forma repetida.',
+        'La reformulacion clave es dejar de pensar “soy una persona ansiosa” para pasar a “soy una persona con ansiedad”. Eso cambia mucho la posicion desde la que empezas a trabajar.',
+      ],
+      takeaways: [
+        'La ansiedad normal organiza; la disfuncional bloquea.',
+        'Evitacion y control excesivo suelen sostener el problema.',
+        'No es lo mismo ser una persona ansiosa que estar atravesando ansiedad.',
+        'La ansiedad disminuye cuando aparece una respuesta mas adecuada.',
+      ],
+    },
+    {
+      id: 'campus-7',
+      title: 'Como funciona tu ansiedad: el circuito',
+      category: 'Info / Psicoeducacion',
+      author: 'Equipo clinico GAPA',
+      type: 'Guia',
+      readTime: '10 min',
+      audienceProfiles: [
+        'Ansiedad generalizada',
+        'Pánico',
+        'Ansiedad social',
+        'Fobia específica',
+        'TOC',
+        'Somatización',
+        'Desregulación emocional',
+      ],
+      excerpt:
+        'Un mapa simple para entender que la ansiedad no aparece de la nada: sigue un patron identificable y modificable.',
+      content: [
+        'Todo empieza con un disparador. A veces es externo, como una conversacion, un mensaje o una situacion concreta. A veces es interno, como una sensacion fisica, un recuerdo o un pensamiento que aparece de golpe.',
+        'Lo central no es solo el disparador, sino la interpretacion. Ahi suele aparecer el nucleo ansioso: “algo malo va a pasar”, “no voy a poder”, “esto es peligroso”, “me voy a descontrolar”. Esa lectura activa el sistema de alarma.',
+        'Cuando la alarma se activa, el cuerpo responde: palpitaciones, falta de aire, mareo, tension, sudoracion. Es importante recordar que esto es el cuerpo intentando protegerte, no una prueba de que estas en peligro.',
+        'Despues viene la respuesta. Ahi es donde muchas personas intentan resolver el problema evitando, saliendo, cancelando, buscando seguridad, preguntando, chequeando o tratando de controlar todo lo que sienten. Eso calma un poco en el corto plazo, pero suele mantener el circuito.',
+        'El cerebro aprende algo muy potente: “si evite y me senti mejor, entonces era peligroso”. Asi se refuerza la idea de amenaza y la proxima vez la ansiedad sube mas rapido. Por eso no se mantiene solo por lo que te pasa, sino por como respondes a lo que te pasa.',
+        'Una manera clinicamente muy valiosa de empezar a trabajar esto es construir un mapa personal: situacion, pensamiento, sensacion fisica, que hice y que paso despues. Ese registro permite ver el patron y empezar a intervenirlo.',
+      ],
+      takeaways: [
+        'Disparador, interpretacion, activacion, respuesta y mantenimiento forman el circuito.',
+        'La interpretacion explica el inicio de la ansiedad.',
+        'La respuesta de evitacion o control explica por que se mantiene.',
+        'Mapear el circuito propio es una herramienta terapeutica central.',
+      ],
+    },
+    {
+      id: 'campus-8',
+      title: 'Aprender a manejar la ansiedad',
+      category: 'Herramientas practicas',
+      author: 'Equipo clinico GAPA',
+      type: 'Guia',
+      readTime: '11 min',
+      audienceProfiles: [
+        'Ansiedad generalizada',
+        'Pánico',
+        'Ansiedad social',
+        'TOC',
+        'Somatización',
+        'Ánimo depresivo',
+        'Desregulación emocional',
+      ],
+      excerpt:
+        'Regular el cuerpo, tomar distancia de los pensamientos y responder distinto para no quedar atrapado en automatico.',
+      content: [
+        'Uno de los errores mas comunes es querer que la ansiedad desaparezca del todo y cuanto antes. Muchas veces, cuanto mas intentas controlarla, mas se intensifica. El cambio no es solo sentir menos: es relacionarte distinto con lo que sentis.',
+        'Regular el cuerpo ayuda a bajar intensidad. Cuando el cuerpo baja, la mente suele acompañar. La idea no es apagar la ansiedad por la fuerza, sino reducir la activacion para recuperar margen de maniobra.',
+        'Trabajar con pensamientos no significa pensar positivo. Significa no tomar cada pensamiento como si fuera un hecho. Una herramienta util es sumar distancia con frases como “estoy teniendo el pensamiento de que...”. Eso afloja la fusion con lo que la mente dice.',
+        'Cambiar conductas es donde suele aparecer el cambio mas concreto. Evitar mantiene la ansiedad. Exponerte de manera gradual, con criterio y preparacion, suele ayudar a reducirla. No hace falta esperar a sentirte perfecto para actuar distinto.',
+        'Aceptar no es resignarse. Aceptacion activa significa dejar de pelearte con que la ansiedad ya esta ocurriendo. “Esto es incomodo, pero puedo atravesarlo” es muy distinto de “esto me destruye o me supera”.',
+        'La regulacion real combina cuerpo, pensamiento, conducta y emocion. No es una tecnica magica, sino una practica repetida. La ansiedad suele bajar cuando dejas de tratarla como un enemigo y empezas a responder de forma mas funcional.',
+      ],
+      takeaways: [
+        'El objetivo no es eliminar la ansiedad, sino responder mejor.',
+        'Cuerpo, pensamiento y conducta trabajan juntos.',
+        'Evitar alivia rapido, pero suele sostener el problema.',
+        'La ansiedad baja cuando dejas de pelearte con ella como si fuera un enemigo.',
+      ],
+    },
+    {
+      id: 'campus-9',
+      title: 'Mapa de ansiedad y ejercicios de afrontamiento',
+      category: 'Mi proceso',
+      author: 'Equipo clinico GAPA',
+      type: 'Plantilla',
+      readTime: '7 min',
+      audienceProfiles: [
+        'Ansiedad generalizada',
+        'Pánico',
+        'Ansiedad social',
+        'Fobia específica',
+        'TOC',
+        'Somatización',
+        'Ánimo depresivo',
+        'Desregulación emocional',
+      ],
+      excerpt:
+        'Un recurso para registrar situaciones, detectar evitacion y empezar a construir respuestas alternativas.',
+      content: [
+        'Este material sirve para que la ansiedad deje de sentirse como algo caotico o que aparece de la nada. La propuesta es registrar una situacion real y ordenar lo que paso en cinco pasos: situacion, pensamiento, conducta, resultado y que podrias intentar distinto.',
+        'Una primera pregunta util es: ¿que situacion te genera ansiedad? Despues: ¿que haces frente a eso? ¿Que evitas? ¿Que deberias hacer? ¿Que crees que pasaria si lo hicieras? Estas preguntas, que parecen simples, ayudan a ubicar donde se corta la respuesta funcional y donde se mete la evitacion.',
+        'A partir de ahi se pueden trabajar ejercicios concretos: identificar evitacion, disenar una respuesta alternativa, planificar una exposicion gradual y revisar el resultado despues. Lo importante no es hacerlo perfecto, sino empezar a construir evidencia nueva.',
+        'Tambien podes usar un registro breve de este estilo: situacion, pensamiento, sensacion fisica, que hice y que paso despues. Eso permite ver patrones que en el momento suelen quedar invisibles.',
+        'Si queres un mensaje de fondo para recordar durante este proceso, puede ser este: no tenes que eliminar la ansiedad. Tenes que aprender a relacionarte distinto con ella.',
+      ],
+      takeaways: [
+        'Registrar baja confusion y muestra el patron.',
+        'Detectar evitacion es clave para intervenir el mantenimiento.',
+        'La exposicion gradual necesita plan, no impulso.',
+        'No trabajamos etiquetas: trabajamos como funciona tu ansiedad.',
+      ],
+    },
+  ],
+}
+
+export function loadState() {
+  const raw = window.localStorage.getItem(STORAGE_KEY)
+
+  if (!raw) {
+    return seedState
+  }
+
+  try {
+    return JSON.parse(raw)
+  } catch {
+    return seedState
+  }
+}
