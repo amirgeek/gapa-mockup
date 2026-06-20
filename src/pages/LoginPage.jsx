@@ -6,7 +6,7 @@ import { AppIcon } from '../components/AppIcon.jsx'
 
 export function LoginPage() {
   const navigate = useNavigate()
-  const { login, isUsingSupabaseAuth } = useAppContext()
+  const { login } = useAppContext()
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [submitting, setSubmitting] = useState(false)
@@ -53,18 +53,9 @@ export function LoginPage() {
             <p className="eyebrow">Iniciar sesión</p>
             <h2 className="h2">Bienvenida de vuelta.</h2>
             <p className="body-sm">
-              Ingresá con tu correo y tu agenda te espera ordenada.
-              {isUsingSupabaseAuth ? ' Esta vez ya con autenticación real de Supabase.' : ''}
+              Ingresá con tu correo para volver a tu campus, tus sesiones y tu seguimiento
+              personal.
             </p>
-          </div>
-
-          <button type="button" className="social-btn">
-            <span style={{ fontFamily: 'Georgia, Times New Roman, serif' }}>G</span> Continuar con
-            Google
-          </button>
-
-          <div className="auth-divider">
-            <span>o con tu correo</span>
           </div>
 
           <div className="field">
@@ -93,12 +84,14 @@ export function LoginPage() {
             />
           </div>
 
-          <div className="row-between" style={{ fontSize: 14 }}>
+          <div className="row-between auth-support-row" style={{ fontSize: 14 }}>
             <label className="row" style={{ gap: 8, color: 'var(--muted)' }}>
               <input type="checkbox" style={{ width: 16 }} defaultChecked />
               Recordarme
             </label>
-            <span style={{ color: 'var(--blue)', fontWeight: 700 }}>Olvidé mi contraseña</span>
+            <span style={{ color: 'var(--blue)', fontWeight: 700 }}>
+              Si no recordás tu clave, pedí asistencia al equipo.
+            </span>
           </div>
 
           {error ? <p className="form-error">{error}</p> : null}

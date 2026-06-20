@@ -849,6 +849,18 @@ em.accent {
   gap: 24px;
 }
 
+.auth-actions {
+  align-items: stretch;
+}
+
+.auth-actions .btn {
+  justify-content: center;
+}
+
+.auth-support-row {
+  align-items: flex-start;
+}
+
 .social-btn {
   width: 100%;
   padding: 14px 18px;
@@ -1734,6 +1746,14 @@ em.accent {
     align-items: flex-start;
   }
 
+  .auth-form {
+    width: 100%;
+  }
+
+  .auth-support-row {
+    flex-direction: column;
+  }
+
   .app-topbar,
   .metric-row,
   .session-card,
@@ -1766,5 +1786,44 @@ em.accent {
 
   .sos-overlay {
     padding: 12px;
+  }
+}
+
+@media (max-width: 680px) {
+  .auth-form-side {
+    padding: 24px 16px 40px;
+  }
+
+  .auth-form {
+    gap: 20px;
+  }
+
+  .auth-art {
+    min-height: 300px;
+  }
+
+  .auth-art-content {
+    padding: 22px 18px;
+  }
+
+  .auth-art-quote {
+    gap: 10px;
+  }
+
+  .choice {
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .choice strong {
+    font-size: 17px;
+  }
+
+  .auth-actions {
+    flex-direction: column-reverse;
+  }
+
+  .auth-actions .btn {
+    width: 100%;
   }
 }

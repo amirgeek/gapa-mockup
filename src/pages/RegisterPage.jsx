@@ -21,9 +21,27 @@ const initialState = {
 const mercadoPagoLogoUrl =
   'https://http2.mlstatic.com/frontend-assets/mp-web-navigation/ui-navigation/7.4.4/mercadopago/logo-footer-v3.svg'
 
+const planOptions = [
+  {
+    name: 'Mensual',
+    summary: 'ARS 20.000 por mes',
+    detail: 'Acceso completo a campus, sesiones y seguimiento personal.',
+  },
+  {
+    name: 'Trimestral',
+    summary: 'ARS 54.000 cada 3 meses',
+    detail: 'Más continuidad para sostener el proceso sin cortar al primer mes.',
+  },
+  {
+    name: 'Anual',
+    summary: 'ARS 216.000 al año',
+    detail: 'Pensado para quienes quieren trabajar el proceso durante todo el año.',
+  },
+]
+
 export function RegisterPage() {
   const navigate = useNavigate()
-  const { registerWithMembership, isUsingSupabaseAuth } = useAppContext()
+  const { registerWithMembership } = useAppContext()
   const [formData, setFormData] = useState(initialState)
   const [error, setError] = useState('')
   const [step, setStep] = useState(0)
@@ -175,11 +193,9 @@ export function RegisterPage() {
           {step === 0 ? (
             <>
               <div className="stack-sm">
-                <p className="eyebrow">Paso 1 de 3</p>
+                <p className="eyebrow">Entrevista inicial · Paso 1 de 3</p>
                 <h2 className="h2">{currentQuestion.prompt}</h2>
-                <p className="body-sm">
-                  {currentQuestion.helper}
-                </p>
+                <p className="body-sm">{currentQuestion.helper}</p>
                 <p className="body-sm" style={{ color: 'var(--green)' }}>
                   {currentQuestion.section} · Pregunta {activeQuestionIndex + 1} de{' '}
                   {onboardingQuestions.length}
@@ -205,7 +221,7 @@ export function RegisterPage() {
 
               {error ? <p className="form-error">{error}</p> : null}
 
-              <div className="row-between">
+              <div className="row-between auth-actions">
                 <button type="button" className="btn btn-ghost" onClick={backQuestion}>
                   {activeQuestionIndex === 0 ? 'Volver al inicio' : 'Atrás'}
                 </button>
@@ -220,8 +236,8 @@ export function RegisterPage() {
           {step === 1 ? (
             <>
               <div className="stack-sm">
-                <p className="eyebrow">Paso 2 de 3</p>
-                <h2 className="h2">Guardamos tu cuenta.</h2>
+                <p className="eyebrow">Datos de acceso · Paso 2 de 3</p>
+                <h2 className="h2">Creá tu acceso a la plataforma.</h2>
                 <p className="body-sm">
                   Ya detectamos un perfil interno predominante:
                   <strong style={{ color: 'var(--green-deep)' }}> {profileCategory}</strong>.
@@ -278,15 +294,18 @@ export function RegisterPage() {
                     type="password"
                     value={formData.password}
                     onChange={(event) => updateField('password', event.target.value)}
-                    placeholder="Mínimo para demo"
+                    placeholder="Creá una contraseña segura"
                     required
                   />
+                  <span className="body-sm" style={{ color: 'var(--muted)' }}>
+                    La vas a usar para entrar a GAPA una vez activada tu membresía.
+                  </span>
                 </div>
               </div>
 
               {error ? <p className="form-error">{error}</p> : null}
 
-              <div className="row-between">
+              <div className="row-between auth-actions">
                 <button type="button" className="btn btn-ghost" onClick={() => setStep(0)}>
                   Atrás
                 </button>
@@ -301,29 +320,30 @@ export function RegisterPage() {
           {step === 2 ? (
             <form className="stack" onSubmit={handleSubmit}>
               <div className="stack-sm">
-                <p className="eyebrow">Paso 3 de 3</p>
+                <p className="eyebrow">Membresía · Paso 3 de 3</p>
                 <h2 className="h2">Activás la membresía.</h2>
                 <p className="body-sm">
-                  En esta demo simulamos el alta completa después del pago para respetar el flujo
-                  real que le contaste al cliente.
+                  El acceso completo a la plataforma queda asociado a una membresía activa.
+                  Desde acá definís plan, medio de pago y el alta de tu suscripción.
                 </p>
               </div>
 
-              <div className="grid-two">
-                <div className="choice selected" style={{ cursor: 'default' }}>
-                  <div className="choice-dot" />
-                  <div>
-                    <strong>Mensual</strong>
-                    <span>$14.900 por mes, cancelable cuando quieras</span>
-                  </div>
-                </div>
-                <div className="choice" onClick={() => updateField('plan', 'Trimestral')}>
-                  <div className="choice-dot" />
-                  <div>
-                    <strong>Trimestral</strong>
-                    <span>$11.900 por mes, mejor continuidad</span>
-                  </div>
-                </div>
+              <div className="stack" style={{ gap: 12 }}>
+                {planOptions.map((plan) => (
+                  <button
+                    key={plan.name}
+                    type="button"
+                    className={`choice ${formData.plan === plan.name ? 'selected' : ''}`}
+                    onClick={() => updateField('plan', plan.name)}
+                  >
+                    <div className="choice-dot" />
+                    <div>
+                      <strong>{plan.name}</strong>
+                      <span>{plan.summary}</span>
+                      <span style={{ display: 'block', marginTop: 6 }}>{plan.detail}</span>
+                    </div>
+                  </button>
+                ))}
               </div>
 
               <div className="grid-two">
@@ -416,13 +436,12 @@ export function RegisterPage() {
                   </div>
                 ) : null}
                 <h3 className="h3" style={{ marginTop: 8 }}>
-                  Mercado Pago ya queda orientado a suscripción recurrente
+                  La membresía se activa con suscripción recurrente
                 </h3>
                 <p className="body-sm" style={{ marginTop: 8 }}>
-                  En vez de un pago único, ahora el backend intenta generar una suscripción
-                  recurrente en Mercado Pago. Para la demo la dejamos apuntando a una membresía
-                  base de ARS 20.000 por mes.
-                  {isUsingSupabaseAuth ? ' Además, el alta ya se intenta guardar en Supabase Auth y profiles.' : ''}
+                  El alta se prepara para que la cuota se renueve de forma mensual y el acceso a
+                  la plataforma quede asociado a una membresía activa. La referencia inicial está
+                  configurada en ARS 20.000 por mes.
                 </p>
                 <div className="row-wrap" style={{ marginTop: 16 }}>
                   <span className="chip active">ARS 20.000 / mes</span>
@@ -440,7 +459,7 @@ export function RegisterPage() {
                         creatingPreference || formData.paymentProvider !== 'Mercado Pago' ? 0.6 : 1,
                     }}
                   >
-                    {creatingPreference ? 'Preparando suscripción...' : 'Preparar suscripción en Mercado Pago'}
+                    {creatingPreference ? 'Preparando suscripción...' : 'Continuar en Mercado Pago'}
                   </button>
                   <span className="tag neutral">{formData.paymentProvider}</span>
                 </div>
@@ -473,7 +492,7 @@ export function RegisterPage() {
 
               {error ? <p className="form-error">{error}</p> : null}
 
-              <div className="row-between">
+              <div className="row-between auth-actions">
                 <button type="button" className="btn btn-ghost" onClick={() => setStep(1)}>
                   Atrás
                 </button>
@@ -490,10 +509,6 @@ export function RegisterPage() {
 
               <p className="body-sm" style={{ textAlign: 'center' }}>
                 ¿Ya tenés cuenta? <Link to="/login" style={{ color: 'var(--green-deep)', fontWeight: 700 }}>Iniciar sesión</Link>
-              </p>
-              <p className="body-sm" style={{ textAlign: 'center', color: 'var(--muted)' }}>
-                Mientras faltan credenciales productivas, podés seguir usando esta activación demo
-                para validar el flujo completo.
               </p>
             </form>
           ) : null}

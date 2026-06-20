@@ -3,6 +3,281 @@ import { AppContext } from './appContextObject.js'
 import { loadState, STORAGE_KEY } from './appState.js'
 import { isSupabaseConfigured, supabase } from '../lib/supabaseClient.js'
 
+const dbResourceTypeToUi = {
+  guide: 'Guia',
+  audio: 'Audio',
+  video: 'Video',
+  template: 'Plantilla',
+}
+
+const uiResourceTypeToDb = {
+  Guia: 'guide',
+  Audio: 'audio',
+  Video: 'video',
+  Plantilla: 'template',
+}
+
+function slugify(value) {
+  return value
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 80)
+}
+
+function parseDurationMinutes(value) {
+  const numericValue = Number.parseInt(String(value).replace(/[^\d]/g, ''), 10)
+  return Number.isFinite(numericValue) && numericValue > 0 ? numericValue : 60
+}
+
+function estimateReadTimeMinutes(content) {
+  const text = Array.isArray(content) ? content.join(' ') : String(content ?? '')
+  const words = text.trim().split(/\s+/).filter(Boolean).length
+  return Math.max(1, Math.ceil(words / 180))
+}
+
+function extractBodyParts(body) {
+  if (Array.isArray(body)) {
+    return {
+      content: body.filter((item) => typeof item === 'string' && item.trim()),
+      takeaways: [],
+    }
+  }
+
+  if (body && typeof body === 'object') {
+    return {
+      content: Array.isArray(body.content)
+        ? body.content.filter((item) => typeof item === 'string' && item.trim())
+        : [],
+      takeaways: Array.isArray(body.takeaways)
+        ? body.takeaways.filter((item) => typeof item === 'string' && item.trim())
+        : [],
+    }
+  }
+
+  return { content: [], takeaways: [] }
+}
+
+function buildLocalSessionFromRow(row, enrolledUserIds = []) {
+  return {
+    id: row.id,
+    title: row.title,
+    category: row.category,
+    professional: row.professional_name,
+    datetime: row.starts_at,
+    duration: `${row.duration_minutes} min`,
+    description: row.description,
+    meetLink: row.meet_url,
+    capacity: row.capacity,
+    enrolledUserIds,
+    featured: row.is_featured ?? false,
+  }
+}
+
+function buildLocalCampusItemFromRow(row, categoryName) {
+  const { content, takeaways } = extractBodyParts(row.body)
+
+  return {
+    id: row.id,
+    title: row.title,
+    category: categoryName ?? row.category_name ?? 'Campus',
+    author: row.author_name,
+    type: dbResourceTypeToUi[row.resource_type] ?? 'Guia',
+    readTime: `${row.read_time_minutes ?? estimateReadTimeMinutes(content)} min`,
+    audienceProfiles: row.target_profiles?.length ? row.target_profiles : [],
+    excerpt: row.excerpt,
+    content,
+    takeaways,
+  }
+}
+
+function mergeProfilesIntoUsers(currentUsers, profiles) {
+  const normalizedProfiles = Array.isArray(profiles) ? profiles : [profiles]
+  const nextUsers = [...currentUsers]
+
+  normalizedProfiles.forEach((profile) => {
+    if (!profile) {
+      return
+    }
+
+    const existingUser =
+      nextUsers.find((user) => user.id === profile.id) ??
+      nextUsers.find((user) => user.email.toLowerCase() === profile.email.toLowerCase())
+
+    const nextUser = buildLocalUserFromProfile(profile, existingUser)
+    const previousIndex = nextUsers.findIndex(
+      (user) => user.id === profile.id || user.email.toLowerCase() === profile.email.toLowerCase(),
+    )
+
+    if (previousIndex >= 0) {
+      nextUsers[previousIndex] = nextUser
+      return
+    }
+
+    nextUsers.push(nextUser)
+  })
+
+  return nextUsers
+}
+
+async function syncSupabaseUsers({ profileId, includeAllProfiles = false, setState }) {
+  if (!supabase) {
+    return { ok: false, message: 'Supabase no está configurado.' }
+  }
+
+  if (includeAllProfiles) {
+    const { data: profiles, error } = await supabase
+      .from('profiles')
+      .select('*')
+      .order('created_at', { ascending: true })
+
+    if (error || !profiles?.length) {
+      return { ok: false, message: 'No pudimos recuperar los perfiles en Supabase.' }
+    }
+
+    let signedInUser = null
+
+    setState((current) => {
+      const mergedUsers = mergeProfilesIntoUsers(current.users, profiles)
+      signedInUser = mergedUsers.find((user) => user.id === profileId) ?? null
+
+      return {
+        ...current,
+        currentUserId: profileId,
+        users: mergedUsers,
+      }
+    })
+
+    return { ok: true, user: signedInUser, profiles }
+  }
+
+  const { data: profile, error } = await supabase
+    .from('profiles')
+    .select('*')
+    .eq('id', profileId)
+    .single()
+
+  if (error || !profile) {
+    return { ok: false, message: 'No pudimos recuperar el perfil en Supabase.' }
+  }
+
+  let nextUser = null
+
+  setState((current) => {
+    const mergedUsers = mergeProfilesIntoUsers(current.users, [profile])
+    nextUser = mergedUsers.find((user) => user.id === profile.id) ?? null
+
+    return {
+      ...current,
+      currentUserId: profile.id,
+      users: mergedUsers,
+    }
+  })
+
+  return { ok: true, user: nextUser, profiles: [profile] }
+}
+
+async function syncSupabaseContent({ setState }) {
+  if (!supabase) {
+    return { ok: false, message: 'Supabase no está configurado.' }
+  }
+
+  const [
+    sessionsResult,
+    enrollmentsResult,
+    categoriesResult,
+    resourcesResult,
+  ] = await Promise.all([
+    supabase.from('sessions').select('*').order('starts_at', { ascending: true }),
+    supabase.from('session_enrollments').select('session_id, profile_id'),
+    supabase.from('campus_categories').select('id, name, slug'),
+    supabase
+      .from('campus_resources')
+      .select('*')
+      .eq('is_published', true)
+      .order('created_at', { ascending: false }),
+  ])
+
+  if (sessionsResult.error || categoriesResult.error || resourcesResult.error) {
+    return { ok: false, message: 'No pudimos sincronizar sesiones o campus desde Supabase.' }
+  }
+
+  const enrollments = enrollmentsResult.error ? [] : enrollmentsResult.data ?? []
+  const sessions = sessionsResult.data ?? []
+  const categories = categoriesResult.data ?? []
+  const resources = resourcesResult.data ?? []
+
+  const sessionUsersMap = new Map()
+  enrollments.forEach((enrollment) => {
+    const existing = sessionUsersMap.get(enrollment.session_id) ?? []
+    sessionUsersMap.set(enrollment.session_id, [...existing, enrollment.profile_id])
+  })
+
+  const categoryMap = new Map(categories.map((category) => [category.id, category.name]))
+  const nextSessions = sessions.map((session) =>
+    buildLocalSessionFromRow(session, sessionUsersMap.get(session.id) ?? []),
+  )
+  const nextCampusItems = resources.map((resource) =>
+    buildLocalCampusItemFromRow(resource, categoryMap.get(resource.category_id)),
+  )
+
+  setState((current) => {
+    const sessionIdsByUser = new Map()
+
+    enrollments.forEach((enrollment) => {
+      const existing = sessionIdsByUser.get(enrollment.profile_id) ?? []
+      sessionIdsByUser.set(enrollment.profile_id, [...existing, enrollment.session_id])
+    })
+
+    return {
+      ...current,
+      sessions: nextSessions.length ? nextSessions : current.sessions,
+      campusItems: nextCampusItems.length ? nextCampusItems : current.campusItems,
+      users: current.users.map((user) => ({
+        ...user,
+        joinedSessionIds: sessionIdsByUser.get(user.id) ?? user.joinedSessionIds ?? [],
+      })),
+    }
+  })
+
+  return { ok: true, sessions: nextSessions, campusItems: nextCampusItems }
+}
+
+async function ensureCampusCategory(name) {
+  if (!supabase) {
+    return null
+  }
+
+  const slug = slugify(name)
+  const { data: existing } = await supabase
+    .from('campus_categories')
+    .select('id')
+    .eq('slug', slug)
+    .maybeSingle()
+
+  if (existing?.id) {
+    return existing.id
+  }
+
+  const { data: created, error } = await supabase
+    .from('campus_categories')
+    .insert({
+      name,
+      slug,
+      description: `Contenido de campus para ${name}.`,
+    })
+    .select('id')
+    .single()
+
+  if (error) {
+    return null
+  }
+
+  return created.id
+}
+
 function buildLocalUserFromProfile(profile, existingUser) {
   return {
     id: profile.id,
@@ -18,7 +293,7 @@ function buildLocalUserFromProfile(profile, existingUser) {
       profile.onboarding_answers && Object.keys(profile.onboarding_answers).length
         ? profile.onboarding_answers
         : existingUser?.onboardingAnswers ?? {},
-    onboardingSummary: existingUser?.onboardingSummary ?? null,
+    onboardingSummary: profile.onboarding_summary ?? existingUser?.onboardingSummary ?? null,
     joinedSessionIds: existingUser?.joinedSessionIds ?? [],
     dailyCheckIns: existingUser?.dailyCheckIns ?? [],
     processGoals: existingUser?.processGoals ?? [],
@@ -40,41 +315,19 @@ export function AppProvider({ children }) {
 
   const value = useMemo(() => {
     async function syncSupabaseProfile(profileId) {
-      if (!supabase) {
-        return { ok: false, message: 'Supabase no está configurado.' }
-      }
-
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', profileId)
-        .single()
-
-      if (error) {
-        return { ok: false, message: 'No pudimos recuperar el perfil en Supabase.' }
-      }
-
-      let nextUser = null
-
-      setState((current) => {
-        const existingUser =
-          current.users.find((user) => user.id === profile.id) ??
-          current.users.find((user) => user.email.toLowerCase() === profile.email.toLowerCase())
-
-        nextUser = buildLocalUserFromProfile(profile, existingUser)
-
-        const usersWithoutPrevious = current.users.filter(
-          (user) => user.id !== profile.id && user.email.toLowerCase() !== profile.email.toLowerCase(),
-        )
-
-        return {
-          ...current,
-          currentUserId: profile.id,
-          users: [...usersWithoutPrevious, nextUser],
-        }
+      const profileResult = await syncSupabaseUsers({
+        profileId,
+        includeAllProfiles: currentUser?.role === 'admin',
+        setState,
       })
 
-      return { ok: true, user: nextUser }
+      if (!profileResult.ok) {
+        return profileResult
+      }
+
+      await syncSupabaseContent({ setState })
+
+      return { ok: true, user: profileResult.user }
     }
 
     async function login(email, password) {
@@ -157,6 +410,7 @@ export function AppProvider({ children }) {
             membership_plan: formData.plan,
             profile_category: formData.profileCategory,
             onboarding_answers: formData.onboardingAnswers,
+            onboarding_summary: formData.onboardingSummary ?? null,
           })
           .eq('id', data.user.id)
 
@@ -219,9 +473,23 @@ export function AppProvider({ children }) {
       return { ok: true, user: newUser }
     }
 
-    function enrollInSession(sessionId) {
+    async function enrollInSession(sessionId) {
       if (!currentUser) {
-        return
+        return { ok: false, message: 'No hay usuario activo.' }
+      }
+
+      if (isSupabaseConfigured && supabase) {
+        const { error } = await supabase.from('session_enrollments').insert({
+          session_id: sessionId,
+          profile_id: currentUser.id,
+        })
+
+        if (error && !String(error.message).toLowerCase().includes('duplicate')) {
+          return { ok: false, message: 'No pudimos reservar tu lugar en esta sesión.' }
+        }
+
+        await syncSupabaseContent({ setState })
+        return { ok: true }
       }
 
       setState((current) => ({
@@ -237,6 +505,8 @@ export function AppProvider({ children }) {
             : session,
         ),
       }))
+
+      return { ok: true }
     }
 
     function saveDailyCheckIn(level) {
@@ -368,7 +638,30 @@ export function AppProvider({ children }) {
       return { ok: true }
     }
 
-    function createSession(sessionData) {
+    async function createSession(sessionData) {
+      if (isSupabaseConfigured && supabase && currentUser) {
+        const sessionSlug = `${slugify(sessionData.title)}-${Date.now()}`
+        const { error } = await supabase.from('sessions').insert({
+          title: sessionData.title,
+          slug: sessionSlug,
+          category: sessionData.category,
+          description: sessionData.description,
+          professional_name: sessionData.professional,
+          meet_url: sessionData.meetLink,
+          starts_at: new Date(sessionData.datetime).toISOString(),
+          duration_minutes: parseDurationMinutes(sessionData.duration),
+          capacity: Number(sessionData.capacity) || 12,
+          created_by: currentUser.id,
+        })
+
+        if (error) {
+          return { ok: false, message: 'No pudimos guardar la sesión en Supabase.' }
+        }
+
+        await syncSupabaseContent({ setState })
+        return { ok: true }
+      }
+
       const newSession = {
         id: `session-${crypto.randomUUID()}`,
         enrolledUserIds: [],
@@ -380,9 +673,37 @@ export function AppProvider({ children }) {
         ...current,
         sessions: [newSession, ...current.sessions],
       }))
+
+      return { ok: true }
     }
 
-    function createCampusItem(itemData) {
+    async function createCampusItem(itemData) {
+      if (isSupabaseConfigured && supabase && currentUser) {
+        const categoryId = await ensureCampusCategory(itemData.category)
+        const resourceSlug = `${slugify(itemData.title)}-${Date.now()}`
+        const content = Array.isArray(itemData.content) ? itemData.content : []
+        const { error } = await supabase.from('campus_resources').insert({
+          category_id: categoryId,
+          title: itemData.title,
+          slug: resourceSlug,
+          excerpt: itemData.excerpt,
+          body: content,
+          author_id: currentUser.id,
+          author_name: itemData.author,
+          resource_type: uiResourceTypeToDb[itemData.type] ?? 'guide',
+          read_time_minutes: estimateReadTimeMinutes(content),
+          target_profiles: itemData.audienceProfiles?.length ? itemData.audienceProfiles : [],
+          is_published: true,
+        })
+
+        if (error) {
+          return { ok: false, message: 'No pudimos publicar el recurso en Supabase.' }
+        }
+
+        await syncSupabaseContent({ setState })
+        return { ok: true }
+      }
+
       const newItem = {
         id: `campus-${crypto.randomUUID()}`,
         audienceProfiles: itemData.audienceProfiles?.length ? itemData.audienceProfiles : ['Habitos y bienestar'],
@@ -393,6 +714,8 @@ export function AppProvider({ children }) {
         ...current,
         campusItems: [newItem, ...current.campusItems],
       }))
+
+      return { ok: true }
     }
 
     return {
@@ -433,29 +756,23 @@ export function AppProvider({ children }) {
         return
       }
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', sessionUser.id)
-        .single()
+      const profileResult = await syncSupabaseUsers({
+        profileId: sessionUser.id,
+        setState,
+      })
 
-      if (!cancelled && profile) {
-        setState((current) => {
-          const existingUser =
-            current.users.find((user) => user.id === profile.id) ??
-            current.users.find((user) => user.email.toLowerCase() === profile.email.toLowerCase())
-          const nextUser = buildLocalUserFromProfile(profile, existingUser)
-          const usersWithoutPrevious = current.users.filter(
-            (user) =>
-              user.id !== profile.id && user.email.toLowerCase() !== profile.email.toLowerCase(),
-          )
+      const signedInRole = profileResult.user?.role
 
-          return {
-            ...current,
-            currentUserId: profile.id,
-            users: [...usersWithoutPrevious, nextUser],
-          }
+      if (!cancelled && signedInRole === 'admin') {
+        await syncSupabaseUsers({
+          profileId: sessionUser.id,
+          includeAllProfiles: true,
+          setState,
         })
+      }
+
+      if (!cancelled) {
+        await syncSupabaseContent({ setState })
       }
 
       if (!cancelled) {
@@ -472,30 +789,20 @@ export function AppProvider({ children }) {
         return
       }
 
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', session.user.id)
-        .single()
+      const profileResult = await syncSupabaseUsers({
+        profileId: session.user.id,
+        setState,
+      })
 
-      if (profile) {
-        setState((current) => {
-          const existingUser =
-            current.users.find((user) => user.id === profile.id) ??
-            current.users.find((user) => user.email.toLowerCase() === profile.email.toLowerCase())
-          const nextUser = buildLocalUserFromProfile(profile, existingUser)
-          const usersWithoutPrevious = current.users.filter(
-            (user) =>
-              user.id !== profile.id && user.email.toLowerCase() !== profile.email.toLowerCase(),
-          )
-
-          return {
-            ...current,
-            currentUserId: profile.id,
-            users: [...usersWithoutPrevious, nextUser],
-          }
+      if (profileResult.ok && profileResult.user?.role === 'admin') {
+        await syncSupabaseUsers({
+          profileId: session.user.id,
+          includeAllProfiles: true,
+          setState,
         })
       }
+
+      await syncSupabaseContent({ setState })
 
       setAuthReady(true)
     })

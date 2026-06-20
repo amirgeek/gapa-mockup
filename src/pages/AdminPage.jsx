@@ -26,19 +26,27 @@ export function AdminPage() {
   const { state, createSession, createCampusItem } = useAppContext()
   const [sessionForm, setSessionForm] = useState(sessionInitialState)
   const [campusForm, setCampusForm] = useState(campusInitialState)
+  const [feedback, setFeedback] = useState('')
 
-  function handleSessionSubmit(event) {
+  async function handleSessionSubmit(event) {
     event.preventDefault()
-    createSession({
+    const result = await createSession({
       ...sessionForm,
       capacity: Number(sessionForm.capacity),
     })
+
+    if (!result?.ok) {
+      setFeedback(result?.message ?? 'No pudimos guardar la sesión.')
+      return
+    }
+
     setSessionForm(sessionInitialState)
+    setFeedback('Sesión guardada correctamente.')
   }
 
-  function handleCampusSubmit(event) {
+  async function handleCampusSubmit(event) {
     event.preventDefault()
-    createCampusItem({
+    const result = await createCampusItem({
       ...campusForm,
       content: campusForm.content
         .split('\n')
@@ -46,7 +54,14 @@ export function AdminPage() {
         .filter(Boolean),
       audienceProfiles: [campusForm.audienceProfile],
     })
+
+    if (!result?.ok) {
+      setFeedback(result?.message ?? 'No pudimos publicar el recurso.')
+      return
+    }
+
     setCampusForm(campusInitialState)
+    setFeedback('Recurso publicado correctamente.')
   }
 
   return (
@@ -63,6 +78,12 @@ export function AdminPage() {
       </section>
 
       <section className="cards-grid">
+        {feedback ? (
+          <article className="surface-card">
+            <p className="body-sm">{feedback}</p>
+          </article>
+        ) : null}
+
         <article className="surface-card">
           <p className="eyebrow">Usuarios</p>
           <h2 className="h3" style={{ marginTop: 10 }}>
