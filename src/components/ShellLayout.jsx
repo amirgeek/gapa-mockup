@@ -38,13 +38,6 @@ function usePageCopy(admin) {
     }
   }
 
-  if (location.pathname.includes('/comunidad')) {
-    return {
-      title: 'Comunidad',
-      subtitle: 'Un espacio de intercambio humano, guiado y sin sobrecarga.',
-    }
-  }
-
   if (location.pathname.includes('/perfil')) {
     return {
       title: 'Mi perfil',
@@ -94,7 +87,6 @@ export function ShellLayout({ admin = false }) {
                     badge={String(state.sessions.length)}
                   />
                   <SidebarLink to="/app/campus" icon="book" label="Campus" />
-                  <SidebarLink to="/app/comunidad" icon="users" label="Comunidad" />
                 </>
               )}
             </div>

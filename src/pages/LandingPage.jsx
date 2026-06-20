@@ -16,10 +16,10 @@ const pillars = [
     foot: 'Equipo verificado',
   },
   {
-    eyebrow: 'Comunidad',
-    title: 'Atravesarlo acompañado cambia la experiencia.',
-    body: 'La membresía abre acceso a campus, comunidad y seguimiento para sostener un proceso continuo.',
-    foot: 'Comunidad hispanohablante',
+    eyebrow: 'Proceso',
+    title: 'Un recorrido sostenido cambia la experiencia.',
+    body: 'La membresía abre acceso a campus, sesiones y seguimiento para sostener un proceso continuo.',
+    foot: 'Acompañamiento continuo',
   },
 ]
 
@@ -32,7 +32,7 @@ const steps = [
   {
     n: '02',
     title: 'Activás la membresía.',
-    body: 'El alta crea tu cuenta y desbloquea sesiones, campus y comunidad al mismo tiempo.',
+    body: 'El alta crea tu cuenta y desbloquea sesiones, campus y seguimiento al mismo tiempo.',
   },
   {
     n: '03',
@@ -52,7 +52,7 @@ const plans = [
       'Acceso al campus con contenido clínico',
       'Acceso a sesiones publicadas en la plataforma',
       'Recorrido personalizado según onboarding',
-      'Comunidad, agenda y seguimiento personal',
+      'Agenda y seguimiento personal',
     ],
   },
   {
@@ -136,7 +136,7 @@ export function LandingPage() {
         <img
           className="hero-media"
           src="https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1600&q=80"
-          alt="Comunidad en un espacio sereno"
+          alt="Espacio sereno de acompañamiento"
         />
         <div className="hero-content wrap">
           <div className="hero-grid">
