@@ -416,11 +416,13 @@ export function RegisterPage() {
                   style={{ marginTop: 12 }}
                 >
                   <div className="mercadopago-checkout-brand">
-                    <img
-                      src={mercadoPagoLogoUrl}
-                      alt="Mercado Pago"
-                      style={{ width: 122, height: 32, objectFit: 'contain' }}
-                    />
+                    <div className="mercadopago-logo-badge">
+                      <img
+                        src={mercadoPagoLogoUrl}
+                        alt="Mercado Pago"
+                        style={{ width: 122, height: 32, objectFit: 'contain' }}
+                      />
+                    </div>
                     <span className="tag neutral">Suscripción recurrente</span>
                     <span className="tag neutral">Checkout seguro</span>
                   </div>
