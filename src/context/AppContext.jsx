@@ -295,11 +295,11 @@ function buildLocalUserFromProfile(profile, existingUser) {
         : existingUser?.onboardingAnswers ?? {},
     onboardingSummary: profile.onboarding_summary ?? existingUser?.onboardingSummary ?? null,
     joinedSessionIds: existingUser?.joinedSessionIds ?? [],
-    dailyCheckIns: existingUser?.dailyCheckIns ?? [],
-    processGoals: existingUser?.processGoals ?? [],
-    processEntries: existingUser?.processEntries ?? [],
-    exposureSteps: existingUser?.exposureSteps ?? [],
-    sosHistory: existingUser?.sosHistory ?? [],
+    dailyCheckIns: profile.daily_check_ins ?? existingUser?.dailyCheckIns ?? [],
+    processGoals: profile.process_goals ?? existingUser?.processGoals ?? [],
+    processEntries: profile.process_entries ?? existingUser?.processEntries ?? [],
+    exposureSteps: profile.exposure_steps ?? existingUser?.exposureSteps ?? [],
+    sosHistory: profile.sos_history ?? existingUser?.sosHistory ?? [],
   }
 }
 
@@ -314,6 +314,14 @@ export function AppProvider({ children }) {
   const currentUser = state.users.find((user) => user.id === state.currentUserId) ?? null
 
   const value = useMemo(() => {
+    function persistCurrentUserFields(patch) {
+      if (!isSupabaseConfigured || !supabase || !currentUser) {
+        return
+      }
+
+      supabase.from('profiles').update(patch).eq('id', currentUser.id).then(() => {})
+    }
+
     async function syncSupabaseProfile(profileId) {
       const profileResult = await syncSupabaseUsers({
         profileId,
@@ -515,6 +523,7 @@ export function AppProvider({ children }) {
       }
 
       const today = new Date().toISOString().slice(0, 10)
+      let nextCheckIns = []
 
       setState((current) => ({
         ...current,
@@ -524,7 +533,7 @@ export function AppProvider({ children }) {
           }
 
           const existing = user.dailyCheckIns ?? []
-          const nextCheckIns = existing.some((entry) => entry.date === today)
+          nextCheckIns = existing.some((entry) => entry.date === today)
             ? existing.map((entry) => (entry.date === today ? { ...entry, level } : entry))
             : [...existing, { date: today, level }]
 
@@ -534,6 +543,8 @@ export function AppProvider({ children }) {
           }
         }),
       }))
+
+      persistCurrentUserFields({ daily_check_ins: nextCheckIns })
     }
 
     function saveProcessGoals(goals) {
@@ -550,6 +561,8 @@ export function AppProvider({ children }) {
         ),
       }))
 
+      persistCurrentUserFields({ process_goals: cleanedGoals })
+
       return { ok: true }
     }
 
@@ -563,6 +576,7 @@ export function AppProvider({ children }) {
         createdAt: new Date().toISOString(),
         ...entryData,
       }
+      let nextEntries = []
 
       setState((current) => ({
         ...current,
@@ -570,11 +584,16 @@ export function AppProvider({ children }) {
           user.id === currentUser.id
             ? {
                 ...user,
-                processEntries: [nextEntry, ...(user.processEntries ?? [])].slice(0, 12),
+                processEntries: (nextEntries = [nextEntry, ...(user.processEntries ?? [])].slice(
+                  0,
+                  12,
+                )),
               }
             : user,
         ),
       }))
+
+      persistCurrentUserFields({ process_entries: nextEntries })
 
       return { ok: true }
     }
@@ -596,6 +615,7 @@ export function AppProvider({ children }) {
         status: 'pendiente',
         createdAt: new Date().toISOString(),
       }
+      let nextExposureSteps = []
 
       setState((current) => ({
         ...current,
@@ -603,11 +623,15 @@ export function AppProvider({ children }) {
           user.id === currentUser.id
             ? {
                 ...user,
-                exposureSteps: [...(user.exposureSteps ?? []), nextStep].slice(-8),
+                exposureSteps: (nextExposureSteps = [...(user.exposureSteps ?? []), nextStep].slice(
+                  -8,
+                )),
               }
             : user,
         ),
       }))
+
+      persistCurrentUserFields({ exposure_steps: nextExposureSteps })
 
       return { ok: true }
     }
@@ -622,6 +646,7 @@ export function AppProvider({ children }) {
         tool,
         usedAt: new Date().toISOString(),
       }
+      let nextSosHistory = []
 
       setState((current) => ({
         ...current,
@@ -629,11 +654,13 @@ export function AppProvider({ children }) {
           user.id === currentUser.id
             ? {
                 ...user,
-                sosHistory: [nextUse, ...(user.sosHistory ?? [])].slice(0, 10),
+                sosHistory: (nextSosHistory = [nextUse, ...(user.sosHistory ?? [])].slice(0, 10)),
               }
             : user,
         ),
       }))
+
+      persistCurrentUserFields({ sos_history: nextSosHistory })
 
       return { ok: true }
     }

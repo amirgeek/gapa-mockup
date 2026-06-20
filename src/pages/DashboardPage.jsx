@@ -46,7 +46,9 @@ export function DashboardPage() {
     saveProcessEntry,
     addExposureStep,
   } = useAppContext()
-  const [goalsDraft, setGoalsDraft] = useState(() => (currentUser?.processGoals ?? []).join('\n'))
+  const currentGoalsValue = (currentUser?.processGoals ?? []).join('\n')
+  const [goalsDraft, setGoalsDraft] = useState(currentGoalsValue)
+  const [goalsDirty, setGoalsDirty] = useState(false)
   const [entryForm, setEntryForm] = useState({
     situation: '',
     thought: '',
@@ -55,6 +57,7 @@ export function DashboardPage() {
   })
   const [exposureInput, setExposureInput] = useState('')
   const [feedback, setFeedback] = useState('')
+  const visibleGoalsDraft = goalsDirty ? goalsDraft : currentGoalsValue
 
   const today = new Date().toISOString().slice(0, 10)
   const todaysCheckIn = currentUser?.dailyCheckIns?.find((entry) => entry.date === today)?.level ?? null
@@ -71,13 +74,15 @@ export function DashboardPage() {
 
   function handleSaveGoals() {
     const result = saveProcessGoals(
-      goalsDraft
+      visibleGoalsDraft
         .split('\n')
         .map((goal) => goal.trim())
         .filter(Boolean),
     )
 
     if (result?.ok) {
+      setGoalsDirty(false)
+      setGoalsDraft(visibleGoalsDraft)
       setFeedback('Objetivos actualizados.')
     }
   }
@@ -298,8 +303,11 @@ export function DashboardPage() {
             </div>
             <textarea
               rows={5}
-              value={goalsDraft}
-              onChange={(event) => setGoalsDraft(event.target.value)}
+              value={visibleGoalsDraft}
+              onChange={(event) => {
+                setGoalsDirty(true)
+                setGoalsDraft(event.target.value)
+              }}
               placeholder="Escribí tus objetivos actuales"
             />
             <button type="button" className="btn btn-primary btn-sm" onClick={handleSaveGoals}>

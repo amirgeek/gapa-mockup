@@ -9,6 +9,7 @@ import { DashboardPage } from './pages/DashboardPage.jsx'
 import { SessionsPage } from './pages/SessionsPage.jsx'
 import { CampusPage } from './pages/CampusPage.jsx'
 import { ComunidadPage } from './pages/ComunidadPage.jsx'
+import { ProfilePage } from './pages/ProfilePage.jsx'
 import { AdminPage } from './pages/AdminPage.jsx'
 
 export default function App() {
@@ -41,6 +42,7 @@ export default function App() {
           }
         >
           <Route index element={<DashboardPage />} />
+          <Route path="perfil" element={<ProfilePage />} />
           <Route path="sesiones" element={<SessionsPage />} />
           <Route path="campus" element={<CampusPage />} />
           <Route path="comunidad" element={<ComunidadPage />} />

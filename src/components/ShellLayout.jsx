@@ -45,6 +45,13 @@ function usePageCopy(admin) {
     }
   }
 
+  if (location.pathname.includes('/perfil')) {
+    return {
+      title: 'Mi perfil',
+      subtitle: 'Tu membresía, tu perfil interno y el resumen de tu punto de partida.',
+    }
+  }
+
   return {
     title: 'Inicio',
     subtitle: 'Tu agenda, tus recursos y tu seguimiento ya están ordenados.',
@@ -79,6 +86,7 @@ export function ShellLayout({ admin = false }) {
               ) : (
                 <>
                   <SidebarLink to="/app" icon="home" label="Inicio" end />
+                  <SidebarLink to="/app/perfil" icon="user" label="Mi perfil" />
                   <SidebarLink
                     to="/app/sesiones"
                     icon="calendar"
