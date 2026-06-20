@@ -314,6 +314,21 @@ export function AppProvider({ children }) {
   const currentUser = state.users.find((user) => user.id === state.currentUserId) ?? null
 
   const value = useMemo(() => {
+    function loginWithLocalSeed(email, password) {
+      const normalizedEmail = email.trim().toLowerCase()
+      const user = state.users.find(
+        (candidate) =>
+          candidate.email.toLowerCase() === normalizedEmail && candidate.password === password,
+      )
+
+      if (!user) {
+        return { ok: false, message: 'Credenciales incorrectas o cuenta no habilitada todavía.' }
+      }
+
+      setState((current) => ({ ...current, currentUserId: user.id }))
+      return { ok: true, user }
+    }
+
     function persistCurrentUserFields(patch) {
       if (!isSupabaseConfigured || !supabase || !currentUser) {
         return
@@ -347,31 +362,20 @@ export function AppProvider({ children }) {
         })
 
         if (error || !data.user) {
-          return { ok: false, message: 'Credenciales incorrectas o cuenta no habilitada todavía.' }
+          return loginWithLocalSeed(email, password)
         }
 
         const profileResult = await syncSupabaseProfile(data.user.id)
 
         if (!profileResult.ok) {
-          return profileResult
+          const localFallback = loginWithLocalSeed(email, password)
+          return localFallback.ok ? localFallback : profileResult
         }
 
         return profileResult
       }
 
-      const normalizedEmail = email.trim().toLowerCase()
-      const user = state.users.find(
-        (candidate) =>
-          candidate.email.toLowerCase() === normalizedEmail && candidate.password === password,
-      )
-
-      if (!user) {
-        return { ok: false, message: 'Credenciales incorrectas.' }
-      }
-
-      setState((current) => ({ ...current, currentUserId: user.id }))
-
-      return { ok: true, user }
+      return loginWithLocalSeed(email, password)
     }
 
     async function logout() {
