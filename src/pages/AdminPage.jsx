@@ -53,12 +53,12 @@ export function AdminPage() {
     <div className="page-stack">
       <section className="page-cover">
         <p className="eyebrow" style={{ color: 'var(--green-light)' }}>
-          Administración
+          Backoffice
         </p>
-        <h1 style={{ color: '#FBFBFA', marginTop: 10 }}>Operación completa de la plataforma.</h1>
+        <h1 style={{ color: '#FBFBFA', marginTop: 10 }}>Panel operativo para administración interna.</h1>
         <p className="lead" style={{ marginTop: 16, maxWidth: '58ch' }}>
-          Desde acá se administran usuarios, sesiones y contenidos. La idea sigue siendo validar el
-          modelo completo antes de conectar backend, pagos y auth reales.
+          Desde acá se administran usuarios, sesiones y contenidos. Este espacio es exclusivo para
+          operación interna y no forma parte del recorrido terapéutico de los miembros.
         </p>
       </section>
 

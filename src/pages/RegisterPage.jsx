@@ -18,6 +18,9 @@ const initialState = {
   onboardingAnswers: {},
 }
 
+const mercadoPagoLogoUrl =
+  'https://http2.mlstatic.com/frontend-assets/mp-web-navigation/ui-navigation/7.4.4/mercadopago/logo-footer-v3.svg'
+
 export function RegisterPage() {
   const navigate = useNavigate()
   const { registerWithMembership, isUsingSupabaseAuth } = useAppContext()
@@ -392,6 +395,26 @@ export function RegisterPage() {
 
               <div className="card" style={{ padding: 20 }}>
                 <p className="eyebrow no-rule">Pago e integración</p>
+                {formData.paymentProvider === 'Mercado Pago' ? (
+                  <div
+                    className="row-wrap"
+                    style={{
+                      marginTop: 12,
+                      padding: '14px 16px',
+                      border: '1px solid rgba(47, 128, 237, 0.18)',
+                      borderRadius: 16,
+                      background: 'linear-gradient(180deg, rgba(111, 175, 231, 0.12), rgba(255,255,255,0.94))',
+                    }}
+                  >
+                    <img
+                      src={mercadoPagoLogoUrl}
+                      alt="Mercado Pago"
+                      style={{ width: 108, height: 28, objectFit: 'contain' }}
+                    />
+                    <span className="tag neutral">Suscripción recurrente</span>
+                    <span className="tag neutral">Pago seguro</span>
+                  </div>
+                ) : null}
                 <h3 className="h3" style={{ marginTop: 8 }}>
                   Mercado Pago ya queda orientado a suscripción recurrente
                 </h3>
@@ -401,6 +424,11 @@ export function RegisterPage() {
                   base de ARS 20.000 por mes.
                   {isUsingSupabaseAuth ? ' Además, el alta ya se intenta guardar en Supabase Auth y profiles.' : ''}
                 </p>
+                <div className="row-wrap" style={{ marginTop: 16 }}>
+                  <span className="chip active">ARS 20.000 / mes</span>
+                  <span className="chip">Renovación mensual</span>
+                  <span className="chip">Cancelación desde tu cuenta</span>
+                </div>
                 <div className="row-wrap" style={{ marginTop: 18 }}>
                   <button
                     type="button"

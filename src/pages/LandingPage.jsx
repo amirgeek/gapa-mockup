@@ -45,63 +45,57 @@ const plans = [
   {
     name: 'Mensual',
     flag: 'Empezar',
-    price: '$14.900',
+    price: '$20.000',
     suffix: 'por mes, cancelable cuando quieras',
-    desc: 'Para probar la plataforma y ver cómo encaja en tu semana.',
+    desc: 'Para empezar el recorrido con acceso completo a la experiencia principal de GAPA.',
     items: [
-      'Acceso al campus completo',
-      'Inscripción a 4 sesiones grupales por mes',
+      'Acceso al campus con contenido clínico',
+      'Acceso a sesiones publicadas en la plataforma',
       'Recorrido personalizado según onboarding',
-      'Comunidad y agenda compartida',
+      'Comunidad, agenda y seguimiento personal',
     ],
   },
   {
     name: 'Trimestral',
     flag: 'Recomendada',
-    price: '$11.900',
+    price: '$54.000',
     suffix: 'por mes, pago cada 3 meses',
-    desc: 'Pensada para procesos con continuidad real y mejor seguimiento.',
+    desc: 'Pensada para sostener continuidad y evitar cortar el proceso al primer mes.',
     featured: true,
     items: [
       'Todo lo del plan mensual',
-      'Sesiones grupales ilimitadas',
-      'Seguimiento profesional cada 4 semanas',
-      'Acceso anticipado a nuevos talleres',
+      'Mayor continuidad de uso',
+      'Campus recomendado según perfil interno',
+      'Mejor organización del proceso en el tiempo',
     ],
   },
   {
     name: 'Anual',
     flag: 'Compromiso',
-    price: '$9.500',
+    price: '$216.000',
     suffix: 'por mes, pago anual',
-    desc: 'Para sostener un proceso largo con el mejor precio por mes.',
+    desc: 'Para quienes quieren sostener el acompañamiento durante todo el año.',
     items: [
       'Todo lo del plan trimestral',
-      'Sesión individual de orientación al inicio',
-      'Acceso a talleres en vivo y archivo',
-      'Pausa de membresía hasta 30 días',
+      'Recorrido largo con acceso continuo',
+      'Contenido y sesiones dentro del mismo ecosistema',
+      'Base estable para trabajar hábitos y exposición gradual',
     ],
   },
 ]
 
 const team = [
   {
-    name: 'Dra. María Eugenia Soler',
-    role: 'Directora clínica, Mat. 12.483',
+    name: 'Agustina',
+    role: 'Psicóloga MP 47942',
     image:
       'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=900&q=80',
   },
   {
-    name: 'Lic. Tomás Iribarren',
-    role: 'Psicólogo, ansiedad y pánico',
+    name: 'Juan Pablo',
+    role: 'Psicólogo MP 47102',
     image:
       'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&w=900&q=80',
-  },
-  {
-    name: 'Lic. Florencia Castro',
-    role: 'Psicóloga, procesos grupales',
-    image:
-      'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&w=900&q=80',
   },
 ]
 
@@ -164,11 +158,12 @@ export function LandingPage() {
                 Grupo de Afrontamiento contra Problemas de Ansiedad
               </p>
               <h1 style={{ marginTop: 16 }}>
-                Cuando la ansiedad pide pausa, <em>acá hay una sala que ya está armada.</em>
+                Afrontar la ansiedad con <em>herramientas reales.</em>
               </h1>
               <p className="lead">
-                Una plataforma de membresía con sesiones profesionales, campus de recursos y
-                comunidad hispanohablante, pensada para sostener un proceso sin sobrecargar.
+                Psicología clara, sin vueltas. Una plataforma de membresía con sesiones
+                profesionales, campus clínico y seguimiento para sostener un proceso sin
+                sobrecargar.
               </p>
               <div className="row-wrap" style={{ marginTop: 28 }}>
                 <Link to="/registro" className="btn btn-primary btn-lg">
@@ -181,29 +176,29 @@ export function LandingPage() {
               </div>
               <div className="hero-meta-row">
                 <div className="hero-meta">
-                  <strong>2.400+</strong>miembros activos
+                  <strong>Onboarding</strong>perfilamiento inicial para ordenar el recorrido
                 </div>
                 <div className="hero-meta">
-                  <strong>18</strong>profesionales matriculados
+                  <strong>Campus</strong>psicoeducación, herramientas y seguimiento
                 </div>
                 <div className="hero-meta">
-                  <strong>96%</strong>renueva al 3er mes
+                  <strong>Sesiones</strong>encuentros grupales con acceso privado
                 </div>
               </div>
             </div>
             <div className="hero-tile">
-              <p className="eyebrow hero-eyebrow no-rule">Próxima sesión abierta</p>
-              <h3 style={{ marginTop: 8 }}>Rumiación nocturna y técnicas para frenar el bucle</h3>
+              <p className="eyebrow hero-eyebrow no-rule">Dentro de la plataforma</p>
+              <h3 style={{ marginTop: 8 }}>Sesiones grupales, campus y seguimiento en un mismo lugar.</h3>
               <p className="body-sm" style={{ color: 'rgba(251,251,250,0.78)', marginTop: 10 }}>
-                Lic. Tomás Iribarren, jueves 21:00 ART, 12 lugares disponibles para una práctica
-                concreta y guiada.
+                Los encuentros se cargan desde administración con link privado de Meet, y cada
+                usuario accede a contenidos y herramientas según su perfil interno.
               </p>
               <div style={{ marginTop: 18, paddingTop: 18, borderTop: '1px solid rgba(255,255,255,0.16)' }}>
                 <span className="quote" style={{ color: '#FBFBFA', fontSize: 42 }}>
-                  7
+                  4
                 </span>
                 <p className="body-sm" style={{ color: 'rgba(251,251,250,0.78)' }}>
-                  cupos disponibles antes del cierre de inscripción
+                  módulos clave: inicio, sesiones, campus y mi proceso
                 </p>
               </div>
             </div>
@@ -216,11 +211,11 @@ export function LandingPage() {
           <div className="stack" style={{ maxWidth: 760 }}>
             <p className="eyebrow">Por qué GAPA</p>
             <h2 className="h2">
-              No es una app de meditación. <em className="accent">Es una plataforma de acompañamiento profesional.</em>
+              No es una app para distraerte. <em className="accent">Es una plataforma para entender qué te pasa y responder mejor.</em>
             </h2>
             <p className="lead muted">
-              Cada decisión de producto busca bajar ansiedad, ordenar el proceso y sostener una
-              sensación de acompañamiento inmediato.
+              Cada decisión de producto busca bajar carga cognitiva, ordenar el proceso y acercar
+              herramientas concretas para afrontar la ansiedad con más claridad.
             </p>
           </div>
           <div className="pillars-grid">
@@ -272,20 +267,20 @@ export function LandingPage() {
               <img
                 className="photo-fill"
                 src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=900&q=80"
-                alt="Miembro de GAPA"
+                alt="Espacio de acompañamiento profesional"
               />
             </div>
             <div className="testimonial-body">
               <p className="eyebrow" style={{ color: 'var(--green-light)' }}>
-                Historia real
+                Enfoque GAPA
               </p>
               <p className="quote">
-                “Llegué con miedo de volver a sentir lo mismo. En GAPA encontré orden, agenda y
-                gente que ya pasó por algo parecido.”
+                “No trabajamos etiquetas. Trabajamos con cómo funciona tu ansiedad y con qué
+                herramientas pueden ayudarte a responder distinto.”
               </p>
               <div className="testimonial-attr">
-                <strong>Camila R.</strong>
-                <span>Miembro desde marzo, Buenos Aires</span>
+                <strong>Recorrido guiado</strong>
+                <span>Psicoeducación, comunidad, proceso y herramientas en el momento</span>
               </div>
             </div>
           </article>
@@ -296,7 +291,7 @@ export function LandingPage() {
         <div className="wrap stack-lg">
           <div className="stack" style={{ maxWidth: 760 }}>
             <p className="eyebrow">Profesionales</p>
-            <h2 className="h2">Un equipo clínico presente, visible y humano.</h2>
+            <h2 className="h2">Psicología clara, sin vueltas, sostenida por un equipo real.</h2>
           </div>
           <div className="team-grid">
             {team.map((member) => (
@@ -318,7 +313,7 @@ export function LandingPage() {
         <div className="wrap stack-lg">
           <div className="stack" style={{ maxWidth: 760 }}>
             <p className="eyebrow">Planes</p>
-            <h2 className="h2">Una sola membresía, distintos ritmos de continuidad.</h2>
+            <h2 className="h2">Una sola membresía para sostener el proceso con continuidad.</h2>
           </div>
           <div className="plans-grid">
             {plans.map((plan) => (
@@ -375,11 +370,11 @@ export function LandingPage() {
               Empezar
             </p>
             <h2 className="h2" style={{ color: '#FBFBFA', marginTop: 10 }}>
-              Si querés ver cómo se ordena tu proceso, el próximo paso es entrar.
+              Si querés afrontar la ansiedad con herramientas reales, el próximo paso es entrar.
             </h2>
             <p className="lead" style={{ maxWidth: '44ch', marginTop: 16 }}>
-              Ya podés recorrer onboarding, membresía, sesiones, campus, comunidad y panel
-              administrativo dentro de la plataforma.
+              Ya podés recorrer onboarding, membresía, sesiones, campus, comunidad y seguimiento
+              dentro de la plataforma.
             </p>
             <div className="row-wrap" style={{ marginTop: 26 }}>
               <Link to="/registro" className="btn btn-primary btn-lg">

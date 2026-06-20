@@ -2,6 +2,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAppContext } from '../context/useAppContext.jsx'
 import { AppIcon } from './AppIcon.jsx'
 import { BrandLogo } from './BrandLogo.jsx'
+import { SosAssistant } from './SosAssistant.jsx'
 
 function SidebarLink({ to, icon, label, badge, end = false }) {
   return (
@@ -61,17 +62,19 @@ export function ShellLayout({ admin = false }) {
   }
 
   return (
-    <div className="app-shell">
+    <div className={`app-shell ${admin ? 'app-shell-admin' : 'app-shell-member'}`}>
       <div className="app-layout">
-        <aside className="app-sidebar">
+        <aside className={`app-sidebar ${admin ? 'app-sidebar-admin' : 'app-sidebar-member'}`}>
           <div>
             <BrandLogo to={admin ? '/admin' : '/app'} />
-            <div className="side-nav-section">Tu espacio</div>
+            <div className="side-nav-section">
+              {admin ? 'Operación interna' : 'Experiencia de membresía'}
+            </div>
             <div className="side-nav">
               {admin ? (
                 <>
-                  <SidebarLink to="/admin" icon="settings" label="Panel general" end />
-                  <SidebarLink to="/app" icon="home" label="Vista usuario" end />
+                  <SidebarLink to="/admin" icon="settings" label="Panel operativo" end />
+                  <SidebarLink to="/app" icon="home" label="Ir a experiencia miembro" end />
                 </>
               ) : (
                 <>
@@ -86,6 +89,14 @@ export function ShellLayout({ admin = false }) {
                   <SidebarLink to="/app/comunidad" icon="users" label="Comunidad" />
                 </>
               )}
+            </div>
+            <div className="shell-note">
+              <p className="eyebrow no-rule">{admin ? 'Backoffice' : 'Miembros pagos'}</p>
+              <p className="body-sm" style={{ marginTop: 8 }}>
+                {admin
+                  ? 'Alta de sesiones, publicación de contenido y seguimiento operativo de la plataforma.'
+                  : 'Campus clínico, agenda de encuentros y herramientas para sostener el proceso.'}
+              </p>
             </div>
           </div>
 
@@ -112,7 +123,7 @@ export function ShellLayout({ admin = false }) {
         <main className="app-main">
           <div className="app-topbar">
             <div>
-              <p className="eyebrow no-rule">GAPA</p>
+              <p className="eyebrow no-rule">{admin ? 'Administración GAPA' : 'GAPA miembros'}</p>
               <h1 className="h2" style={{ marginTop: 8 }}>
                 {page.title}
               </h1>
@@ -122,12 +133,13 @@ export function ShellLayout({ admin = false }) {
             </div>
             <div className="search-shell">
               <AppIcon name="search" />
-              <span>Buscar en GAPA</span>
+              <span>{admin ? 'Usuarios, sesiones y recursos' : 'Sesiones, campus y proceso'}</span>
             </div>
           </div>
           <Outlet />
         </main>
       </div>
+      {admin ? null : <SosAssistant />}
     </div>
   )
 }
