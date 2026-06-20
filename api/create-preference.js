@@ -3,20 +3,14 @@
 const planCatalog = {
   Mensual: {
     title: 'Membresía GAPA Mensual',
-    amount: 20000,
+    amount: 24999,
     frequency: 1,
     frequencyType: 'months',
   },
   Trimestral: {
     title: 'Membresía GAPA Trimestral',
-    amount: 54000,
+    amount: 69900,
     frequency: 3,
-    frequencyType: 'months',
-  },
-  Anual: {
-    title: 'Membresía GAPA Anual',
-    amount: 216000,
-    frequency: 12,
     frequencyType: 'months',
   },
 }

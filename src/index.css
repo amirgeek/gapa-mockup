@@ -1264,6 +1264,39 @@ em.accent {
   background: linear-gradient(90deg, rgba(47, 107, 62, 0.95), rgba(111, 191, 115, 0.88));
 }
 
+.mercadopago-checkout {
+  display: grid;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid rgba(47, 128, 237, 0.18);
+  border-radius: 20px;
+  background: linear-gradient(180deg, rgba(111, 175, 231, 0.14), rgba(255, 255, 255, 0.96));
+}
+
+.mercadopago-checkout-brand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 12px;
+  align-items: center;
+}
+
+.mercadopago-checkout-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.mercadopago-checkout-copy strong {
+  color: var(--blue-deep);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 22px;
+  font-weight: 400;
+}
+
+.mercadopago-checkout-copy span {
+  color: var(--muted);
+  font-size: 14px;
+}
+
 .dash-hero {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;

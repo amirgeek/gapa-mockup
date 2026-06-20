@@ -413,8 +413,7 @@ export function AppProvider({ children }) {
           .from('profiles')
           .update({
             membership_status: 'active',
-            membership_provider:
-              formData.paymentProvider === 'Mercado Pago' ? 'mercado_pago' : 'talio_pay',
+            membership_provider: 'mercado_pago',
             membership_plan: formData.plan,
             profile_category: formData.profileCategory,
             onboarding_answers: formData.onboardingAnswers,

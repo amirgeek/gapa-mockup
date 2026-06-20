@@ -45,7 +45,7 @@ const plans = [
   {
     name: 'Mensual',
     flag: 'Empezar',
-    price: '$20.000',
+    price: '$24.999',
     suffix: 'por mes, cancelable cuando quieras',
     desc: 'Para empezar el recorrido con acceso completo a la experiencia principal de GAPA.',
     items: [
@@ -58,8 +58,8 @@ const plans = [
   {
     name: 'Trimestral',
     flag: 'Recomendada',
-    price: '$54.000',
-    suffix: 'por mes, pago cada 3 meses',
+    price: '$69.900',
+    suffix: 'cada 3 meses, equivalente a $23.300 por mes',
     desc: 'Pensada para sostener continuidad y evitar cortar el proceso al primer mes.',
     featured: true,
     items: [
@@ -67,19 +67,6 @@ const plans = [
       'Mayor continuidad de uso',
       'Campus recomendado según perfil interno',
       'Mejor organización del proceso en el tiempo',
-    ],
-  },
-  {
-    name: 'Anual',
-    flag: 'Compromiso',
-    price: '$216.000',
-    suffix: 'por mes, pago anual',
-    desc: 'Para quienes quieren sostener el acompañamiento durante todo el año.',
-    items: [
-      'Todo lo del plan trimestral',
-      'Recorrido largo con acceso continuo',
-      'Contenido y sesiones dentro del mismo ecosistema',
-      'Base estable para trabajar hábitos y exposición gradual',
     ],
   },
 ]

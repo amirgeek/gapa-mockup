@@ -24,18 +24,13 @@ const mercadoPagoLogoUrl =
 const planOptions = [
   {
     name: 'Mensual',
-    summary: 'ARS 20.000 por mes',
+    summary: 'ARS 24.999 por mes',
     detail: 'Acceso completo a campus, sesiones y seguimiento personal.',
   },
   {
     name: 'Trimestral',
-    summary: 'ARS 54.000 cada 3 meses',
-    detail: 'Más continuidad para sostener el proceso sin cortar al primer mes.',
-  },
-  {
-    name: 'Anual',
-    summary: 'ARS 216.000 al año',
-    detail: 'Pensado para quienes quieren trabajar el proceso durante todo el año.',
+    summary: 'ARS 69.900 cada 3 meses',
+    detail: 'Equivale a ARS 23.300 por mes y te da más continuidad en el proceso.',
   },
 ]
 
@@ -356,19 +351,20 @@ export function RegisterPage() {
                   >
                     <option>Mensual</option>
                     <option>Trimestral</option>
-                    <option>Anual</option>
                   </select>
                 </div>
                 <div className="field">
-                  <label htmlFor="register-provider">Pago</label>
-                  <select
-                    id="register-provider"
-                    value={formData.paymentProvider}
-                    onChange={(event) => updateField('paymentProvider', event.target.value)}
+                  <label>Medio de pago</label>
+                  <div
+                    className="choice selected"
+                    style={{ cursor: 'default', minHeight: '100%', padding: 16 }}
                   >
-                    <option>Mercado Pago</option>
-                    <option>Talio Pay</option>
-                  </select>
+                    <div className="choice-dot" />
+                    <div>
+                      <strong>Mercado Pago</strong>
+                      <span>Suscripción recurrente con checkout seguro.</span>
+                    </div>
+                  </div>
                 </div>
               </div>
 
@@ -415,37 +411,47 @@ export function RegisterPage() {
 
               <div className="card" style={{ padding: 20 }}>
                 <p className="eyebrow no-rule">Pago e integración</p>
-                {formData.paymentProvider === 'Mercado Pago' ? (
-                  <div
-                    className="row-wrap"
-                    style={{
-                      marginTop: 12,
-                      padding: '14px 16px',
-                      border: '1px solid rgba(47, 128, 237, 0.18)',
-                      borderRadius: 16,
-                      background: 'linear-gradient(180deg, rgba(111, 175, 231, 0.12), rgba(255,255,255,0.94))',
-                    }}
-                  >
+                <div
+                  className="mercadopago-checkout"
+                  style={{ marginTop: 12 }}
+                >
+                  <div className="mercadopago-checkout-brand">
                     <img
                       src={mercadoPagoLogoUrl}
                       alt="Mercado Pago"
-                      style={{ width: 108, height: 28, objectFit: 'contain' }}
+                      style={{ width: 122, height: 32, objectFit: 'contain' }}
                     />
                     <span className="tag neutral">Suscripción recurrente</span>
-                    <span className="tag neutral">Pago seguro</span>
+                    <span className="tag neutral">Checkout seguro</span>
                   </div>
-                ) : null}
+                  <div className="mercadopago-checkout-copy">
+                    <strong>
+                      {formData.plan === 'Trimestral'
+                        ? 'Pagás ARS 69.900 cada 3 meses'
+                        : 'Pagás ARS 24.999 por mes'}
+                    </strong>
+                    <span>
+                      {formData.plan === 'Trimestral'
+                        ? 'Plan pensado para sostener continuidad, con equivalente de ARS 23.300 por mes.'
+                        : 'Acceso completo al campus, sesiones grupales y herramientas de seguimiento.'}
+                    </span>
+                  </div>
+                </div>
                 <h3 className="h3" style={{ marginTop: 8 }}>
                   La membresía se activa con suscripción recurrente
                 </h3>
                 <p className="body-sm" style={{ marginTop: 8 }}>
                   El alta se prepara para que la cuota se renueve de forma mensual y el acceso a
-                  la plataforma quede asociado a una membresía activa. La referencia inicial está
-                  configurada en ARS 20.000 por mes.
+                  la plataforma quede asociado a una membresía activa. Todo el cobro se canaliza
+                  a través de Mercado Pago.
                 </p>
                 <div className="row-wrap" style={{ marginTop: 16 }}>
-                  <span className="chip active">ARS 20.000 / mes</span>
-                  <span className="chip">Renovación mensual</span>
+                  <span className="chip active">
+                    {formData.plan === 'Trimestral' ? 'ARS 69.900 / trimestre' : 'ARS 24.999 / mes'}
+                  </span>
+                  <span className="chip">
+                    {formData.plan === 'Trimestral' ? 'Equivale a ARS 23.300 / mes' : 'Renovación mensual'}
+                  </span>
                   <span className="chip">Cancelación desde tu cuenta</span>
                 </div>
                 <div className="row-wrap" style={{ marginTop: 18 }}>
@@ -453,15 +459,12 @@ export function RegisterPage() {
                     type="button"
                     className="btn btn-secondary"
                     onClick={handleMercadoPagoCheckout}
-                    disabled={creatingPreference || formData.paymentProvider !== 'Mercado Pago'}
-                    style={{
-                      opacity:
-                        creatingPreference || formData.paymentProvider !== 'Mercado Pago' ? 0.6 : 1,
-                    }}
+                    disabled={creatingPreference}
+                    style={{ opacity: creatingPreference ? 0.6 : 1 }}
                   >
                     {creatingPreference ? 'Preparando suscripción...' : 'Continuar en Mercado Pago'}
                   </button>
-                  <span className="tag neutral">{formData.paymentProvider}</span>
+                  <span className="tag neutral">Mercado Pago</span>
                 </div>
                 {paymentMessage ? (
                   <p className="body-sm" style={{ marginTop: 12 }}>
