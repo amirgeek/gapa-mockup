@@ -1195,6 +1195,75 @@ em.accent {
   font-size: 14px;
 }
 
+.profile-report-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.profile-chart {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 12px;
+  align-items: end;
+  min-height: 220px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  background: linear-gradient(180deg, rgba(111, 191, 115, 0.06), rgba(252, 252, 250, 0.96));
+}
+
+.profile-chart-bar-wrap {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.profile-chart-bar {
+  width: 100%;
+  min-height: 24px;
+  border-radius: 16px 16px 8px 8px;
+  background: linear-gradient(180deg, rgba(47, 107, 62, 0.94), rgba(111, 175, 231, 0.9));
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  padding-top: 8px;
+  color: #fbfbfa;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.profile-chart-bar-wrap small {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.profile-progress-row {
+  display: grid;
+  gap: 10px;
+}
+
+.profile-progress-row span {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.profile-progress-track {
+  width: 100%;
+  height: 10px;
+  border-radius: 999px;
+  background: rgba(17, 20, 24, 0.08);
+  overflow: hidden;
+}
+
+.profile-progress-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, rgba(47, 107, 62, 0.95), rgba(111, 191, 115, 0.88));
+}
+
 .dash-hero {
   display: grid;
   grid-template-columns: 1.2fr 0.8fr;
@@ -1769,6 +1838,10 @@ em.accent {
 
   .hero h1 {
     max-width: 12ch;
+  }
+
+  .profile-report-grid {
+    grid-template-columns: 1fr;
   }
 
   .member-section-head,
