@@ -362,12 +362,14 @@ export function AppProvider({ children }) {
         })
 
         if (error || !data.user) {
+          console.error('signInWithPassword failed:', error)
           return loginWithLocalSeed(email, password)
         }
 
         const profileResult = await syncSupabaseProfile(data.user.id)
 
         if (!profileResult.ok) {
+          console.error('syncSupabaseProfile failed:', profileResult)
           const localFallback = loginWithLocalSeed(email, password)
           return localFallback.ok ? localFallback : profileResult
         }
@@ -380,7 +382,11 @@ export function AppProvider({ children }) {
 
     async function logout() {
       if (isSupabaseConfigured && supabase) {
-        await supabase.auth.signOut()
+        try {
+          await supabase.auth.signOut()
+        } catch (error) {
+          console.error('supabase.auth.signOut failed, clearing local session anyway', error)
+        }
       }
 
       setState((current) => ({ ...current, currentUserId: null }))
@@ -396,7 +402,7 @@ export function AppProvider({ children }) {
             data: {
               full_name: formData.name.trim(),
               role: 'user',
-              membership_status: 'active',
+              membership_status: 'pending',
             },
           },
         })
@@ -416,7 +422,7 @@ export function AppProvider({ children }) {
         const { error: updateError } = await supabase
           .from('profiles')
           .update({
-            membership_status: 'active',
+            membership_status: 'pending',
             membership_provider: 'mercado_pago',
             membership_plan: formData.plan,
             profile_category: formData.profileCategory,
@@ -482,6 +488,14 @@ export function AppProvider({ children }) {
       }))
 
       return { ok: true, user: newUser }
+    }
+
+    async function refreshCurrentProfile() {
+      if (!isSupabaseConfigured || !supabase || !currentUser) {
+        return { ok: false, message: 'No hay perfil para actualizar.' }
+      }
+
+      return syncSupabaseProfile(currentUser.id)
     }
 
     async function enrollInSession(sessionId) {
@@ -685,6 +699,7 @@ export function AppProvider({ children }) {
         })
 
         if (error) {
+          console.error('createSession failed:', error)
           return { ok: false, message: 'No pudimos guardar la sesión en Supabase.' }
         }
 
@@ -727,6 +742,7 @@ export function AppProvider({ children }) {
         })
 
         if (error) {
+          console.error('createCampusItem failed:', error)
           return { ok: false, message: 'No pudimos publicar el recurso en Supabase.' }
         }
 
@@ -756,6 +772,7 @@ export function AppProvider({ children }) {
       login,
       logout,
       registerWithMembership,
+      refreshCurrentProfile,
       enrollInSession,
       saveDailyCheckIn,
       saveProcessGoals,

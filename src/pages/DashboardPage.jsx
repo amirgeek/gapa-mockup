@@ -4,8 +4,8 @@ import { useAppContext } from '../context/useAppContext.jsx'
 import { AppIcon } from '../components/AppIcon.jsx'
 
 const sessionImages = [
-  'https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1200&q=80',
-  'https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=1200&q=80',
 ]
 
 const guidedSteps = [

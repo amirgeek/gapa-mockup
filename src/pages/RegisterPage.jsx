@@ -44,6 +44,7 @@ export function RegisterPage() {
   const [paymentMessage, setPaymentMessage] = useState('')
   const [creatingPreference, setCreatingPreference] = useState(false)
   const [submitting, setSubmitting] = useState(false)
+  const [registeredUser, setRegisteredUser] = useState(null)
 
   const answeredCount = Object.keys(formData.onboardingAnswers).length
   const onboardingSummary =
@@ -101,36 +102,7 @@ export function RegisterPage() {
     setStep(2)
   }
 
-  async function handleMercadoPagoCheckout() {
-    setError('')
-    setPaymentMessage('')
-    setCreatingPreference(true)
-
-    try {
-      const subscription = await createMercadoPagoSubscription({
-        plan: formData.plan,
-        email: formData.email,
-        fullName: formData.name,
-      })
-
-      const checkoutUrl = subscription.initPoint
-
-      if (checkoutUrl) {
-        window.open(checkoutUrl, '_blank', 'noopener,noreferrer')
-        setPaymentMessage(
-          'Ya dejamos la suscripción lista en otra pestaña. Si aprobás el alta, Mercado Pago debería continuar con el flujo recurrente.',
-        )
-      } else {
-        setPaymentMessage('La suscripción se creó, pero no recibimos un link de checkout.')
-      }
-    } catch (checkoutError) {
-      setPaymentMessage(checkoutError.message)
-    } finally {
-      setCreatingPreference(false)
-    }
-  }
-
-  async function handleSubmit(event) {
+  async function handleActivateMembership(event) {
     event.preventDefault()
 
     if (answeredCount !== onboardingQuestions.length) {
@@ -138,29 +110,64 @@ export function RegisterPage() {
       return
     }
 
+    setError('')
+    setPaymentMessage('')
     setSubmitting(true)
 
-    const result = await registerWithMembership({
-      ...formData,
-      profileCategory,
-      onboardingSummary,
-    })
+    let profile = registeredUser
 
-    setSubmitting(false)
+    if (!profile) {
+      const result = await registerWithMembership({
+        ...formData,
+        profileCategory,
+        onboardingSummary,
+      })
 
-    if (!result.ok) {
-      setError(result.message)
-      return
+      if (!result.ok) {
+        setSubmitting(false)
+        setError(result.message)
+        return
+      }
+
+      profile = result.user
+      setRegisteredUser(profile)
     }
 
-    navigate('/app')
+    setCreatingPreference(true)
+
+    try {
+      const subscription = await createMercadoPagoSubscription({
+        plan: formData.plan,
+        email: formData.email,
+        profileId: profile.id,
+      })
+
+      const checkoutUrl = subscription.initPoint
+
+      if (checkoutUrl) {
+        window.open(checkoutUrl, '_blank', 'noopener,noreferrer')
+        setPaymentMessage(
+          'Tu cuenta ya está creada. Completá el pago en la pestaña de Mercado Pago: la membresía se activa automáticamente apenas se confirme.',
+        )
+        window.setTimeout(() => navigate('/app'), 1600)
+      } else {
+        setPaymentMessage(
+          'La suscripción se creó, pero no recibimos un link de checkout. Volvé a intentarlo.',
+        )
+      }
+    } catch (checkoutError) {
+      setPaymentMessage(checkoutError.message)
+    } finally {
+      setCreatingPreference(false)
+      setSubmitting(false)
+    }
   }
 
   return (
     <div className="auth-page">
       <div className="auth-art">
         <img
-          src="https://images.unsplash.com/photo-1493836512294-502baa1986e2?auto=format&fit=crop&w=1400&q=80"
+          src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1400&q=80"
           alt="Ambiente cálido de acompañamiento"
         />
         <div className="auth-art-content">
@@ -313,7 +320,7 @@ export function RegisterPage() {
           ) : null}
 
           {step === 2 ? (
-            <form className="stack" onSubmit={handleSubmit}>
+            <form className="stack" onSubmit={handleActivateMembership}>
               <div className="stack-sm">
                 <p className="eyebrow">Membresía · Paso 3 de 3</p>
                 <h2 className="h2">Activás la membresía.</h2>
@@ -456,18 +463,11 @@ export function RegisterPage() {
                   </span>
                   <span className="chip">Cancelación desde tu cuenta</span>
                 </div>
-                <div className="row-wrap" style={{ marginTop: 18 }}>
-                  <button
-                    type="button"
-                    className="btn btn-secondary"
-                    onClick={handleMercadoPagoCheckout}
-                    disabled={creatingPreference}
-                    style={{ opacity: creatingPreference ? 0.6 : 1 }}
-                  >
-                    {creatingPreference ? 'Preparando suscripción...' : 'Continuar en Mercado Pago'}
-                  </button>
-                  <span className="tag neutral">Mercado Pago</span>
-                </div>
+                <p className="body-sm" style={{ marginTop: 16, color: 'var(--muted)' }}>
+                  Al confirmar más abajo, creamos tu cuenta y abrimos el checkout seguro de
+                  Mercado Pago en una pestaña nueva. La membresía queda "pendiente" hasta que
+                  Mercado Pago confirme el pago.
+                </p>
                 {paymentMessage ? (
                   <p className="body-sm" style={{ marginTop: 12 }}>
                     {paymentMessage}
@@ -504,10 +504,14 @@ export function RegisterPage() {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={submitting}
-                  style={{ opacity: submitting ? 0.7 : 1 }}
+                  disabled={submitting || creatingPreference}
+                  style={{ opacity: submitting || creatingPreference ? 0.7 : 1 }}
                 >
-                  {submitting ? 'Activando...' : 'Activar membresía'}
+                  {creatingPreference
+                    ? 'Preparando suscripción...'
+                    : submitting
+                      ? 'Creando cuenta...'
+                      : 'Suscribirme con Mercado Pago'}
                   <AppIcon name="arrow" size={16} />
                 </button>
               </div>

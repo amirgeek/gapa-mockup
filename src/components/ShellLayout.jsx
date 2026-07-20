@@ -2,6 +2,7 @@ import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAppContext } from '../context/useAppContext.jsx'
 import { AppIcon } from './AppIcon.jsx'
 import { BrandLogo } from './BrandLogo.jsx'
+import { MembershipPendingGate } from './MembershipPendingGate.jsx'
 import { SosAssistant } from './SosAssistant.jsx'
 
 function SidebarLink({ to, icon, label, badge, end = false }) {
@@ -55,6 +56,7 @@ export function ShellLayout({ admin = false }) {
   const { currentUser, logout, state } = useAppContext()
   const navigate = useNavigate()
   const page = usePageCopy(admin)
+  const membershipPending = !admin && currentUser?.membershipStatus !== 'active'
 
   async function handleLogout() {
     await logout()
@@ -105,7 +107,7 @@ export function ShellLayout({ admin = false }) {
               <div className="avatar">{currentUser?.name?.charAt(0)?.toUpperCase() ?? 'G'}</div>
               <div>
                 <strong>{currentUser?.name ?? 'Miembro GAPA'}</strong>
-                <span>{admin ? 'Administrador' : 'Membresía activa'}</span>
+                <span>{admin ? 'Administrador' : membershipPending ? 'Membresía pendiente' : 'Membresía activa'}</span>
               </div>
             </div>
             <button
@@ -136,7 +138,7 @@ export function ShellLayout({ admin = false }) {
               <span>{admin ? 'Usuarios, sesiones y recursos' : 'Sesiones, campus y proceso'}</span>
             </div>
           </div>
-          <Outlet />
+          {membershipPending ? <MembershipPendingGate /> : <Outlet />}
         </main>
       </div>
       {admin ? null : <SosAssistant />}

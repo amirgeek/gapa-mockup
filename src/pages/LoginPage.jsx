@@ -18,8 +18,8 @@ export function LoginPage() {
     const result = await login(formData.email, formData.password)
     setSubmitting(false)
 
-    if (!result.ok) {
-      setError(result.message)
+    if (!result.ok || !result.user) {
+      setError(result.message || 'No pudimos completar el inicio de sesión. Probá de nuevo.')
       return
     }
 

@@ -135,7 +135,7 @@ export function LandingPage() {
       <section className="hero">
         <img
           className="hero-media"
-          src="https://images.unsplash.com/photo-1516302752625-fcc3c50ae61f?auto=format&fit=crop&w=1600&q=80"
+          src="https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?auto=format&fit=crop&w=1600&q=80"
           alt="Espacio sereno de acompañamiento"
         />
         <div className="hero-content wrap">

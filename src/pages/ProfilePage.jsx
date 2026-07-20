@@ -5,6 +5,17 @@ function formatMonth(dateString) {
   return new Intl.DateTimeFormat('es-AR', { month: 'short' }).format(new Date(dateString))
 }
 
+const membershipStatusLabels = {
+  active: 'Activa',
+  pending: 'Pendiente',
+  past_due: 'Pago pausado',
+  cancelled: 'Cancelada',
+}
+
+function membershipStatusLabel(status) {
+  return membershipStatusLabels[status] ?? 'Pendiente'
+}
+
 function lastCheckInLabel(dailyCheckIns) {
   if (!dailyCheckIns?.length) {
     return 'Todavía no registraste tu estado de hoy.'
@@ -75,7 +86,7 @@ export function ProfilePage() {
       {
         label: 'Membresía',
         value: currentUser?.membershipPlan ?? 'Sin plan',
-        note: currentUser?.membershipStatus ?? 'pendiente',
+        note: membershipStatusLabel(currentUser?.membershipStatus),
       },
       {
         label: 'Perfil interno',
@@ -268,7 +279,7 @@ export function ProfilePage() {
           </div>
           <div className="member-lined-item">
             <strong>Estado</strong>
-            <span>{currentUser?.membershipStatus ?? 'pendiente'}</span>
+            <span>{membershipStatusLabel(currentUser?.membershipStatus)}</span>
           </div>
         </article>
 

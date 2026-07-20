@@ -1,4 +1,5 @@
 /* global process */
+import { getSupabaseAdmin } from './_supabaseAdmin.js'
 
 const planCatalog = {
   Mensual: {
@@ -33,8 +34,15 @@ export default async function handler(request, response) {
   const {
     plan = 'Mensual',
     email,
+    profileId,
     successUrl,
   } = request.body ?? {}
+
+  if (!profileId) {
+    return response.status(400).json({
+      message: 'Falta el identificador de perfil para asociar la suscripción.',
+    })
+  }
 
   const selectedPlan = planCatalog[plan] ?? planCatalog.Mensual
 
@@ -48,9 +56,9 @@ export default async function handler(request, response) {
       },
       body: JSON.stringify({
         reason: selectedPlan.title,
-        external_reference: `gapa-${plan.toLowerCase()}-${Date.now()}`,
+        external_reference: profileId,
         payer_email: email,
-        back_url: successUrl ?? 'https://gapa-mockup.vercel.app/login',
+        back_url: successUrl ?? 'https://gapa-mockup.vercel.app/app',
         auto_recurring: {
           frequency: selectedPlan.frequency,
           frequency_type: selectedPlan.frequencyType,
@@ -68,6 +76,19 @@ export default async function handler(request, response) {
       return response.status(result.status).json({
         message: 'No pudimos crear la suscripción en Mercado Pago.',
         details: data?.message ?? data?.cause ?? 'Error desconocido',
+      })
+    }
+
+    const supabaseAdmin = getSupabaseAdmin()
+
+    if (supabaseAdmin) {
+      await supabaseAdmin.from('membership_payments').insert({
+        profile_id: profileId,
+        provider: 'mercado_pago',
+        provider_reference: data.id,
+        amount_in_ars: selectedPlan.amount,
+        currency: 'ARS',
+        status: 'pending',
       })
     }
 

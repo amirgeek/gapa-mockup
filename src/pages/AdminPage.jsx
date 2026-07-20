@@ -22,6 +22,17 @@ const campusInitialState = {
   content: '',
 }
 
+const membershipStatusLabels = {
+  active: 'Activa',
+  pending: 'Pendiente',
+  past_due: 'Pago pausado',
+  cancelled: 'Cancelada',
+}
+
+function membershipStatusLabel(status) {
+  return membershipStatusLabels[status] ?? 'Pendiente'
+}
+
 export function AdminPage() {
   const { state, createSession, createCampusItem } = useAppContext()
   const [sessionForm, setSessionForm] = useState(sessionInitialState)
@@ -98,7 +109,7 @@ export function AdminPage() {
                 </div>
                 <div>
                   <strong>{user.role}</strong>
-                  <span>{user.membershipStatus}</span>
+                  <span>{membershipStatusLabel(user.membershipStatus)}</span>
                 </div>
               </div>
             ))}

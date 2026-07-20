@@ -24,6 +24,21 @@ function formatTime(dateString) {
 export function SessionsPage() {
   const { currentUser, state, enrollInSession } = useAppContext()
   const [search, setSearch] = useState('')
+  const [enrollingId, setEnrollingId] = useState(null)
+  const [enrollErrors, setEnrollErrors] = useState({})
+
+  async function handleEnroll(sessionId) {
+    setEnrollingId(sessionId)
+    setEnrollErrors((current) => ({ ...current, [sessionId]: null }))
+    const result = await enrollInSession(sessionId)
+    setEnrollingId(null)
+    if (!result?.ok) {
+      setEnrollErrors((current) => ({
+        ...current,
+        [sessionId]: result?.message || 'No pudimos reservar tu lugar en esta sesión.',
+      }))
+    }
+  }
 
   const filtered = useMemo(
     () =>
@@ -184,10 +199,18 @@ export function SessionsPage() {
                         </strong>
                       </div>
                     </div>
-                    <button type="button" className="btn btn-primary" onClick={() => enrollInSession(session.id)}>
-                      Reservar plaza
+                    <button
+                      type="button"
+                      className="btn btn-primary"
+                      disabled={enrollingId === session.id}
+                      onClick={() => handleEnroll(session.id)}
+                    >
+                      {enrollingId === session.id ? 'Reservando...' : 'Reservar plaza'}
                       <AppIcon name="arrow" size={16} />
                     </button>
+                    {enrollErrors[session.id] ? (
+                      <p className="form-error">{enrollErrors[session.id]}</p>
+                    ) : null}
                   </div>
                 </div>
               </article>
