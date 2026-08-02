@@ -1,223 +1,336 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useAppContext } from '../context/useAppContext.jsx'
 import { getSosTopicsForProfile } from '../data/sosResources.js'
 import { AppIcon } from './AppIcon.jsx'
 
+let messageIdCounter = 0
+function nextId() {
+  messageIdCounter += 1
+  return `sos-msg-${messageIdCounter}`
+}
+
 export function SosAssistant() {
   const { currentUser, logSosUse } = useAppContext()
   const [isOpen, setIsOpen] = useState(false)
+  const [messages, setMessages] = useState([])
+  const [isTyping, setIsTyping] = useState(false)
   const [isSpeaking, setIsSpeaking] = useState(false)
-  const [isPlayingVideo, setIsPlayingVideo] = useState(false)
-  const [videoStepIndex, setVideoStepIndex] = useState(0)
+  const [pendingOptions, setPendingOptions] = useState(null)
+  const timeoutsRef = useRef([])
+  const scrollRef = useRef(null)
+
   const profilePack = useMemo(
     () => getSosTopicsForProfile(currentUser?.profileCategory),
     [currentUser?.profileCategory],
   )
-  const [activeTopicId, setActiveTopicId] = useState(profilePack.topics[0]?.id ?? '')
+  const riskLevel = currentUser?.onboardingSummary?.riskLevel ?? 'nunca'
 
-  useEffect(() => {
-    if (!isPlayingVideo) {
-      return undefined
-    }
-
-    const interval = window.setInterval(() => {
-      setVideoStepIndex((current) => {
-        const next = current + 1
-        if (next >= activeTopic.videoFrames.length) {
-          setIsPlayingVideo(false)
-          return current
-        }
-        return next
-      })
-    }, 2400)
-
-    return () => window.clearInterval(interval)
-  }, [isPlayingVideo, activeTopicId]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    return () => {
-      if ('speechSynthesis' in window) {
-        window.speechSynthesis.cancel()
-      }
-    }
-  }, [])
-
-  const activeTopic =
-    profilePack.topics.find((topic) => topic.id === activeTopicId) ?? profilePack.topics[0]
-  const safeVideoIndex = Math.min(videoStepIndex, activeTopic.videoFrames.length - 1)
-
-  function handleTopicSelect(topicId) {
-    setActiveTopicId(topicId)
-    setVideoStepIndex(0)
-    setIsPlayingVideo(false)
-    logSosUse(`SOS · ${topicId}`)
+  function clearTimers() {
+    timeoutsRef.current.forEach((timeoutId) => window.clearTimeout(timeoutId))
+    timeoutsRef.current = []
   }
 
-  function handleSpeak() {
+  function queueBotMessage(content, { delay = 650, options = null } = {}) {
+    setIsTyping(true)
+    setPendingOptions(null)
+    const timeoutId = window.setTimeout(() => {
+      setIsTyping(false)
+      setMessages((current) => [...current, { id: nextId(), from: 'bot', content }])
+      if (options) {
+        setPendingOptions(options)
+      }
+    }, delay)
+    timeoutsRef.current.push(timeoutId)
+  }
+
+  function queueBotSequence(items, { startDelay = 500, step = 1500 } = {}) {
+    setIsTyping(true)
+    setPendingOptions(null)
+    items.forEach((content, index) => {
+      const isLast = index === items.length - 1
+      const timeoutId = window.setTimeout(() => {
+        setMessages((current) => [...current, { id: nextId(), from: 'bot', content }])
+        if (isLast) {
+          setIsTyping(false)
+        }
+      }, startDelay + index * step)
+      timeoutsRef.current.push(timeoutId)
+    })
+  }
+
+  function pushUserMessage(content) {
+    setMessages((current) => [...current, { id: nextId(), from: 'user', content }])
+  }
+
+  function buildTopicOptions() {
+    return profilePack.topics.map((topic) => ({
+      id: topic.id,
+      label: topic.title,
+      onSelect: () => handleTopicSelect(topic),
+    }))
+  }
+
+  function buildFollowUpOptions(topic) {
+    return [
+      { id: 'audio', label: '🔊 Escuchar guía en audio', onSelect: () => handleAudioGuide(topic) },
+      { id: 'video', label: '🧭 Ver guía paso a paso', onSelect: () => handleStepGuide(topic) },
+      { id: 'other', label: '↩ Elegir otro tema', onSelect: () => handleShowTopics() },
+      { id: 'done', label: '✅ Ya estoy mejor', onSelect: () => handleFinish() },
+    ]
+  }
+
+  function handleShowTopics() {
+    pushUserMessage('Quiero elegir otro tema')
+    queueBotMessage('Dale. ¿Con cuál de estos te ayudo ahora?', { options: buildTopicOptions() })
+  }
+
+  function handleTopicSelect(topic) {
+    pushUserMessage(topic.title)
+    logSosUse(`SOS · ${topic.id}`)
+    queueBotMessage(topic.text, { delay: 700, options: buildFollowUpOptions(topic) })
+  }
+
+  function handleAudioGuide(topic) {
+    pushUserMessage('Escuchar guía en audio')
+    logSosUse(`SOS audio · ${topic.title}`)
+
     if (!('speechSynthesis' in window)) {
+      queueBotMessage('Tu navegador no soporta audio guiado en este momento, pero podés seguir el texto de arriba.', {
+        options: buildFollowUpOptions(topic),
+      })
       return
     }
 
     window.speechSynthesis.cancel()
-    const utterance = new SpeechSynthesisUtterance(activeTopic.audioScript)
+    const utterance = new SpeechSynthesisUtterance(topic.audioScript)
     utterance.lang = 'es-AR'
     utterance.rate = 0.95
     utterance.onend = () => setIsSpeaking(false)
     utterance.onerror = () => setIsSpeaking(false)
     setIsSpeaking(true)
-    logSosUse(`SOS audio · ${activeTopic.title}`)
     window.speechSynthesis.speak(utterance)
+
+    queueBotMessage('Reproduciendo guía hablada. Escuchá con calma, no hace falta hacer nada más ahora.', {
+      delay: 500,
+      options: [
+        {
+          id: 'stop',
+          label: '⏹ Detener audio',
+          onSelect: () => {
+            window.speechSynthesis.cancel()
+            setIsSpeaking(false)
+            pushUserMessage('Detener audio')
+            queueBotMessage('Listo, corté el audio.', { options: buildFollowUpOptions(topic) })
+          },
+        },
+        ...buildFollowUpOptions(topic),
+      ],
+    })
   }
 
-  function handleStopAudio() {
+  function handleStepGuide(topic) {
+    pushUserMessage('Ver guía paso a paso')
+    logSosUse(`SOS video · ${topic.title}`)
+    setPendingOptions(null)
+
+    const steps = topic.videoFrames.map(
+      (frame, index) => `Paso ${index + 1} de ${topic.videoFrames.length} · ${frame}`,
+    )
+    queueBotSequence(steps, { startDelay: 500, step: 1600 })
+
+    const totalDelay = 500 + steps.length * 1600 + 300
+    const timeoutId = window.setTimeout(() => {
+      setMessages((current) => [
+        ...current,
+        { id: nextId(), from: 'bot', content: '¿Cómo seguimos?' },
+      ])
+      setPendingOptions(buildFollowUpOptions(topic))
+    }, totalDelay)
+    timeoutsRef.current.push(timeoutId)
+  }
+
+  function handleFinish() {
+    pushUserMessage('Ya estoy mejor')
+    logSosUse('SOS · cierre')
+    queueBotMessage(
+      'Me alegra leer eso. Guardé este uso en tu seguimiento. Podés volver a abrir el SOS cuando lo necesites.',
+      { delay: 600 },
+    )
+  }
+
+  function startConversation() {
+    clearTimers()
+    setMessages([])
+    setPendingOptions(null)
+    messageIdCounter = 0
+
+    const greetingName = currentUser?.name?.split(' ')[0] ?? ''
+    const greeting = greetingName
+      ? `Hola ${greetingName}, activaste el modo SOS.`
+      : 'Hola, activaste el modo SOS.'
+
+    if (riskLevel === 'frecuentemente') {
+      queueBotMessage(
+        'Antes de seguir: contanos que en tu onboarding marcaste que esto te viene pasando frecuentemente. Eso merece ayuda humana prioritaria, no solo esta herramienta.',
+        { delay: 300 },
+      )
+      queueBotMessage(
+        'Si sentís que estás en riesgo o podrías lastimarte, comunicate ya con tu profesional de referencia, con alguien de tu confianza o con el servicio de emergencias de tu zona (en Argentina: 911).',
+        { delay: 1700 },
+      )
+      queueBotMessage(`${greeting} Mientras buscás esa ayuda, puedo acompañarte con algo puntual ahora.`, {
+        delay: 2600,
+      })
+      queueBotMessage(
+        `Detecté tu perfil como "${currentUser?.profileCategory ?? 'general'}". ¿Con qué necesitás ayuda ahora mismo?`,
+        { delay: 3300, options: buildTopicOptions() },
+      )
+      return
+    }
+
+    queueBotMessage(`${greeting} Vi que tu perfil es "${currentUser?.profileCategory ?? 'general'}".`, {
+      delay: 300,
+    })
+    queueBotMessage('Estoy acá para ayudarte a bajar esto ahora, paso a paso. ¿Con qué necesitás ayuda?', {
+      delay: 1200,
+      options: buildTopicOptions(),
+    })
+  }
+
+  function openAssistant() {
+    setIsOpen(true)
+  }
+
+  function closeAssistant() {
+    setIsOpen(false)
+    clearTimers()
     if ('speechSynthesis' in window) {
       window.speechSynthesis.cancel()
     }
     setIsSpeaking(false)
   }
 
-  function handlePlayVideo() {
-    setVideoStepIndex(0)
-    setIsPlayingVideo(true)
-    logSosUse(`SOS video · ${activeTopic.title}`)
-  }
+  useEffect(() => {
+    if (isOpen) {
+      startConversation()
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen])
+
+  useEffect(() => {
+    if (!isOpen) {
+      return undefined
+    }
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        closeAssistant()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isOpen])
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight
+    }
+  }, [messages, isTyping, pendingOptions])
+
+  useEffect(() => {
+    return () => {
+      clearTimers()
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel()
+      }
+    }
+  }, [])
 
   return (
     <>
-      <button type="button" className="sos-trigger" onClick={() => setIsOpen(true)}>
+      <button type="button" className="sos-trigger" onClick={openAssistant}>
         SOS
       </button>
 
       {isOpen ? (
-        <div className="sos-overlay" role="dialog" aria-modal="true" aria-label="Asistente SOS">
-          <div className="sos-panel">
-            <div className="sos-panel-header">
+        <div
+          className="sos-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-label="Asistente SOS"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) {
+              closeAssistant()
+            }
+          }}
+        >
+          <div className="sos-chat-panel">
+            <div className="sos-chat-header">
               <div>
                 <p className="eyebrow no-rule" style={{ color: '#ffd7d7' }}>
-                  Respuesta inmediata
+                  Respuesta inmediata · Asistente algorítmico
                 </p>
-                <h3 className="h3" style={{ color: '#fbfbfa', marginTop: 8 }}>
-                  SOS para {currentUser?.profileCategory ?? 'tu perfil'}
+                <h3 className="h3" style={{ color: '#fbfbfa', marginTop: 4 }}>
+                  SOS GAPA
                 </h3>
-                <p className="body-sm" style={{ color: 'rgba(255,255,255,0.82)', marginTop: 8 }}>
-                  {profilePack.intro}
-                </p>
               </div>
-              <button type="button" className="sos-close" onClick={() => setIsOpen(false)}>
-                Cerrar
+              <button
+                type="button"
+                className="sos-chat-close"
+                onClick={closeAssistant}
+                aria-label="Cerrar asistente SOS"
+              >
+                <AppIcon name="close" size={18} />
               </button>
             </div>
 
-            <div className="sos-panel-body">
-              <aside className="sos-topic-list">
-                {profilePack.topics.map((topic) => (
-                  <button
-                    key={topic.id}
-                    type="button"
-                    className={`sos-topic-button ${activeTopic.id === topic.id ? 'active' : ''}`}
-                    onClick={() => handleTopicSelect(topic.id)}
-                  >
-                    <span>{topic.title}</span>
-                    <AppIcon name="arrow" size={14} />
-                  </button>
-                ))}
-              </aside>
+            <div className="sos-chat-body" ref={scrollRef}>
+              {messages.map((message) => (
+                <div key={message.id} className={`sos-bubble-row ${message.from}`}>
+                  <div className={`sos-bubble ${message.from}`}>{message.content}</div>
+                </div>
+              ))}
 
-              <div className="sos-topic-content">
-                <section className="sos-resource-block">
-                  <div className="row-between">
-                    <div>
-                      <p className="eyebrow no-rule">Texto</p>
-                      <h4 className="h4" style={{ marginTop: 6 }}>
-                        {activeTopic.title}
-                      </h4>
-                    </div>
-                    <span className="tag neutral">Lectura breve</span>
+              {isTyping ? (
+                <div className="sos-bubble-row bot">
+                  <div className="sos-bubble bot sos-typing">
+                    <span />
+                    <span />
+                    <span />
                   </div>
-                  <p className="body" style={{ marginTop: 14 }}>
-                    {activeTopic.text}
-                  </p>
-                </section>
+                </div>
+              ) : null}
 
-                <section className="sos-resource-block">
-                  <div className="row-between">
-                    <div>
-                      <p className="eyebrow no-rule">Audio</p>
-                      <h4 className="h4" style={{ marginTop: 6 }}>
-                        Guía hablada rápida
-                      </h4>
-                    </div>
-                    <span className="tag neutral">Navegador</span>
-                  </div>
-                  <p className="body-sm" style={{ marginTop: 12 }}>
-                    Reproduce una lectura guiada del recurso usando la voz del dispositivo.
-                  </p>
-                  <div className="row-wrap" style={{ marginTop: 16 }}>
-                    <button type="button" className="btn btn-primary btn-sm" onClick={handleSpeak}>
-                      Escuchar guía
-                    </button>
+              {!isTyping && pendingOptions ? (
+                <div className="sos-options">
+                  {pendingOptions.map((option) => (
                     <button
+                      key={option.id}
                       type="button"
-                      className="btn btn-ghost btn-sm"
-                      onClick={handleStopAudio}
-                      disabled={!isSpeaking}
+                      className="sos-option-button"
+                      onClick={option.onSelect}
                     >
-                      Detener audio
+                      {option.label}
                     </button>
-                  </div>
-                </section>
+                  ))}
+                </div>
+              ) : null}
+            </div>
 
-                <section className="sos-resource-block">
-                  <div className="row-between">
-                    <div>
-                      <p className="eyebrow no-rule">Video</p>
-                      <h4 className="h4" style={{ marginTop: 6 }}>
-                        {activeTopic.videoTitle}
-                      </h4>
-                    </div>
-                    <span className="tag neutral">Guía secuencial</span>
-                  </div>
-                  <div className="sos-video-shell" style={{ marginTop: 16 }}>
-                    <div className="sos-video-stage">
-                      <span className="sos-video-kicker">
-                        Paso {safeVideoIndex + 1} de {activeTopic.videoFrames.length}
-                      </span>
-                      <p className="sos-video-copy">{activeTopic.videoFrames[safeVideoIndex]}</p>
-                    </div>
-                    <div className="sos-video-progress">
-                      {activeTopic.videoFrames.map((frame) => (
-                        <span
-                          key={frame}
-                          className={
-                            activeTopic.videoFrames[safeVideoIndex] === frame
-                              ? 'active'
-                              : ''
-                          }
-                        />
-                      ))}
-                    </div>
-                    <div className="row-wrap" style={{ marginTop: 14 }}>
-                      <button
-                        type="button"
-                        className="btn btn-primary btn-sm"
-                        onClick={handlePlayVideo}
-                      >
-                        Ver guía
-                      </button>
-                      <button
-                        type="button"
-                        className="btn btn-ghost btn-sm"
-                        onClick={() => {
-                          setIsPlayingVideo(false)
-                          setVideoStepIndex(0)
-                        }}
-                      >
-                        Reiniciar
-                      </button>
-                    </div>
-                  </div>
-                </section>
-              </div>
+            <div className="sos-chat-footer">
+              {isSpeaking ? <span className="tag neutral">Reproduciendo audio…</span> : null}
+              <span className="body-sm" style={{ color: 'var(--muted)' }}>
+                Este asistente no reemplaza atención profesional de emergencia.
+              </span>
             </div>
           </div>
         </div>

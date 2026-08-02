@@ -133,10 +133,6 @@ export function ShellLayout({ admin = false }) {
                 {page.subtitle}
               </p>
             </div>
-            <div className="search-shell">
-              <AppIcon name="search" />
-              <span>{admin ? 'Usuarios, sesiones y recursos' : 'Sesiones, campus y proceso'}</span>
-            </div>
           </div>
           {membershipPending ? <MembershipPendingGate /> : <Outlet />}
         </main>

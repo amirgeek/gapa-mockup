@@ -72,6 +72,7 @@ const paths = {
       <path d="M5 12h12M16 4h3a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1h-3" />
     </>
   ),
+  close: <path d="M6 6l12 12M18 6L6 18" />,
 }
 
 export function AppIcon({ name, className = '', size = 18 }) {

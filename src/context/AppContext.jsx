@@ -792,38 +792,41 @@ export function AppProvider({ children }) {
     let cancelled = false
 
     async function bootstrapAuth() {
-      const { data } = await supabase.auth.getSession()
-      const sessionUser = data.session?.user
+      try {
+        const { data } = await supabase.auth.getSession()
+        const sessionUser = data.session?.user
 
-      if (!sessionUser) {
-        if (!cancelled) {
-          setState((current) => ({ ...current, currentUserId: null }))
-          setAuthReady(true)
+        if (!sessionUser) {
+          if (!cancelled) {
+            setState((current) => ({ ...current, currentUserId: null }))
+          }
+          return
         }
-        return
-      }
 
-      const profileResult = await syncSupabaseUsers({
-        profileId: sessionUser.id,
-        setState,
-      })
-
-      const signedInRole = profileResult.user?.role
-
-      if (!cancelled && signedInRole === 'admin') {
-        await syncSupabaseUsers({
+        const profileResult = await syncSupabaseUsers({
           profileId: sessionUser.id,
-          includeAllProfiles: true,
           setState,
         })
-      }
 
-      if (!cancelled) {
-        await syncSupabaseContent({ setState })
-      }
+        const signedInRole = profileResult.user?.role
 
-      if (!cancelled) {
-        setAuthReady(true)
+        if (!cancelled && signedInRole === 'admin') {
+          await syncSupabaseUsers({
+            profileId: sessionUser.id,
+            includeAllProfiles: true,
+            setState,
+          })
+        }
+
+        if (!cancelled) {
+          await syncSupabaseContent({ setState })
+        }
+      } catch (error) {
+        console.error('bootstrapAuth failed:', error)
+      } finally {
+        if (!cancelled) {
+          setAuthReady(true)
+        }
       }
     }
 
@@ -836,22 +839,26 @@ export function AppProvider({ children }) {
         return
       }
 
-      const profileResult = await syncSupabaseUsers({
-        profileId: session.user.id,
-        setState,
-      })
-
-      if (profileResult.ok && profileResult.user?.role === 'admin') {
-        await syncSupabaseUsers({
+      try {
+        const profileResult = await syncSupabaseUsers({
           profileId: session.user.id,
-          includeAllProfiles: true,
           setState,
         })
+
+        if (profileResult.ok && profileResult.user?.role === 'admin') {
+          await syncSupabaseUsers({
+            profileId: session.user.id,
+            includeAllProfiles: true,
+            setState,
+          })
+        }
+
+        await syncSupabaseContent({ setState })
+      } catch (error) {
+        console.error('onAuthStateChange sync failed:', error)
+      } finally {
+        setAuthReady(true)
       }
-
-      await syncSupabaseContent({ setState })
-
-      setAuthReady(true)
     })
 
     return () => {

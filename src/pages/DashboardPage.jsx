@@ -64,7 +64,10 @@ export function DashboardPage() {
   const recommendedResources = state.campusItems.filter((item) =>
     item.audienceProfiles?.includes(currentUser?.profileCategory),
   )
-  const upcomingSessions = [...state.sessions].sort((a, b) => a.datetime.localeCompare(b.datetime))
+  const [now] = useState(() => Date.now())
+  const upcomingSessions = state.sessions
+    .filter((session) => new Date(session.datetime).getTime() >= now)
+    .sort((a, b) => a.datetime.localeCompare(b.datetime))
   const featuredSession = upcomingSessions[0]
   const joinedSessions = upcomingSessions.filter((session) =>
     currentUser?.joinedSessionIds?.includes(session.id),

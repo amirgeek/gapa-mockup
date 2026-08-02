@@ -40,15 +40,18 @@ export function SessionsPage() {
     }
   }
 
+  const [now] = useState(() => Date.now())
   const filtered = useMemo(
     () =>
-      state.sessions.filter(
-        (session) =>
-          session.title.toLowerCase().includes(search.toLowerCase()) ||
-          session.professional.toLowerCase().includes(search.toLowerCase()) ||
-          session.category.toLowerCase().includes(search.toLowerCase()),
-      ),
-    [search, state.sessions],
+      state.sessions
+        .filter((session) => new Date(session.datetime).getTime() >= now)
+        .filter(
+          (session) =>
+            session.title.toLowerCase().includes(search.toLowerCase()) ||
+            session.professional.toLowerCase().includes(search.toLowerCase()) ||
+            session.category.toLowerCase().includes(search.toLowerCase()),
+        ),
+    [search, state.sessions, now],
   )
 
   const joined = filtered.filter((session) => currentUser?.joinedSessionIds?.includes(session.id))
@@ -144,12 +147,6 @@ export function SessionsPage() {
       <section className="page-stack">
         <div className="row-between">
           <h2 className="h3">Próximas sesiones abiertas</h2>
-          <div className="capsule-row">
-            <span className="chip active">Todas</span>
-            <span className="chip">Ansiedad</span>
-            <span className="chip">Sueño</span>
-            <span className="chip">Vínculos</span>
-          </div>
         </div>
 
         <div className="stack" style={{ gap: 16 }}>
